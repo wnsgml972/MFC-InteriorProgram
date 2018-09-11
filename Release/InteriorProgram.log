@@ -1,0 +1,13 @@
+﻿  CDlgTab1.cpp
+  CDlgTab2.cpp
+  ControlView.cpp
+  InteriorProgram.cpp
+  InteriorProgramDoc.cpp
+  InteriorProgramView.cpp
+  MainFrm.cpp
+  코드를 생성하고 있습니다.
+  161 of 409 functions (39.4%) were compiled, the rest were copied from previous compilation.
+    90 functions were new in current compilation
+    30 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  InteriorProgram.vcxproj -> C:\Users\kjh0121\source\repos\Project1\Release\InteriorProgram.exe

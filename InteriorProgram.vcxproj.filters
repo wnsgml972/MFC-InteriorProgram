@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{8664220f-5143-4a4a-98ba-fc56c8e3e227}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{4e8bb70e-6966-4fbb-a6f5-15463d40e724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{1a3fac66-bc37-4b6c-85a4-f72773156a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{1dac73ab-9841-4c2a-ba3f-74ed275e97a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CBufferDC.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="CDlgTab1.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="CDlgTab2.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="InteriorProgram.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="InteriorProgramDoc.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="InteriorProgramView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="RoomShape.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowShape.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="DoorShape.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeHandler.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="UserObjectShape.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CBufferDC.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="CDlgTab1.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="CDlgTab2.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="InteriorProgram.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="InteriorProgramDoc.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="InteriorProgramView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="define.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="DoorShape.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomShape.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowShape.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeHandler.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="UserObjectShape.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="InteriorProgram.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\userimages.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\InteriorProgramDoc.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\InteriorProgram.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\InteriorProgram.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+</Project>
