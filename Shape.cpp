@@ -10,6 +10,7 @@ Shape::Shape(int nId, int nX, int nY, int nWidth, int nHeight)
 	this->nWidth = nWidth;
 	this->nHeight = nHeight;
 
+	bSelectedState = FALSE;
 	nRed = 0;  nGreen = 0;  nBlue = 0;
 }
 

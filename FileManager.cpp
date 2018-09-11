@@ -14,7 +14,7 @@ FileManager* FileManager::GetInstance()
 
 
 //////////////////////////////////////////////////////////////////////////
-// 멤버 함수 아님!
+/// 변환기
 string FileManager::CStringToString(CString cstr)
 {
 	char caResult[100];
@@ -75,14 +75,14 @@ boolean FileManager::SaveAsCsv()
 #pragma warning(disable: 4018)
 	//파일 쓰기
 
-	for (int i = 0; i < CPhoneBook->m_CaPerson.size(); i++)
+	for (int i = 0; i < CPhoneBook->m_CaShape.size(); i++)
 	{
-		if (CPhoneBook->m_CaPerson.at(i) == nullptr)
+		if (CPhoneBook->m_CaShape.at(i) == nullptr)
 		{
 			continue;
 		}
-		file << CStringToString(CPhoneBook->m_CaPerson.at(i)->GetName()) << ',' << CStringToString(CPhoneBook->m_CaPerson.at(i)->GetPhoneNumber())
-			<< ',' << CStringToString(CPhoneBook->m_CaPerson.at(i)->GetTitle()) << ',' << CStringToString(CPhoneBook->m_CaPerson.at(i)->GetJob());
+		file << CStringToString(CPhoneBook->m_CaShape.at(i)->GetName()) << ',' << CStringToString(CPhoneBook->m_CaShape.at(i)->GetPhoneNumber())
+			<< ',' << CStringToString(CPhoneBook->m_CaShape.at(i)->GetTitle()) << ',' << CStringToString(CPhoneBook->m_CaShape.at(i)->GetJob());
 		file << '\n';
 	}
 #pragma warning(pop)
@@ -117,7 +117,7 @@ boolean FileManager::LoadAsCsv()
 		return FALSE;
 	}
 
-	CPhoneBook->m_CaPerson.clear();
+	CPhoneBook->m_CaShape.clear();
 
 	while (file.good()) //eof, bad, fail 함수가 거짓을 반환할 때까지
 	{
@@ -134,7 +134,7 @@ boolean FileManager::LoadAsCsv()
 			strTitle = StringToCString(row[2]);
 			strPhoneNumber = StringToCString(row[3]);
 
-			CPhoneBook->m_CaPerson.push_back(new Person(CPhoneBook->m_AutoIncId++, strName, strPhoneNumber, strTitle, strJob));
+			CPhoneBook->m_CaShape.push_back(new Person(CPhoneBook->m_AutoIncId++, strName, strPhoneNumber, strTitle, strJob));
 		}
 	}
 

@@ -22,13 +22,13 @@
 2. FormView가 VisualStudio 2017에서 생성이 안 됨, 본 프로젝트에 있는 ControlView를 복붙하여 사용
 
 3.  CBufferDC는 진짜 혁명!
-  * CBufferDC 만들 고
+  * 원하는 View의 OnEraseBkgnd 메시지 함수를 아무것도 동작하지 않게 return TRUE로 바꿈
+  * CBufferDC 만듬
   * OnPaint에 dc를 이거로 교체하면 끝!
   * repaint()시 깜빡임이 바로 없어짐
 
 
 4. MVC 패턴에 따른 패키징
-
 
 ## 쓸만한 것
 
