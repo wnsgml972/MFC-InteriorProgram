@@ -11,11 +11,22 @@ Shape::Shape(int nId, int nX, int nY, int nWidth, int nHeight)
 	this->nHeight = nHeight;
 
 	bSelectedState = FALSE;
-	nRed = 0;  nGreen = 0;  nBlue = 0;
+	nRed = 0;  nGreen = 0;  nBlue = 0;	
+}
+
+Shape::Shape(Shape * CShape)
+{
+	this->nId = CShape->nId;
+	this->nX = CShape->nX;
+	this->nY = CShape->nY;
+	this->nWidth = CShape->nWidth;
+	this->nHeight = CShape->nHeight;
+
 }
 
 Shape::~Shape()
 {
+	printf("~Shape\n");
 }
 
 void Shape::SetRect(int nX, int nY, int nWidth, int nHeight)

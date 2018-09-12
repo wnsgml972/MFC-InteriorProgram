@@ -1,9 +1,12 @@
 #pragma once
 
 #define SAFE_DELETE(p) { if(p) {delete p; p = NULL;} }
+#define MY_ERROR -1
+#define MY_SUCCES 1
 
 #include <vector>
 #include <stack>
+#include <typeinfo>
 
 using namespace std;
 

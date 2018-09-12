@@ -34,18 +34,19 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_DOOR)
 	{
-		m_CaShape.push_back(new DoorShape(m_nAutoIncId++, nX, nY, nWidth, nHeight));
-		//room의 벡터 안에 넣어야 됨
+		DoorShape *CDoorShape = new DoorShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
+		m_CaShape.push_back(CDoorShape);
+		//room의 벡터 안에 넣어야 됨,  수정중
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_WINDOW)
 	{
-		m_CaShape.push_back(new WindowShape(m_nAutoIncId++, nX, nY, nWidth, nHeight));
-		//room의 벡터 안에 넣어야 됨
+		WindowShape *CWindowShape = new WindowShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
+		m_CaShape.push_back(CWindowShape);
+		//room의 벡터 안에 넣어야 됨,  수정중
 	}
-	else
+	else //error
 	{
-		printf("error\n");
-		//error
+		cout << "Add Shape Error\n";
 	}
 }
 bool ShapeHandler::DeleteShapeById(int nId) // 만약 Room 이라면 그 안에 존재하는 Door와 Window 모두 벡터에서 같이 삭제해야 함
@@ -82,9 +83,70 @@ void ShapeHandler::Clear()
 {
 	instance->m_CaShape.clear();
 }
-void ShapeHandler::Move(int nOldMouseX, int nOldMouseY, int CurrentMouseX, int CurrentMouseY) //door list와 window list를 같이 움직인다.
-{
 
+/*
+		- Move
+1. MouseDown 시 선택된 Shape의 기준 꼭지점과 클릭한 point와의 차이점을 구해놓는다.
+2. MouseMove에서 구해놓은 차이와 현재 드래그 되는 좌표값을 더해준다!
+3. 그 값은 InteriorProgramView를 넘으면 안 된다.
+4. 그 외 프로그램 상 각종 예외처리
+*/
+void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
+{
+	int index = GetCurrentSelectedIndex();
+
+	if (index == MY_ERROR) //아직 선택안됨
+	{
+		return;
+	}
+
+	Shape *tmpShape = m_CaShape.at(index);
+	int tmpX, tmpY, tmpWidth, tmpHeight;
+
+	if (typeid(*tmpShape) == typeid(RoomShape))
+	{
+		tmpX = point.x + m_nMoveSubVal[0];
+		tmpY = point.y + m_nMoveSubVal[1];
+		tmpWidth = point.x + m_nMoveSubVal[2];
+		tmpHeight = point.y + m_nMoveSubVal[3];
+
+		if (tmpX < 0 || tmpWidth > 765 || tmpY < 0 || tmpHeight > 720)
+		{
+			return;
+		}
+		else
+		{
+			tmpShape->nX = tmpX;
+			tmpShape->nY = tmpY;
+			tmpShape->nWidth = tmpWidth;
+			tmpShape->nHeight = tmpHeight;
+
+		}
+	}
+	else if (typeid(*tmpShape) == typeid(DoorShape) || typeid(*tmpShape) == typeid(WindowShape))
+	{
+		tmpX = point.x + m_nMoveSubVal[0];
+		tmpY = point.y + m_nMoveSubVal[1];
+		tmpWidth = point.x + m_nMoveSubVal[2];
+		tmpHeight = point.y + m_nMoveSubVal[3];
+
+		if (tmpX < 0 || tmpWidth > 765 || tmpY < 0 || tmpHeight > 720)
+		{
+			return;
+		}
+		else
+		{
+			tmpShape->nX = tmpX;
+			tmpShape->nY = tmpY;
+			tmpShape->nWidth = tmpWidth;
+			tmpShape->nHeight = tmpHeight;
+
+		}
+	}
+	else
+	{
+		cout << "Move Error\n";
+	}
 }
 void ShapeHandler::Select(CPoint point)
 {
@@ -127,31 +189,33 @@ void ShapeHandler::InitSelect()
 		if (m_CaShape.at(i)->bSelectedState)
 		{
 			m_CaShape.at(i)->bSelectedState = FALSE;
-			m_CaShape.at(i)->SetColor(0, 0, 0);
+
+
+			if (typeid(*m_CaShape.at(i)) == typeid(RoomShape))
+			{
+				m_CaShape.at(i)->SetColor(0, 0, 0);
+			}
+			else if (typeid(*m_CaShape.at(i)) == typeid(DoorShape))
+			{
+				m_CaShape.at(i)->SetColor(211, 162, 127);
+			}
+			else if (typeid(*m_CaShape.at(i)) == typeid(WindowShape))
+			{
+				m_CaShape.at(i)->SetColor(80, 188, 223);
+			}
+			else
+			{
+				cout << "InitSelected Error\n";
+			}
+
 		}
 	}
 
 }
-int ShapeHandler::CurrentSelectedId()
+int ShapeHandler::GetCurrentSelectedIndex()
 {
-	return 0;
-}
-int ShapeHandler::HowManySelected()
-{
-	return 0;
-}
-void ShapeHandler::RotateSelectedShape()
-{
-}
-void ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Door와 Window 모두 벡터에서 같이 삭제해야 함
-{
-}
-void ShapeHandler::CopySelectedShape()
-{
+	int nResult = MY_ERROR;
 
-}
-void ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
-{
 #pragma warning(push)
 #pragma warning(disable: 4018)
 	for (int i = 0; i < m_CaShape.size(); i++)
@@ -159,13 +223,81 @@ void ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
 	{
 		if (m_CaShape.at(i)->bSelectedState == TRUE)
 		{
-			m_CaShape.at(i)->SetRect(nX, nY, nWidth, nHeight);
+			nResult = i;
 			break;
 		}
 	}
+	return nResult;
 }
+int ShapeHandler::HowManySelected()
+{
+	int nResult = MY_ERROR;
+
+#pragma warning(push)
+#pragma warning(disable: 4018)
+	for (int i = 0; i < m_CaShape.size(); i++)
+#pragma warning(pop)
+	{
+		if (m_CaShape.at(i)->bSelectedState == TRUE)
+		{
+			nResult++;
+		}
+	}
+
+	return nResult;
+}
+int ShapeHandler::RotateSelectedShape()
+{
+	int index = GetCurrentSelectedIndex();
+
+	if (index == MY_ERROR) //아직 선택안됨
+	{
+		return MY_ERROR;
+	}
+
+	Shape *tmpShape = m_CaShape.at(index);
 
 
+	return MY_SUCCES;
+}
+int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Door와 Window 모두 벡터에서 같이 삭제해야 함
+{
+	int index = GetCurrentSelectedIndex();
 
+	if (index == MY_ERROR) //아직 선택안됨
+	{
+		return MY_ERROR;
+	}
+
+	Shape *tmpShape = m_CaShape.at(index);
+
+	return MY_SUCCES;
+}
+int ShapeHandler::CopySelectedShape()
+{
+	int index = GetCurrentSelectedIndex();
+
+	if (index == MY_ERROR) //아직 선택안됨
+	{
+		return MY_ERROR;
+	}
+
+	Shape *tmpShape = m_CaShape.at(index);
+
+	return MY_SUCCES;
+}
+int ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
+{
+	int index = GetCurrentSelectedIndex();
+
+	if (index == MY_ERROR) //아직 선택안됨
+	{
+		return MY_ERROR;
+	}
+	Shape *tmpShape = m_CaShape.at(index);
+	tmpShape->SetRect(nX, nY, nWidth, nHeight);
+
+	return MY_SUCCES;
+}
 
 

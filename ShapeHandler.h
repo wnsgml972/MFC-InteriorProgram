@@ -24,21 +24,21 @@ public:
 	void Redo();
 	void Clear();
 	void CopyShapeById(int nId);
-	void Move(int nOldMouseX, int nOldMouseY, int CurrentMouseX, int CurrentMouseY);
+	void Move(CPoint point);
 	void Select(CPoint point); //selected true로 바꾸기
-
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Select Shape
 	void InitSelect();
-	int CurrentSelectedId();
+	int GetCurrentSelectedIndex();
 	int HowManySelected();
-	void RotateSelectedShape();
-	void DeleteSelectedShape(); //delete p; undo() 해야 함
-	void UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight);
-	void CopySelectedShape();
+	int RotateSelectedShape();
+	int DeleteSelectedShape(); //delete p; undo() 해야 함
+	int UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight);
+	int CopySelectedShape();
 
 	vector<Shape*> m_CaShape;
+	int m_nMoveSubVal[4]; //Move에 사용함
 
 private:
 	ShapeHandler();
