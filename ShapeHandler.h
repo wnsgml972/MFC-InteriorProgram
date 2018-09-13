@@ -25,7 +25,8 @@ public:
 	void Clear();
 	void CopyShapeById(int nId);
 	void Move(CPoint point);
-	void Select(CPoint point); //selected true로 바꾸기
+	void Select(CPoint point);
+	void SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPoint &CurrentMousePoint);
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Select Shape
@@ -39,6 +40,7 @@ public:
 
 	vector<Shape*> m_CaShape;
 	int m_nMoveSubVal[4]; //Move에 사용함
+	bool NoAddShape;
 
 private:
 	ShapeHandler();
@@ -49,7 +51,7 @@ private:
 	int m_nAutoIncId;
 	int m_nSelectRange;
 	int m_nDrawRange;
-
-
+	int m_nDrawSelectRange;
+	int m_nRememberIndexForDoorWindowVector;
 };
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include <stack>
 #include <typeinfo>
+#include <algorithm>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ public:
 		PAINT_TR1, PAINT_TR2, PAINT_TR3, PAINT_USER_ADD, PAINT_USER_WASH, PAINT_USER_TV,
 		PAINT_EDIT, PAINT_EDIT_CLEAR, PAINT_EDIT_UNDO, PAINT_EDIT_REDO, PAINT_EDIT_MT, PAINT_EDIT_COLOR
 	}; // InteriorProgramView랑 동기화 시켜줘야 됨...
+	   // PAINT_BASIC은 Select와 Move를 담당함!
 
 
 private:
