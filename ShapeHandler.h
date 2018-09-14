@@ -52,6 +52,7 @@ private:
 	int m_nSelectRange;
 	int m_nDrawRange;
 	int m_nDrawSelectRange;
-	int m_nRememberIndexForDoorWindowVector;
+
+	Shape *m_pRememberIndexForDoorWindowPointer;
 };
 

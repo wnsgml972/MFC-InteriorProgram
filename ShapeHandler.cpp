@@ -19,7 +19,6 @@ ShapeHandler::ShapeHandler()
 	m_nDrawRange = 7;
 	m_nDrawSelectRange = 7;
 	NoAddShape = FALSE;
-	m_nRememberIndexForDoorWindowVector = MY_ERROR;
 }
 ShapeHandler::~ShapeHandler()
 {
@@ -45,24 +44,23 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_DOOR)
 	{
 		DoorShape *CDoorShape = new DoorShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
+		
+		CDoorShape->pInRoomShapePointer = m_pRememberIndexForDoorWindowPointer; // 자신이 속해있는 Room의 포인터
+
+
+		/// 삽입!
 		m_CaShape.push_back(CDoorShape);
-
-		//문이 그려진 해당하는 Room의 벡터 안에 넣어야 됨,   remember 변수 사용ㅎㅎ
-		dynamic_cast<RoomShape*>(m_CaShape.at(m_nRememberIndexForDoorWindowVector))->m_CaDoor.push_back(CDoorShape);
-
-		// 자신이 Shape Vector에서는 어느 인덱스에 들어갔는지 기억해놈
-		dynamic_cast<RoomShape*>(m_CaShape.at(m_nRememberIndexForDoorWindowVector))->m_CaDoor.back()->nShapeVectorIndex = m_CaShape.size() - 1;
+		dynamic_cast<RoomShape*>(CDoorShape->pInRoomShapePointer)->m_CaDoor.push_back(CDoorShape);
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_WINDOW)
 	{
 		WindowShape *CWindowShape = new WindowShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
+
+		CWindowShape->pInRoomShapePointer = m_pRememberIndexForDoorWindowPointer; // 자신이 속해있는 Room의 포인터
+
+		/// 삽입!
 		m_CaShape.push_back(CWindowShape);
-
-		//문이 그려진 해당하는 Room의 벡터 안에 넣어야 됨,   remember 변수 사용ㅎㅎ
-		dynamic_cast<RoomShape*>(m_CaShape.at(m_nRememberIndexForDoorWindowVector))->m_CaWindow.push_back(CWindowShape);
-
-		// 자신이 Shape Vector에서는 어느 인덱스에 들어갔는지 기억해놈
-		dynamic_cast<RoomShape*>(m_CaShape.at(m_nRememberIndexForDoorWindowVector))->m_CaWindow.back()->nShapeVectorIndex = m_CaShape.size() - 1;
+		dynamic_cast<RoomShape*>(CWindowShape->pInRoomShapePointer)->m_CaWindow.push_back(CWindowShape);
 	}
 	else //error
 	{
@@ -272,7 +270,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.x = nShapeTempWidth;
 			}
 
-			m_nRememberIndexForDoorWindowVector = i;
+			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
 			break;
 		}
 		else if (nShapeTempWidth - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempWidth + m_nDrawSelectRange && nShapeTempY - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
@@ -299,7 +297,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.y = nShapeTempHeight;
 			}
 
-			m_nRememberIndexForDoorWindowVector = i;
+			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
 			break;
 		}
 		else if (nShapeTempX - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempWidth + m_nDrawSelectRange && nShapeTempHeight - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
@@ -327,7 +325,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.x = nShapeTempWidth;
 			}
 
-			m_nRememberIndexForDoorWindowVector = i;
+			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
 			break;
 		}
 		else if (nShapeTempX - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempX + m_nDrawSelectRange && nShapeTempY - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
@@ -354,7 +352,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.y = nShapeTempHeight;
 			}
 
-			m_nRememberIndexForDoorWindowVector = i;
+			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
 			break;
 		}
 		else
@@ -382,7 +380,6 @@ void ShapeHandler::InitSelect()
 		if (m_CaShape.at(i)->bSelectedState)
 		{
 			m_CaShape.at(i)->bSelectedState = FALSE;
-
 
 			if (typeid(*m_CaShape.at(i)) == typeid(RoomShape))
 			{
@@ -454,63 +451,123 @@ int ShapeHandler::RotateSelectedShape()
 }
 int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Door와 Window 모두 벡터에서 같이 삭제해야 함
 {
-	int index = GetCurrentSelectedIndex();
+	int nSelectedIndex = GetCurrentSelectedIndex();
 
-	if (index == MY_ERROR) //아직 선택안됨
+	if (nSelectedIndex == MY_ERROR) //아직 선택안됨
 	{
 		return MY_ERROR;
 	}
-
-	if (typeid(*m_CaShape.at(index)) == typeid(RoomShape))
+	//////////////////////////////////////////////////////////////////////////
+	// [ 그룹화 삭제 알고리즘 ]
+ 	if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(RoomShape))
 	{
+		auto tmpInRoomPtr = m_CaShape.at(nSelectedIndex); //먼저 방의 포인터를 받아둠
+		tmpInRoomPtr->SetId(-600000);
 
-/// 그룹화 삭제 알고리즘
-// 찾아서 삭제하는데! 하나 삭제하면 전체 갯수가 줄어드므로 벡터의 인덱스가 바뀜! 
-// 그렇기 때문에 다음 루프에서 또 삭제할 때 오류가 남
-// 해결 방법으로 벡터의 맨 뒤에서부터 검색해 삭제할 것을 찾으면 됨
-// 근ep 창문과 문을 섞어서 만들경우 결국 생성 인덱스가 섞여버림...
-// 정렬해야 됨, 정렬해서 뒤에서부터 삭제해야 됨...
-// 새로운 벡터를 생성해 값을 다 넣고 정렬한다음 삭제한다.
-
-		vector <int> naDeleteIndexShape;
-
-		//Door ShapeVector 속에서 찾아서 삭제
-#pragma warning(push)
-#pragma warning(disable: 4018)
-		for (int i = dynamic_cast<RoomShape*>(m_CaShape.at(index))->m_CaDoor.size() -1; i >= 0 ; i--)
-#pragma warning(pop)
+		//////////////////////////////////////////////////////////////////////////
+		// 먼저 방안의 문 벡터 창문 벡터를 모두 동적할당 해제 후 삭제
+		for (auto nIdx : dynamic_cast<RoomShape*>(m_CaShape[nSelectedIndex])->m_CaDoor)
 		{
-			naDeleteIndexShape.push_back(dynamic_cast<RoomShape*>(m_CaShape.at(index))->m_CaDoor.at(i)->nShapeVectorIndex);
+			nIdx->SetId(-600000);
+			SAFE_DELETE(nIdx);
 		}
-
-		//Window ShapeVector 속에서 찾아서 삭제
-#pragma warning(push)
-#pragma warning(disable: 4018)
-		for (int i = dynamic_cast<RoomShape*>(m_CaShape.at(index))->m_CaWindow.size()-1; i >=0 ; i--)
-#pragma warning(pop)
+		for (auto nIdx : dynamic_cast<RoomShape*>(m_CaShape[nSelectedIndex])->m_CaWindow)
 		{
-			naDeleteIndexShape.push_back(dynamic_cast<RoomShape*>(m_CaShape.at(index))->m_CaWindow.at(i)->nShapeVectorIndex);
+			nIdx->SetId(-600000);
+			SAFE_DELETE(nIdx);
 		}
+		dynamic_cast<RoomShape*>(m_CaShape[nSelectedIndex])->m_CaDoor.clear();
+		dynamic_cast<RoomShape*>(m_CaShape[nSelectedIndex])->m_CaWindow.clear();
 
-		// 내림차순 정렬
-		sort(naDeleteIndexShape.begin(), naDeleteIndexShape.end(), greater<int>());
-
-#pragma warning(push)
-#pragma warning(disable: 4018)
-		for (int i = 0; i < naDeleteIndexShape.size(); i++)
-#pragma warning(pop)
+		//////////////////////////////////////////////////////////////////////////
+		// 전체 Shape 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제 후, 동적할당 해제
+		for (long i = m_CaShape.size() - 1; i >= 0; i--)
 		{
-			m_CaShape.erase(m_CaShape.begin() + naDeleteIndexShape.at(i));
+			int nWasteValue = m_CaShape[i]->GetId();
+			if (nWasteValue < -50000)
+			{
+				m_CaShape.erase(m_CaShape.begin() + i);
+
+			}
 		}
-		//Room 삭제
-		m_CaShape.erase(m_CaShape.begin() + index);
+		SAFE_DELETE(tmpInRoomPtr);
 	}
-	else
+	//////////////////////////////////////////////////////////////////////////
+	// [ 선택 요소 삭제 알고리즘 ]
+	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(DoorShape))
 	{
-		m_CaShape.erase(m_CaShape.begin() + index);
+		// 선택된 방 안의 문의 벡터를 받아 둠
+		// 주솟 값을 받아야함!!!! 저기 있는 벡터는 포인터 변수가 아님 꼭 기억해 놓을 것!
+		auto tmpDoorPtr = &dynamic_cast<RoomShape *>(dynamic_cast<DoorShape*>(m_CaShape[nSelectedIndex])->pInRoomShapePointer)->m_CaDoor;
+		// 선택된 문의 포인터
+		auto tmpSelectedDoorPtr = m_CaShape.at(nSelectedIndex);
+
+		tmpSelectedDoorPtr->SetId(-600000);
+
+		//////////////////////////////////////////////////////////////////////////
+		//  전체 Shape 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
+		for (long i = m_CaShape.size() - 1; i >= 0; i--)
+		{
+			int nWasteValue = m_CaShape[i]->GetId();
+			if (nWasteValue < -50000)
+			{
+				m_CaShape.erase(m_CaShape.begin() + i);
+				break;
+			}
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		// 문 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
+		for (long i = tmpDoorPtr->size() - 1; i >= 0; i--)
+		{
+			
+			int nWasteValue = tmpDoorPtr->at(i)->GetId();
+			if (nWasteValue < -50000)
+			{
+				tmpDoorPtr->erase(tmpDoorPtr->begin() + i);
+				break;
+			}
+		}
+
+		SAFE_DELETE(tmpSelectedDoorPtr);//  선택된 문 삭제, delete
 	}
+	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(WindowShape))
+	{
+		// 선택된 방 안의 창문의 벡터 포인터를 받아 둠
+		auto tmpWindowPtr = &dynamic_cast<RoomShape *>(dynamic_cast<WindowShape*>(m_CaShape[nSelectedIndex])->pInRoomShapePointer)->m_CaWindow;
+		// 선택된 창문의 포인터
+		auto tmpSelectedWindowPtr = m_CaShape.at(nSelectedIndex);
 
+		tmpSelectedWindowPtr->SetId(-600000);
 
+		//////////////////////////////////////////////////////////////////////////
+		// 전체 Shape 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
+		for (long i = m_CaShape.size() - 1; i >= 0; i--)
+		{
+			int nWasteValue = m_CaShape[i]->GetId();
+			if (nWasteValue < -50000)
+			{
+				m_CaShape.erase(m_CaShape.begin() + i);
+			}
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		// 창문 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
+		for (long i = tmpWindowPtr->size() - 1; i >= 0; i--)
+		{
+			int nWasteValue = tmpWindowPtr->at(i)->GetId();
+			if (nWasteValue < -50000)
+			{
+				tmpWindowPtr->erase(tmpWindowPtr->begin() + i);
+			}
+		}
+		SAFE_DELETE(tmpSelectedWindowPtr);//  선택된 문 삭제, delete
+	}
+	else 
+	{
+		cout << "Delete Error\n";
+		return MY_ERROR;
+	}
 	return MY_SUCCES;
 }
 int ShapeHandler::CopySelectedShape()

@@ -45,3 +45,13 @@ void Shape::SetColor(int nRed, int nGreen, int nBlue)
 	this->nGreen = nGreen;
 	this->nBlue = nBlue;
 }
+
+int Shape::GetId()
+{
+	return nId;
+}
+
+void Shape::SetId(int nId)
+{
+	this->nId = nId;
+}
