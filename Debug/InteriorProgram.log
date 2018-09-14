@@ -1,7 +1,4 @@
-﻿  CDlgTab2.cpp
-  InteriorProgram.cpp
-  InteriorProgramView.cpp
-  MainFrm.cpp
-  ShapeHandler.cpp
-  코드를 생성하고 있습니다...
+﻿  ShapeHandler.cpp
+c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(155): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(172): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   InteriorProgram.vcxproj -> C:\Users\kjh0121\source\repos\Project1\Debug\InteriorProgram.exe

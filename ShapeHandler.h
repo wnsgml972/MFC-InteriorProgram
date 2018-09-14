@@ -39,7 +39,6 @@ public:
 	int CopySelectedShape();
 
 	vector<Shape*> m_CaShape;
-	int m_nMoveSubVal[4]; //Move에 사용함
 	bool NoAddShape;
 
 private:

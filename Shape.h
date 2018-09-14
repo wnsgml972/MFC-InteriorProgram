@@ -16,6 +16,7 @@ public:
 	int nX, nY, nWidth, nHeight;
 	bool bSelectedState;
 	int nRed, nGreen, nBlue;
+	int m_nMoveSubVal[4]; //Move에 사용함
 
 private:
 	int nId;

@@ -126,30 +126,73 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 
 	if (typeid(*tmpShape) == typeid(RoomShape)) //RoomShape Move시 그룹화 된 문과 창문을 같이 움직여야 됨!
 	{
-		tmpX = point.x + m_nMoveSubVal[0];
-		tmpY = point.y + m_nMoveSubVal[1];
-		tmpWidth = point.x + m_nMoveSubVal[2];
-		tmpHeight = point.y + m_nMoveSubVal[3];
+		RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(m_CaShape.at(index));
 
-		if (tmpX < 0 || tmpWidth > 765 || tmpY < 0 || tmpHeight > 720)
+		// 밑에처럼 다른 문 벡터나 창문 벡터처럼 한번에 해도 되지만 좀 알아보기 쉽게 방은 그냥 템프 하나 구해놈
+		//Room
+		tmpX = point.x + tmpRoomShape->m_nMoveSubVal[0];
+		tmpY = point.y + tmpRoomShape->m_nMoveSubVal[1];
+		tmpWidth = point.x + tmpRoomShape->m_nMoveSubVal[2];
+		tmpHeight = point.y + tmpRoomShape->m_nMoveSubVal[3];
+
+		// 창문이나 문이 그려지면 그 DrawRange 범위 밖으로도 나가지면 안 됨!!
+		if (tmpX < 0 + m_nDrawSelectRange || tmpWidth > 765 - m_nDrawSelectRange || tmpY < 0 + m_nDrawSelectRange || tmpHeight > 720 - m_nDrawSelectRange) // 방 범위 제어 문
 		{
 			return;
 		}
 		else
 		{
-			tmpShape->nX = tmpX;
-			tmpShape->nY = tmpY;
-			tmpShape->nWidth = tmpWidth;
-			tmpShape->nHeight = tmpHeight;
+			tmpRoomShape->nX = tmpX;
+			tmpRoomShape->nY = tmpY;
+			tmpRoomShape->nWidth = tmpWidth;
+			tmpRoomShape->nHeight = tmpHeight;
 
+		}
+		// 방에 대한 것을 먼저 해야하는 게 방 클릭 후 범위 밖으로 나가면 다른 창문이나 문은 움직이면 안 되므로
+		// 위에서 먼저 체크하고 리턴해버려야 함
+
+		//In Room Door
+		for (long i = 0; i < tmpRoomShape->m_CaDoor.size(); i++)
+		{
+			// 문 범위 제어 문
+			if (point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3] > 720)
+			{
+				return;
+			}
+			else
+			{
+				tmpRoomShape->m_CaDoor[i]->nX = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0];
+				tmpRoomShape->m_CaDoor[i]->nY = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1];
+				tmpRoomShape->m_CaDoor[i]->nWidth = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2];
+				tmpRoomShape->m_CaDoor[i]->nHeight = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3];
+			}
+		}
+
+		//In Room Window
+		for (long i = 0; i < tmpRoomShape->m_CaWindow.size(); i++)
+		{
+			// 창문 범위 제어 문
+			if (point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3] > 720)
+			{
+				return;
+			}
+			else
+			{
+				tmpRoomShape->m_CaWindow[i]->nX = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0];
+				tmpRoomShape->m_CaWindow[i]->nY = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1];
+				tmpRoomShape->m_CaWindow[i]->nWidth = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2];
+				tmpRoomShape->m_CaWindow[i]->nHeight = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3];
+			}
 		}
 	}
 	else if (typeid(*tmpShape) == typeid(DoorShape) || typeid(*tmpShape) == typeid(WindowShape))
 	{
-		tmpX = point.x + m_nMoveSubVal[0];
-		tmpY = point.y + m_nMoveSubVal[1];
-		tmpWidth = point.x + m_nMoveSubVal[2];
-		tmpHeight = point.y + m_nMoveSubVal[3];
+		// 창문 문만 클릭했을 시!!!
+		return;
+		tmpX = point.x + tmpShape->m_nMoveSubVal[0];
+		tmpY = point.y + tmpShape->m_nMoveSubVal[1];
+		tmpWidth = point.x + tmpShape->m_nMoveSubVal[2];
+		tmpHeight = point.y + tmpShape->m_nMoveSubVal[3];
 
 		if (tmpX < 0 || tmpWidth > 765 || tmpY < 0 || tmpHeight > 720)
 		{
@@ -202,11 +245,16 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 {
 
 	// 먼저 그려져야 할 Room 범위를 찾음! ,제일 뒤에서부터 검색햐야 함!  z-index
+
+	bool bAllNoTouch = TRUE; // 어느 곳에도 속하지 않음
+
+
 #pragma warning(push)
 #pragma warning(disable: 4018)
 	for (int i = m_CaShape.size() - 1; i >= 0; i--)
 #pragma warning(pop)
 	{
+		
 		//Room이 아니면 Continue
 		if (!(typeid(*m_CaShape.at(i)) == typeid(RoomShape)))
 		{
@@ -242,7 +290,6 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 			tempHeight = CurrentMousePoint.y;
 		}
 
-
 		// 네모를 하나의 라인 하나당 Range가 존재하는 네모로 봤을 때
 		// 각각 위에서부터 범위를 조사해감
 		// 위 -> 오른쪽 -> 아래 -> 왼쪽
@@ -271,6 +318,8 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 			}
 
 			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			NoAddShape = FALSE;
+			bAllNoTouch = FALSE;
 			break;
 		}
 		else if (nShapeTempWidth - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempWidth + m_nDrawSelectRange && nShapeTempY - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
@@ -280,7 +329,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 			CurrentMousePoint.x = m_CaShape.at(i)->nWidth + m_nDrawRange;
 
 			// y축은 Room을 넘어가지 않게 만듬
-			if (OldMousePoint.y <= nShapeTempY)
+			if (OldMousePoint.y <= nShapeTempY) 
 			{
 				OldMousePoint.y = nShapeTempY;
 			}
@@ -298,6 +347,9 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 			}
 
 			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			NoAddShape = FALSE;
+			bAllNoTouch = FALSE;
+
 			break;
 		}
 		else if (nShapeTempX - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempWidth + m_nDrawSelectRange && nShapeTempHeight - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
@@ -326,6 +378,9 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 			}
 
 			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			NoAddShape = FALSE;
+			bAllNoTouch = FALSE;
+
 			break;
 		}
 		else if (nShapeTempX - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempX + m_nDrawSelectRange && nShapeTempY - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
@@ -353,15 +408,17 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 			}
 
 			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			NoAddShape = FALSE;
+			bAllNoTouch = FALSE;
+
 			break;
 		}
 		else
 		{
-			if (!bDragFlag) //드래그 중이 아닐 때만
+			if (!bDragFlag && bAllNoTouch) //드래그 중이 아닐 때만
 			{
 				NoAddShape = TRUE;
 				cout << "else!\n";
-
 			}
 		}
 	}
