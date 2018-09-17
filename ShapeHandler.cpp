@@ -45,7 +45,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_ROOM)
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// ¸¶Áö¸· °Ë»ç
+		// ë§ˆì§€ë§‰ ê²€ì‚¬
 		if (nX > nWidth)
 		{
 			swap(nX, nWidth);
@@ -59,7 +59,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_DOOR)
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// ¸¶Áö¸· °Ë»ç
+		// ë§ˆì§€ë§‰ ê²€ì‚¬
 		if (nX > nWidth)
 		{
 			swap(nX, nWidth);
@@ -70,18 +70,18 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		}
 
 		DoorShape *CDoorShape = new DoorShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
-		
-		CDoorShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // ÀÚ½ÅÀÌ ¼ÓÇØÀÖ´Â RoomÀÇ Æ÷ÀÎÅÍ
+
+		CDoorShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // ìì‹ ì´ ì†í•´ìˆëŠ” Roomì˜ í¬ì¸í„°
 
 
-		/// »ğÀÔ!
+		/// ì‚½ì…!
 		m_CaShape.push_back(CDoorShape);
 		dynamic_cast<RoomShape*>(CDoorShape->pInRoomShapePointer)->m_CaDoor.push_back(CDoorShape);
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_WINDOW)
 	{
 		//////////////////////////////////////////////////////////////////////////
-		// ¸¶Áö¸· °Ë»ç
+		// ë§ˆì§€ë§‰ ê²€ì‚¬
 		if (nX > nWidth)
 		{
 			swap(nX, nWidth);
@@ -93,9 +93,9 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 
 		WindowShape *CWindowShape = new WindowShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
 
-		CWindowShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // ÀÚ½ÅÀÌ ¼ÓÇØÀÖ´Â RoomÀÇ Æ÷ÀÎÅÍ
+		CWindowShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // ìì‹ ì´ ì†í•´ìˆëŠ” Roomì˜ í¬ì¸í„°
 
-		/// »ğÀÔ!
+		/// ì‚½ì…!
 		m_CaShape.push_back(CWindowShape);
 		dynamic_cast<RoomShape*>(CWindowShape->pInRoomShapePointer)->m_CaWindow.push_back(CWindowShape);
 	}
@@ -104,7 +104,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		cout << "Add Shape Error\n";
 	}
 }
-bool ShapeHandler::DeleteShapeById(int nId) // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Door¿Í Window ¸ğµÎ º¤ÅÍ¿¡¼­ °°ÀÌ »èÁ¦ÇØ¾ß ÇÔ
+bool ShapeHandler::DeleteShapeById(int nId) // ë§Œì•½ Room ì´ë¼ë©´ ê·¸ ì•ˆì— ì¡´ì¬í•˜ëŠ” Doorì™€ Window ëª¨ë‘ ë²¡í„°ì—ì„œ ê°™ì´ ì‚­ì œí•´ì•¼ í•¨
 {
 	return false;
 }
@@ -120,7 +120,7 @@ int ShapeHandler::FindVectorIndexById(int nId)
 
 
 //////////////////////////////////////////////////////////////////////////
-/// ±â´É
+/// ê¸°ëŠ¥
 void ShapeHandler::CopyShapeById(int nId)
 {
 
@@ -141,19 +141,19 @@ void ShapeHandler::Clear()
 
 /*
 		- Move
-1. MouseDown ½Ã ¼±ÅÃµÈ ShapeÀÇ ±âÁØ ²ÀÁöÁ¡°ú Å¬¸¯ÇÑ point¿ÍÀÇ Â÷ÀÌÁ¡À» ±¸ÇØ³õ´Â´Ù.
-2. MouseMove¿¡¼­ ±¸ÇØ³õÀº Â÷ÀÌ¿Í ÇöÀç µå·¡±× µÇ´Â ÁÂÇ¥°ªÀ» ´õÇØÁØ´Ù!,  
-		1) OnPaint¿¡¼­ InitVector¸¦ ÅëÇØ °è¼ÓÇØ¼­ º¤ÅÍ¿¡ ÀÖ´Â ¾ÖµéÀ» ±×¸®°í ÀÖ´Ù.
-		2) ±×·¯¹Ç·Î Vector¾È¿¡ ÀÖ´Â ShapeÀÇ ÁÂÇ¥°ª¸¸ ¹Ù²ãÁÖ¸é ÀÚµ¿À¸·Î ¹Ù²ï À§Ä¡¿¡¼­ ±×·ÁÁö°Ô µÈ´Ù!
-		3) ¿ì¸®´Â Vector¾ÈÀÇ Shape ÁÂÇ¥ °ª¸¸ MouseMove¿¡¼­ °è¼Ó ¹Ù²ãÁÖ¸é OnPaint¿¡¼­ ¾Ë¾Æ¼­ ±×·ÁÁØ´Ù.
-3. ±× °ªÀº InteriorProgramView¸¦ ³ÑÀ¸¸é ¾È µÈ´Ù.
-4. ±× ¿Ü ÇÁ·Î±×·¥ »ó °¢Á¾ ¿¹¿ÜÃ³¸®
+1. MouseDown ì‹œ ì„ íƒëœ Shapeì˜ ê¸°ì¤€ ê¼­ì§€ì ê³¼ í´ë¦­í•œ pointì™€ì˜ ì°¨ì´ì ì„ êµ¬í•´ë†“ëŠ”ë‹¤.
+2. MouseMoveì—ì„œ êµ¬í•´ë†“ì€ ì°¨ì´ì™€ í˜„ì¬ ë“œë˜ê·¸ ë˜ëŠ” ì¢Œí‘œê°’ì„ ë”í•´ì¤€ë‹¤!,
+		1) OnPaintì—ì„œ InitVectorë¥¼ í†µí•´ ê³„ì†í•´ì„œ ë²¡í„°ì— ìˆëŠ” ì• ë“¤ì„ ê·¸ë¦¬ê³  ìˆë‹¤.
+		2) ê·¸ëŸ¬ë¯€ë¡œ Vectorì•ˆì— ìˆëŠ” Shapeì˜ ì¢Œí‘œê°’ë§Œ ë°”ê¿”ì£¼ë©´ ìë™ìœ¼ë¡œ ë°”ë€ ìœ„ì¹˜ì—ì„œ ê·¸ë ¤ì§€ê²Œ ëœë‹¤!
+		3) ìš°ë¦¬ëŠ” Vectorì•ˆì˜ Shape ì¢Œí‘œ ê°’ë§Œ MouseMoveì—ì„œ ê³„ì† ë°”ê¿”ì£¼ë©´ OnPaintì—ì„œ ì•Œì•„ì„œ ê·¸ë ¤ì¤€ë‹¤.
+3. ê·¸ ê°’ì€ InteriorProgramViewë¥¼ ë„˜ìœ¼ë©´ ì•ˆ ëœë‹¤.
+4. ê·¸ ì™¸ í”„ë¡œê·¸ë¨ ìƒ ê°ì¢… ì˜ˆì™¸ì²˜ë¦¬
 */
-void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
+void ShapeHandler::Move(CPoint point) //door listì™€ window listë¥¼ ê°™ì´ ì›€ì§ì¸ë‹¤.
 {
 	int index = GetCurrentSelectedIndex();
 
-	if (index == MY_ERROR) //¾ÆÁ÷ ¼±ÅÃ¾ÈµÊ
+	if (index == MY_ERROR) //ì•„ì§ ì„ íƒì•ˆë¨
 	{
 		return;
 	}
@@ -161,19 +161,19 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 	Shape *tmpShape = m_CaShape.at(index);
 	int tmpX, tmpY, tmpWidth, tmpHeight;
 
-	if (typeid(*tmpShape) == typeid(RoomShape)) //RoomShape Move½Ã ±×·ìÈ­ µÈ ¹®°ú Ã¢¹®À» °°ÀÌ ¿òÁ÷¿©¾ß µÊ!
+	if (typeid(*tmpShape) == typeid(RoomShape)) //RoomShape Moveì‹œ ê·¸ë£¹í™” ëœ ë¬¸ê³¼ ì°½ë¬¸ì„ ê°™ì´ ì›€ì§ì—¬ì•¼ ë¨!
 	{
 		RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(m_CaShape.at(index));
 
-		// ¹Ø¿¡Ã³·³ ´Ù¸¥ ¹® º¤ÅÍ³ª Ã¢¹® º¤ÅÍÃ³·³ ÇÑ¹ø¿¡ ÇØµµ µÇÁö¸¸ Á» ¾Ë¾Æº¸±â ½±°Ô ¹æÀº ±×³É ÅÛÇÁ ÇÏ³ª ±¸ÇØ³ğ
+		// ë°‘ì—ì²˜ëŸ¼ ë‹¤ë¥¸ ë¬¸ ë²¡í„°ë‚˜ ì°½ë¬¸ ë²¡í„°ì²˜ëŸ¼ í•œë²ˆì— í•´ë„ ë˜ì§€ë§Œ ì¢€ ì•Œì•„ë³´ê¸° ì‰½ê²Œ ë°©ì€ ê·¸ëƒ¥ í…œí”„ í•˜ë‚˜ êµ¬í•´ë†ˆ
 		//Room
 		tmpX = point.x + tmpRoomShape->m_nMoveSubVal[0];
 		tmpY = point.y + tmpRoomShape->m_nMoveSubVal[1];
 		tmpWidth = point.x + tmpRoomShape->m_nMoveSubVal[2];
 		tmpHeight = point.y + tmpRoomShape->m_nMoveSubVal[3];
 
-		// Ã¢¹®ÀÌ³ª ¹®ÀÌ ±×·ÁÁö¸é ±× DrawRange ¹üÀ§ ¹ÛÀ¸·Îµµ ³ª°¡Áö¸é ¾È µÊ!!
-		if (tmpX < 0 + m_nDrawSelectRange || tmpWidth > 765 - m_nDrawSelectRange || tmpY < 0 + m_nDrawSelectRange || tmpHeight > 720 - m_nDrawSelectRange) // ¹æ ¹üÀ§ Á¦¾î ¹®
+		// ì°½ë¬¸ì´ë‚˜ ë¬¸ì´ ê·¸ë ¤ì§€ë©´ ê·¸ DrawRange ë²”ìœ„ ë°–ìœ¼ë¡œë„ ë‚˜ê°€ì§€ë©´ ì•ˆ ë¨!!
+		if (tmpX < 0 + m_nDrawSelectRange || tmpWidth > 765 - m_nDrawSelectRange || tmpY < 0 + m_nDrawSelectRange || tmpHeight > 720 - m_nDrawSelectRange) // ë°© ë²”ìœ„ ì œì–´ ë¬¸
 		{
 			return;
 		}
@@ -185,8 +185,8 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 			tmpRoomShape->nHeight = tmpHeight;
 
 		}
-		// ¹æ¿¡ ´ëÇÑ °ÍÀ» ¸ÕÀú ÇØ¾ßÇÏ´Â °Ô ¹æ Å¬¸¯ ÈÄ ¹üÀ§ ¹ÛÀ¸·Î ³ª°¡¸é ´Ù¸¥ Ã¢¹®ÀÌ³ª ¹®Àº ¿òÁ÷ÀÌ¸é ¾È µÇ¹Ç·Î
-		// À§¿¡¼­ ¸ÕÀú Ã¼Å©ÇÏ°í ¸®ÅÏÇØ¹ö·Á¾ß ÇÔ
+		// ë°©ì— ëŒ€í•œ ê²ƒì„ ë¨¼ì € í•´ì•¼í•˜ëŠ” ê²Œ ë°© í´ë¦­ í›„ ë²”ìœ„ ë°–ìœ¼ë¡œ ë‚˜ê°€ë©´ ë‹¤ë¥¸ ì°½ë¬¸ì´ë‚˜ ë¬¸ì€ ì›€ì§ì´ë©´ ì•ˆ ë˜ë¯€ë¡œ
+		// ìœ„ì—ì„œ ë¨¼ì € ì²´í¬í•˜ê³  ë¦¬í„´í•´ë²„ë ¤ì•¼ í•¨
 
 		//In Room Door
 #pragma warning(push)
@@ -194,7 +194,7 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 		for (long i = 0; i < tmpRoomShape->m_CaDoor.size(); i++)
 #pragma warning(pop)
 		{
-			// ¹® ¹üÀ§ Á¦¾î ¹®
+			// ë¬¸ ë²”ìœ„ ì œì–´ ë¬¸
 			if (point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3] > 720)
 			{
 				return;
@@ -214,7 +214,7 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 		for (long i = 0; i < tmpRoomShape->m_CaWindow.size(); i++)
 #pragma warning(push)
 		{
-			// Ã¢¹® ¹üÀ§ Á¦¾î ¹®
+			// ì°½ë¬¸ ë²”ìœ„ ì œì–´ ë¬¸
 			if (point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3] > 720)
 			{
 				return;
@@ -230,7 +230,7 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 	}
 	else if (typeid(*tmpShape) == typeid(DoorShape) || typeid(*tmpShape) == typeid(WindowShape))
 	{
-		// Ã¢¹® ¹®¸¸ Å¬¸¯ÇßÀ» ½Ã!!!
+		// ì°½ë¬¸ ë¬¸ë§Œ í´ë¦­í–ˆì„ ì‹œ!!!
 
 		RoomShape *tmpRoomShape;
 
@@ -244,15 +244,15 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 		}
 		else
 		{
-			cout << "Move Çü º¯È¯ Error\n";
+			cout << "Move í˜• ë³€í™˜ Error\n";
 		}
-		
-		if (tmpShape->nX + m_nDrawRange == tmpRoomShape->nX || tmpShape->nWidth - m_nDrawRange == tmpRoomShape->nWidth) //¿ŞÂÊ È¤Àº ¿À¸¥ÂÊ¿¡ ÀÖ´Ù¸é
+
+		if (tmpShape->nX + m_nDrawRange == tmpRoomShape->nX || tmpShape->nWidth - m_nDrawRange == tmpRoomShape->nWidth) //ì™¼ìª½ í˜¹ì€ ì˜¤ë¥¸ìª½ì— ìˆë‹¤ë©´
 		{
-			//cout << "¿Ş¿À\n";
+			//cout << "ì™¼ì˜¤\n";
 
 			//////////////////////////////////////////////////////////////////////////
-			// X ÃàÀº °íÁ¤ÇÏ°í, YÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+			// X ì¶•ì€ ê³ ì •í•˜ê³ , Yì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 			tmpY = point.y + tmpShape->m_nMoveSubVal[1];
 			tmpHeight = point.y + tmpShape->m_nMoveSubVal[3];
@@ -267,16 +267,16 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 				tmpShape->nHeight = tmpHeight;
 			}
 		}
-		else if (tmpShape->nY + m_nDrawRange == tmpRoomShape->nY || tmpShape->nHeight - m_nDrawRange == tmpRoomShape->nHeight) //À§ÂÊ È¤Àº ¾Æ·¡ÂÊ¿¡ ÀÖ´Ù¸é
+		else if (tmpShape->nY + m_nDrawRange == tmpRoomShape->nY || tmpShape->nHeight - m_nDrawRange == tmpRoomShape->nHeight) //ìœ„ìª½ í˜¹ì€ ì•„ë˜ìª½ì— ìˆë‹¤ë©´
 		{
-			//cout << "À§¾Æ·¡\n";
+			//cout << "ìœ„ì•„ë˜\n";
 
 			//////////////////////////////////////////////////////////////////////////
-			// Y ÃàÀº °íÁ¤ÇÏ°í, XÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+			// Y ì¶•ì€ ê³ ì •í•˜ê³ , Xì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 			tmpX = point.x + tmpShape->m_nMoveSubVal[0];
 			tmpWidth = point.x + tmpShape->m_nMoveSubVal[2];
-			
+
 			if (tmpX <= tmpRoomShape->nX || tmpWidth >= tmpRoomShape->nWidth)
 			{
 				return;
@@ -289,7 +289,7 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 		}
 		else
 		{
-			cout << "Ã¢¹®, ¹® ´ÜÀÏ Move Error\n";
+			cout << "ì°½ë¬¸, ë¬¸ ë‹¨ì¼ Move Error\n";
 		}
 	}
 	else
@@ -299,8 +299,8 @@ void ShapeHandler::Move(CPoint point) //door list¿Í window list¸¦ °°ÀÌ ¿òÁ÷ÀÎ´Ù.
 }
 void ShapeHandler::Select(CPoint point)
 {
-	// point´Â current mouse point
-	// Á¦ÀÏ µÚ¿¡¼­ºÎÅÍ °Ë»öÇá¾ß ÇÔ!  z-index
+	// pointëŠ” current mouse point
+	// ì œì¼ ë’¤ì—ì„œë¶€í„° ê²€ìƒ‰í–ì•¼ í•¨!  z-index
 #pragma warning(push)
 #pragma warning(disable: 4018)
 	for (int i = m_CaShape.size() - 1; i >= 0; i--)
@@ -311,9 +311,9 @@ void ShapeHandler::Select(CPoint point)
 		int nShapeTempWidth = m_CaShape.at(i)->nWidth;
 		int nShapeTempHeight = m_CaShape.at(i)->nHeight;
 
-		// ³×¸ğ¸¦ ÇÏ³ªÀÇ ¶óÀÎ ÇÏ³ª´ç Range°¡ Á¸ÀçÇÏ´Â ³×¸ğ·Î ºÃÀ» ¶§
-		// °¢°¢ À§¿¡¼­ºÎÅÍ ¹üÀ§¸¦ Á¶»çÇØ°¨
-		// À§ -> ¿À¸¥ÂÊ -> ¾Æ·¡ -> ¿ŞÂÊ
+		// ë„¤ëª¨ë¥¼ í•˜ë‚˜ì˜ ë¼ì¸ í•˜ë‚˜ë‹¹ Rangeê°€ ì¡´ì¬í•˜ëŠ” ë„¤ëª¨ë¡œ ë´¤ì„ ë•Œ
+		// ê°ê° ìœ„ì—ì„œë¶€í„° ë²”ìœ„ë¥¼ ì¡°ì‚¬í•´ê°
+		// ìœ„ -> ì˜¤ë¥¸ìª½ -> ì•„ë˜ -> ì™¼ìª½
 		if ((nShapeTempX - m_nSelectRange <= point.x && point.x <= nShapeTempWidth + m_nSelectRange && nShapeTempY - m_nSelectRange <= point.y && point.y <= nShapeTempY + m_nSelectRange) ||
 			(nShapeTempWidth - m_nSelectRange <= point.x && point.x <= nShapeTempWidth + m_nSelectRange && nShapeTempY - m_nSelectRange <= point.y && point.y <= nShapeTempHeight + m_nSelectRange) ||
 			(nShapeTempX - m_nSelectRange <= point.x && point.x <= nShapeTempWidth + m_nSelectRange && nShapeTempHeight - m_nSelectRange <= point.y && point.y <= nShapeTempHeight + m_nSelectRange) ||
@@ -329,17 +329,17 @@ void ShapeHandler::Select(CPoint point)
 void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPoint &CurrentMousePoint)
 {
 
-	// ¸ÕÀú ±×·ÁÁ®¾ß ÇÒ Room ¹üÀ§¸¦ Ã£À½! ,Á¦ÀÏ µÚ¿¡¼­ºÎÅÍ °Ë»öÇá¾ß ÇÔ!  z-index
+	// ë¨¼ì € ê·¸ë ¤ì ¸ì•¼ í•  Room ë²”ìœ„ë¥¼ ì°¾ìŒ! ,ì œì¼ ë’¤ì—ì„œë¶€í„° ê²€ìƒ‰í–ì•¼ í•¨!  z-index
 
-	bool bAllNoTouch = TRUE; // ¾î´À °÷¿¡µµ ¼ÓÇÏÁö ¾ÊÀ½
+	bool bAllNoTouch = TRUE; // ì–´ëŠ ê³³ì—ë„ ì†í•˜ì§€ ì•ŠìŒ
 
 
 #pragma warning(push)
 #pragma warning(disable: 4018)
 	for (int i = m_CaShape.size() - 1; i >= 0; i--)
 #pragma warning(pop)
-	{		
-		//RoomÀÌ ¾Æ´Ï¸é Continue, Room¾È¿¡¼­ Door³ª Window¸¦ Ã£¾Æ¾ß ÇÏ±â ¶§¹®
+	{
+		//Roomì´ ì•„ë‹ˆë©´ Continue, Roomì•ˆì—ì„œ Doorë‚˜ Windowë¥¼ ì°¾ì•„ì•¼ í•˜ê¸° ë•Œë¬¸
 		if (!(typeid(*m_CaShape.at(i)) == typeid(RoomShape)))
 		{
 			continue;
@@ -350,8 +350,8 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 		int nShapeTempWidth = m_CaShape.at(i)->nWidth;
 		int nShapeTempHeight = m_CaShape.at(i)->nHeight;
 
-		// Áï ±âÁØ ²ÀÁöÁ¡À» ¿ŞÂÊ À§·Î ÇÔ
-		// ±×·ÁÁö´Â µµÇüÀÇ ±âÁØ ²ÀÁöÁ¡À» Ã£À½
+		// ì¦‰ ê¸°ì¤€ ê¼­ì§€ì ì„ ì™¼ìª½ ìœ„ë¡œ í•¨
+		// ê·¸ë ¤ì§€ëŠ” ë„í˜•ì˜ ê¸°ì¤€ ê¼­ì§€ì ì„ ì°¾ìŒ
 		int tempX, tempY, tempWidth, tempHeight;
 		if (OldMousePoint.x >= CurrentMousePoint.x)
 		{
@@ -374,16 +374,16 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 			tempHeight = CurrentMousePoint.y;
 		}
 
-		// ³×¸ğ¸¦ ÇÏ³ªÀÇ ¶óÀÎ ÇÏ³ª´ç Range°¡ Á¸ÀçÇÏ´Â ³×¸ğ·Î ºÃÀ» ¶§
-		// °¢°¢ À§¿¡¼­ºÎÅÍ ¹üÀ§¸¦ Á¶»çÇØ°¨
-		// À§ -> ¿À¸¥ÂÊ -> ¾Æ·¡ -> ¿ŞÂÊ
+		// ë„¤ëª¨ë¥¼ í•˜ë‚˜ì˜ ë¼ì¸ í•˜ë‚˜ë‹¹ Rangeê°€ ì¡´ì¬í•˜ëŠ” ë„¤ëª¨ë¡œ ë´¤ì„ ë•Œ
+		// ê°ê° ìœ„ì—ì„œë¶€í„° ë²”ìœ„ë¥¼ ì¡°ì‚¬í•´ê°
+		// ìœ„ -> ì˜¤ë¥¸ìª½ -> ì•„ë˜ -> ì™¼ìª½
 		if (nShapeTempX - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempWidth + m_nDrawSelectRange && nShapeTempY - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempY + m_nDrawSelectRange)
 		{
-			// À§, yÃà °íÁ¤
+			// ìœ„, yì¶• ê³ ì •
 			OldMousePoint.y = m_CaShape.at(i)->nY -m_nDrawRange;
 			CurrentMousePoint.y = m_CaShape.at(i)->nY +m_nDrawRange;
-			
-			// xÃàÀº RoomÀ» ³Ñ¾î°¡Áö ¾Ê°Ô ¸¸µë
+
+			// xì¶•ì€ Roomì„ ë„˜ì–´ê°€ì§€ ì•Šê²Œ ë§Œë“¬
 			if (OldMousePoint.x <= nShapeTempX)
 			{
 				OldMousePoint.x = nShapeTempX;
@@ -408,12 +408,12 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 		}
 		else if (nShapeTempWidth - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempWidth + m_nDrawSelectRange && nShapeTempY - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
 		{
-			// ¿À¸¥ÂÊ, xÃà °íÁ¤
+			// ì˜¤ë¥¸ìª½, xì¶• ê³ ì •
 			OldMousePoint.x = m_CaShape.at(i)->nWidth - m_nDrawRange;
 			CurrentMousePoint.x = m_CaShape.at(i)->nWidth + m_nDrawRange;
 
-			// yÃàÀº RoomÀ» ³Ñ¾î°¡Áö ¾Ê°Ô ¸¸µë
-			if (OldMousePoint.y <= nShapeTempY) 
+			// yì¶•ì€ Roomì„ ë„˜ì–´ê°€ì§€ ì•Šê²Œ ë§Œë“¬
+			if (OldMousePoint.y <= nShapeTempY)
 			{
 				OldMousePoint.y = nShapeTempY;
 			}
@@ -438,12 +438,12 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 		}
 		else if (nShapeTempX - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempWidth + m_nDrawSelectRange && nShapeTempHeight - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
 		{
-			// ¾Æ·¡, yÃà °íÁ¤
+			// ì•„ë˜, yì¶• ê³ ì •
 			OldMousePoint.y = m_CaShape.at(i)->nHeight - m_nDrawRange;
 			CurrentMousePoint.y = m_CaShape.at(i)->nHeight + m_nDrawRange;
 
 
-			// xÃàÀº RoomÀ» ³Ñ¾î°¡Áö ¾Ê°Ô ¸¸µë
+			// xì¶•ì€ Roomì„ ë„˜ì–´ê°€ì§€ ì•Šê²Œ ë§Œë“¬
 			if (OldMousePoint.x <= nShapeTempX)
 			{
 				OldMousePoint.x = nShapeTempX;
@@ -469,11 +469,11 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 		}
 		else if (nShapeTempX - m_nDrawSelectRange <= OldMousePoint.x && OldMousePoint.x <= nShapeTempX + m_nDrawSelectRange && nShapeTempY - m_nDrawSelectRange <= OldMousePoint.y && OldMousePoint.y <= nShapeTempHeight + m_nDrawSelectRange)
 		{
-			// ¿ŞÂÊ, xÃà °íÁ¤
+			// ì™¼ìª½, xì¶• ê³ ì •
 			OldMousePoint.x = m_CaShape.at(i)->nX - m_nDrawRange;
 			CurrentMousePoint.x = m_CaShape.at(i)->nX + m_nDrawRange;
 
-			// yÃàÀº RoomÀ» ³Ñ¾î°¡Áö ¾Ê°Ô ¸¸µë
+			// yì¶•ì€ Roomì„ ë„˜ì–´ê°€ì§€ ì•Šê²Œ ë§Œë“¬
 			if (OldMousePoint.y <= nShapeTempY)
 			{
 				OldMousePoint.y = nShapeTempY;
@@ -499,7 +499,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 		}
 		else
 		{
-			if (!bDragFlag && bAllNoTouch) //µå·¡±× ÁßÀÌ ¾Æ´Ò ¶§¸¸
+			if (!bDragFlag && bAllNoTouch) //ë“œë˜ê·¸ ì¤‘ì´ ì•„ë‹ ë•Œë§Œ
 			{
 				NoAddShape = TRUE;
 				cout << "else!\n";
@@ -517,7 +517,7 @@ void ShapeHandler::InitSelect()
 #pragma warning(disable: 4018)
 	for (int i = 0; i < m_CaShape.size(); i++)
 #pragma warning(pop)
-	{		
+	{
 		if (m_CaShape.at(i)->bSelectedState)
 		{
 			m_CaShape.at(i)->bSelectedState = FALSE;
@@ -581,7 +581,7 @@ int ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
 {
 	int index = GetCurrentSelectedIndex();
 
-	if (index == MY_ERROR) //¾ÆÁ÷ ¼±ÅÃ¾ÈµÊ
+	if (index == MY_ERROR) //ì•„ì§ ì„ íƒì•ˆë¨
 	{
 		return MY_ERROR;
 	}
@@ -590,23 +590,23 @@ int ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
 
 	return MY_SUCCES;
 }
-int ShapeHandler::DeleteSelectedShape() // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Door¿Í Window ¸ğµÎ º¤ÅÍ¿¡¼­ °°ÀÌ »èÁ¦ÇØ¾ß ÇÔ
+int ShapeHandler::DeleteSelectedShape() // ë§Œì•½ Room ì´ë¼ë©´ ê·¸ ì•ˆì— ì¡´ì¬í•˜ëŠ” Doorì™€ Window ëª¨ë‘ ë²¡í„°ì—ì„œ ê°™ì´ ì‚­ì œí•´ì•¼ í•¨
 {
 	int nSelectedIndex = GetCurrentSelectedIndex();
 
-	if (nSelectedIndex == MY_ERROR) //¾ÆÁ÷ ¼±ÅÃ¾ÈµÊ
+	if (nSelectedIndex == MY_ERROR) //ì•„ì§ ì„ íƒì•ˆë¨
 	{
 		return MY_ERROR;
 	}
 	//////////////////////////////////////////////////////////////////////////
-	// [ ±×·ìÈ­ »èÁ¦ ¾Ë°í¸®Áò ]
+	// [ ê·¸ë£¹í™” ì‚­ì œ ì•Œê³ ë¦¬ì¦˜ ]
 	if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(RoomShape))
 	{
-		auto tmpInRoomPtr = m_CaShape.at(nSelectedIndex); //¸ÕÀú ¹æÀÇ Æ÷ÀÎÅÍ¸¦ ¹Ş¾ÆµÒ
+		auto tmpInRoomPtr = m_CaShape.at(nSelectedIndex); //ë¨¼ì € ë°©ì˜ í¬ì¸í„°ë¥¼ ë°›ì•„ë‘ 
 		tmpInRoomPtr->SetId(-600000);
 
 		//////////////////////////////////////////////////////////////////////////
-		// ¸ÕÀú ¹æ¾ÈÀÇ ¹® º¤ÅÍ Ã¢¹® º¤ÅÍ¸¦ ¸ğµÎ µ¿ÀûÇÒ´ç ÇØÁ¦ ÈÄ »èÁ¦
+		// ë¨¼ì € ë°©ì•ˆì˜ ë¬¸ ë²¡í„° ì°½ë¬¸ ë²¡í„°ë¥¼ ëª¨ë‘ ë™ì í• ë‹¹ í•´ì œ í›„ ì‚­ì œ
 		for (auto nIdx : dynamic_cast<RoomShape*>(m_CaShape[nSelectedIndex])->m_CaDoor)
 		{
 			nIdx->SetId(-600000);
@@ -621,7 +621,7 @@ int ShapeHandler::DeleteSelectedShape() // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Doo
 		dynamic_cast<RoomShape*>(m_CaShape[nSelectedIndex])->m_CaWindow.clear();
 
 		//////////////////////////////////////////////////////////////////////////
-		// ÀüÃ¼ Shape º¤ÅÍ¿¡¼­´Â ¾ÆÀÌµğ °ªÀÌ ¾²·¹±â °ªÀÎ °ÍÀ» »èÁ¦ ÈÄ, µ¿ÀûÇÒ´ç ÇØÁ¦
+		// ì „ì²´ Shape ë²¡í„°ì—ì„œëŠ” ì•„ì´ë”” ê°’ì´ ì“°ë ˆê¸° ê°’ì¸ ê²ƒì„ ì‚­ì œ í›„, ë™ì í• ë‹¹ í•´ì œ
 		for (long i = m_CaShape.size() - 1; i >= 0; i--)
 		{
 			int nWasteValue = m_CaShape[i]->GetId();
@@ -634,19 +634,19 @@ int ShapeHandler::DeleteSelectedShape() // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Doo
 		SAFE_DELETE(tmpInRoomPtr);
 	}
 	//////////////////////////////////////////////////////////////////////////
-	// [ ¼±ÅÃ ¿ä¼Ò »èÁ¦ ¾Ë°í¸®Áò ]
+	// [ ì„ íƒ ìš”ì†Œ ì‚­ì œ ì•Œê³ ë¦¬ì¦˜ ]
 	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(DoorShape))
 	{
-		// ¼±ÅÃµÈ ¹æ ¾ÈÀÇ ¹®ÀÇ º¤ÅÍ¸¦ ¹Ş¾Æ µÒ
-		// ÁÖ¼Ú °ªÀ» ¹Ş¾Æ¾ßÇÔ!!!! Àú±â ÀÖ´Â º¤ÅÍ´Â Æ÷ÀÎÅÍ º¯¼ö°¡ ¾Æ´Ô ²À ±â¾ïÇØ ³õÀ» °Í!
+		// ì„ íƒëœ ë°© ì•ˆì˜ ë¬¸ì˜ ë²¡í„°ë¥¼ ë°›ì•„ ë‘ 
+		// ì£¼ì†Ÿ ê°’ì„ ë°›ì•„ì•¼í•¨!!!! ì €ê¸° ìˆëŠ” ë²¡í„°ëŠ” í¬ì¸í„° ë³€ìˆ˜ê°€ ì•„ë‹˜ ê¼­ ê¸°ì–µí•´ ë†“ì„ ê²ƒ!
 		auto tmpDoorPtr = &dynamic_cast<RoomShape *>(dynamic_cast<DoorShape*>(m_CaShape[nSelectedIndex])->pInRoomShapePointer)->m_CaDoor;
-		// ¼±ÅÃµÈ ¹®ÀÇ Æ÷ÀÎÅÍ
+		// ì„ íƒëœ ë¬¸ì˜ í¬ì¸í„°
 		auto tmpSelectedDoorPtr = m_CaShape.at(nSelectedIndex);
 
 		tmpSelectedDoorPtr->SetId(-600000);
 
 		//////////////////////////////////////////////////////////////////////////
-		//  ÀüÃ¼ Shape º¤ÅÍ¿¡¼­´Â ¾ÆÀÌµğ °ªÀÌ ¾²·¹±â °ªÀÎ °ÍÀ» »èÁ¦
+		//  ì „ì²´ Shape ë²¡í„°ì—ì„œëŠ” ì•„ì´ë”” ê°’ì´ ì“°ë ˆê¸° ê°’ì¸ ê²ƒì„ ì‚­ì œ
 		for (long i = m_CaShape.size() - 1; i >= 0; i--)
 		{
 			int nWasteValue = m_CaShape[i]->GetId();
@@ -658,7 +658,7 @@ int ShapeHandler::DeleteSelectedShape() // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Doo
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		// ¹® º¤ÅÍ¿¡¼­´Â ¾ÆÀÌµğ °ªÀÌ ¾²·¹±â °ªÀÎ °ÍÀ» »èÁ¦
+		// ë¬¸ ë²¡í„°ì—ì„œëŠ” ì•„ì´ë”” ê°’ì´ ì“°ë ˆê¸° ê°’ì¸ ê²ƒì„ ì‚­ì œ
 		for (long i = tmpDoorPtr->size() - 1; i >= 0; i--)
 		{
 
@@ -670,19 +670,19 @@ int ShapeHandler::DeleteSelectedShape() // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Doo
 			}
 		}
 
-		SAFE_DELETE(tmpSelectedDoorPtr);//  ¼±ÅÃµÈ ¹® »èÁ¦, delete
+		SAFE_DELETE(tmpSelectedDoorPtr);//  ì„ íƒëœ ë¬¸ ì‚­ì œ, delete
 	}
 	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(WindowShape))
 	{
-		// ¼±ÅÃµÈ ¹æ ¾ÈÀÇ Ã¢¹®ÀÇ º¤ÅÍ Æ÷ÀÎÅÍ¸¦ ¹Ş¾Æ µÒ
+		// ì„ íƒëœ ë°© ì•ˆì˜ ì°½ë¬¸ì˜ ë²¡í„° í¬ì¸í„°ë¥¼ ë°›ì•„ ë‘ 
 		auto tmpWindowPtr = &dynamic_cast<RoomShape *>(dynamic_cast<WindowShape*>(m_CaShape[nSelectedIndex])->pInRoomShapePointer)->m_CaWindow;
-		// ¼±ÅÃµÈ Ã¢¹®ÀÇ Æ÷ÀÎÅÍ
+		// ì„ íƒëœ ì°½ë¬¸ì˜ í¬ì¸í„°
 		auto tmpSelectedWindowPtr = m_CaShape.at(nSelectedIndex);
 
 		tmpSelectedWindowPtr->SetId(-600000);
 
 		//////////////////////////////////////////////////////////////////////////
-		// ÀüÃ¼ Shape º¤ÅÍ¿¡¼­´Â ¾ÆÀÌµğ °ªÀÌ ¾²·¹±â °ªÀÎ °ÍÀ» »èÁ¦
+		// ì „ì²´ Shape ë²¡í„°ì—ì„œëŠ” ì•„ì´ë”” ê°’ì´ ì“°ë ˆê¸° ê°’ì¸ ê²ƒì„ ì‚­ì œ
 		for (long i = m_CaShape.size() - 1; i >= 0; i--)
 		{
 			int nWasteValue = m_CaShape[i]->GetId();
@@ -693,7 +693,7 @@ int ShapeHandler::DeleteSelectedShape() // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Doo
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		// Ã¢¹® º¤ÅÍ¿¡¼­´Â ¾ÆÀÌµğ °ªÀÌ ¾²·¹±â °ªÀÎ °ÍÀ» »èÁ¦
+		// ì°½ë¬¸ ë²¡í„°ì—ì„œëŠ” ì•„ì´ë”” ê°’ì´ ì“°ë ˆê¸° ê°’ì¸ ê²ƒì„ ì‚­ì œ
 		for (long i = tmpWindowPtr->size() - 1; i >= 0; i--)
 		{
 			int nWasteValue = tmpWindowPtr->at(i)->GetId();
@@ -702,7 +702,7 @@ int ShapeHandler::DeleteSelectedShape() // ¸¸¾à Room ÀÌ¶ó¸é ±× ¾È¿¡ Á¸ÀçÇÏ´Â Doo
 				tmpWindowPtr->erase(tmpWindowPtr->begin() + i);
 			}
 		}
-		SAFE_DELETE(tmpSelectedWindowPtr);//  ¼±ÅÃµÈ ¹® »èÁ¦, delete
+		SAFE_DELETE(tmpSelectedWindowPtr);//  ì„ íƒëœ ë¬¸ ì‚­ì œ, delete
 	}
 	else
 	{
@@ -726,10 +726,10 @@ int ShapeHandler::CopySelectedShape()
 	{
 		Shape *tmpShape = m_CaShape[index];
 
-		if (typeid(*tmpShape) == typeid(RoomShape)) // RoomÀ» ¼±ÅÃÇØ¼­ º¹»çÇÏ·Á ÇÒ ¶§!,  ±×·ìÈ­ º¹»ç »ç¿ë ¾È ÇÔ!
+		if (typeid(*tmpShape) == typeid(RoomShape)) // Roomì„ ì„ íƒí•´ì„œ ë³µì‚¬í•˜ë ¤ í•  ë•Œ!,  ê·¸ë£¹í™” ë³µì‚¬ ì‚¬ìš© ì•ˆ í•¨!
 		{
 			RoomShape *CNewCopyShape = new RoomShape(*dynamic_cast<RoomShape*>(tmpShape));
-			CNewCopyShape->SetId(MakeAutoIncId()); // Id¸¦ ´Ù½Ã ºÎ¿©ÇØ¾ß ÇÔ!
+			CNewCopyShape->SetId(MakeAutoIncId()); // Idë¥¼ ë‹¤ì‹œ ë¶€ì—¬í•´ì•¼ í•¨!
 
 			CNewCopyShape->nX += 10;
 			CNewCopyShape->nWidth += 10;
@@ -753,22 +753,22 @@ int ShapeHandler::CopySelectedShape()
 				CNewCopyShape->nHeight = 720;
 			}
 
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_ROOM; // Room »ı¼º »óÅÂ·Î ¹Ù²Ş
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_ROOM; // Room ìƒì„± ìƒíƒœë¡œ ë°”ê¿ˆ
 			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // ±âº» »óÅÂ·Î ´Ù½Ã µÇµ¹¾Æ¿È!
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // ê¸°ë³¸ ìƒíƒœë¡œ ë‹¤ì‹œ ë˜ëŒì•„ì˜´!
 		}
-		else if (typeid(*tmpShape) == typeid(DoorShape)) // Door¸¦ ¼±ÅÃÇØ¼­ º¹»çÇÏ·Á ÇÒ ¶§!
+		else if (typeid(*tmpShape) == typeid(DoorShape)) // Doorë¥¼ ì„ íƒí•´ì„œ ë³µì‚¬í•˜ë ¤ í•  ë•Œ!
 		{
 			DoorShape *CNewCopyShape = new DoorShape(*dynamic_cast<DoorShape*>(tmpShape));
-			CNewCopyShape->SetId(MakeAutoIncId()); // Id¸¦ ´Ù½Ã ºÎ¿©ÇØ¾ß ÇÔ!
+			CNewCopyShape->SetId(MakeAutoIncId()); // Idë¥¼ ë‹¤ì‹œ ë¶€ì—¬í•´ì•¼ í•¨!
 			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<DoorShape*>(tmpShape)->pInRoomShapePointer);
 
-			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //¿ŞÂÊ È¤Àº ¿À¸¥ÂÊ¿¡ ÀÖ´Ù¸é
+			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //ì™¼ìª½ í˜¹ì€ ì˜¤ë¥¸ìª½ì— ìˆë‹¤ë©´
 			{
-				//cout << "¿Ş¿À\n";
+				//cout << "ì™¼ì˜¤\n";
 
 				//////////////////////////////////////////////////////////////////////////
-				// X ÃàÀº °íÁ¤ÇÏ°í, YÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+				// X ì¶•ì€ ê³ ì •í•˜ê³ , Yì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 				CNewCopyShape->nY += 10;
 				CNewCopyShape->nHeight += 10;
@@ -782,12 +782,12 @@ int ShapeHandler::CopySelectedShape()
 					CNewCopyShape->nHeight = tmpRoomShape->nHeight;
 				}
 			}
-			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //À§ÂÊ È¤Àº ¾Æ·¡ÂÊ¿¡ ÀÖ´Ù¸é
+			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //ìœ„ìª½ í˜¹ì€ ì•„ë˜ìª½ì— ìˆë‹¤ë©´
 			{
-				//cout << "À§¾Æ·¡\n";
+				//cout << "ìœ„ì•„ë˜\n";
 
 				//////////////////////////////////////////////////////////////////////////
-				// Y ÃàÀº °íÁ¤ÇÏ°í, XÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+				// Y ì¶•ì€ ê³ ì •í•˜ê³ , Xì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 				CNewCopyShape->nX += 10;
 				CNewCopyShape->nWidth += 10;
@@ -803,25 +803,25 @@ int ShapeHandler::CopySelectedShape()
 			}
 			else
 			{
-				cout << "Ã¢¹®, ¹® ´ÜÀÏ Copy Error\n";
+				cout << "ì°½ë¬¸, ë¬¸ ë‹¨ì¼ Copy Error\n";
 			}
 
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_DOOR; // Door »ı¼º »óÅÂ·Î ¹Ù²Ş
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_DOOR; // Door ìƒì„± ìƒíƒœë¡œ ë°”ê¿ˆ
 			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // ±âº» »óÅÂ·Î ´Ù½Ã µÇµ¹¾Æ¿È!
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // ê¸°ë³¸ ìƒíƒœë¡œ ë‹¤ì‹œ ë˜ëŒì•„ì˜´!
 		}
-		else if (typeid(*tmpShape) == typeid(WindowShape)) // Window¸¦ ¼±ÅÃÇØ¼­ º¹»çÇÏ·Á ÇÒ ¶§!
+		else if (typeid(*tmpShape) == typeid(WindowShape)) // Windowë¥¼ ì„ íƒí•´ì„œ ë³µì‚¬í•˜ë ¤ í•  ë•Œ!
 		{
 			WindowShape *CNewCopyShape = new WindowShape(*dynamic_cast<WindowShape*>(tmpShape));
-			CNewCopyShape->SetId(MakeAutoIncId()); // Id¸¦ ´Ù½Ã ºÎ¿©ÇØ¾ß ÇÔ!
+			CNewCopyShape->SetId(MakeAutoIncId()); // Idë¥¼ ë‹¤ì‹œ ë¶€ì—¬í•´ì•¼ í•¨!
 			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<WindowShape*>(tmpShape)->pInRoomShapePointer);
 
-			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //¿ŞÂÊ È¤Àº ¿À¸¥ÂÊ¿¡ ÀÖ´Ù¸é
+			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //ì™¼ìª½ í˜¹ì€ ì˜¤ë¥¸ìª½ì— ìˆë‹¤ë©´
 			{
-				//cout << "¿Ş¿À\n";
+				//cout << "ì™¼ì˜¤\n";
 
 				//////////////////////////////////////////////////////////////////////////
-				// X ÃàÀº °íÁ¤ÇÏ°í, YÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+				// X ì¶•ì€ ê³ ì •í•˜ê³ , Yì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 				CNewCopyShape->nY += 10;
 				CNewCopyShape->nHeight += 10;
@@ -835,12 +835,12 @@ int ShapeHandler::CopySelectedShape()
 					CNewCopyShape->nHeight = tmpRoomShape->nHeight;
 				}
 			}
-			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //À§ÂÊ È¤Àº ¾Æ·¡ÂÊ¿¡ ÀÖ´Ù¸é
+			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //ìœ„ìª½ í˜¹ì€ ì•„ë˜ìª½ì— ìˆë‹¤ë©´
 			{
-				//cout << "À§¾Æ·¡\n";
+				//cout << "ìœ„ì•„ë˜\n";
 
 				//////////////////////////////////////////////////////////////////////////
-				// Y ÃàÀº °íÁ¤ÇÏ°í, XÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+				// Y ì¶•ì€ ê³ ì •í•˜ê³ , Xì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 				CNewCopyShape->nX += 10;
 				CNewCopyShape->nWidth += 10;
@@ -856,12 +856,12 @@ int ShapeHandler::CopySelectedShape()
 			}
 			else
 			{
-				cout << "Ã¢¹®, ¹® ´ÜÀÏ Copy Error\n";
+				cout << "ì°½ë¬¸, ë¬¸ ë‹¨ì¼ Copy Error\n";
 			}
 
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_WINDOW; // Window »ı¼º »óÅÂ·Î ¹Ù²Ş
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_WINDOW; // Window ìƒì„± ìƒíƒœë¡œ ë°”ê¿ˆ
 			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // ±âº» »óÅÂ·Î ´Ù½Ã µÇµ¹¾Æ¿È!
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // ê¸°ë³¸ ìƒíƒœë¡œ ë‹¤ì‹œ ë˜ëŒì•„ì˜´!
 		}
 		else
 		{
@@ -882,9 +882,9 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 
 	Shape *tmpShape = m_CaShape[index];
 
-	if (typeid(*tmpShape) == typeid(RoomShape)) // RoomÀ» ¼±ÅÃÇØ¼­ ScaleÇÏ·Á ÇÒ ¶§!,  ±×·ìÈ­ Scale »ç¿ë ¾È ÇÔ!
+	if (typeid(*tmpShape) == typeid(RoomShape)) // Roomì„ ì„ íƒí•´ì„œ Scaleí•˜ë ¤ í•  ë•Œ!,  ê·¸ë£¹í™” Scale ì‚¬ìš© ì•ˆ í•¨!
 	{
-		if (zDelta > 100) //Å©°Ô ÇÒ ¶§
+		if (zDelta > 100) //í¬ê²Œ í•  ë•Œ
 		{
 			if (tmpShape->nX < 5 || tmpShape->nWidth > 740 || tmpShape->nY < 5 || tmpShape->nHeight > 700)
 			{
@@ -894,67 +894,67 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 			bool bSuccess = TRUE;
 			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(tmpShape);
 
-			for (auto pIter : tmpRoomShape->m_CaDoor) //Room¾ÈÀÇ Door!
+			for (auto pIter : tmpRoomShape->m_CaDoor) //Roomì•ˆì˜ Door!
 			{
-				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //¿ŞÂÊÀÌ¸é
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //ì™¼ìª½ì´ë©´
 				{
 					pIter->nX -= 2;
 					pIter->nWidth -= 2;
 				}
-				else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //¿À¸¥ÂÊÀÌ¸é
+				else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //ì˜¤ë¥¸ìª½ì´ë©´
 				{
 					pIter->nX += 2;
 					pIter->nWidth += 2;
 				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //À§ÂÊÀÌ¸é
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //ìœ„ìª½ì´ë©´
 				{
 					pIter->nY -= 2;
 					pIter->nHeight -= 2;
 				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //¾Æ·¡ÂÊÀÌ¸é
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //ì•„ë˜ìª½ì´ë©´
 				{
 					pIter->nY += 2;
 					pIter->nHeight += 2;
 				}
 				else
 				{
-					cout << " ¹® ±×·ì Wheel Error\n";
+					cout << " ë¬¸ ê·¸ë£¹ Wheel Error\n";
 					bSuccess = FALSE;
 					break;
 				}
 			}
 			for (auto pIter : tmpRoomShape->m_CaWindow)
 			{
-				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //¿ŞÂÊÀÌ¸é
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //ì™¼ìª½ì´ë©´
 				{
 					pIter->nX -= 2;
 					pIter->nWidth -= 2;
 				}
-				else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //¿À¸¥ÂÊÀÌ¸é
+				else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //ì˜¤ë¥¸ìª½ì´ë©´
 				{
 					pIter->nX += 2;
 					pIter->nWidth += 2;
 				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //À§ÂÊÀÌ¸é
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //ìœ„ìª½ì´ë©´
 				{
 					pIter->nY -= 2;
 					pIter->nHeight -= 2;
 				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //¾Æ·¡ÂÊÀÌ¸é
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //ì•„ë˜ìª½ì´ë©´
 				{
 					pIter->nY += 2;
 					pIter->nHeight += 2;
 				}
 				else
 				{
-					cout << " Ã¢¹® ±×·ì Wheel Error\n";
+					cout << " ì°½ë¬¸ ê·¸ë£¹ Wheel Error\n";
 					bSuccess = FALSE;
 					break;
 				}
 			}
 
 			//////////////////////////////////////////////////////////////////////////
-			// ¼º°ø ¹æ Å©±â Á¶Á¤, Á¦ÀÏ ¸¶Áö¸·¿¡
+			// ì„±ê³µ ë°© í¬ê¸° ì¡°ì •, ì œì¼ ë§ˆì§€ë§‰ì—
 			if (bSuccess)
 			{
 				tmpShape->nX -= 2;
@@ -964,27 +964,27 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 			}
 			else
 			{
-				cout << " Ã¢¹®, ¹® ±×·ì ÀüÃ¼ Wheel Error\n";
+				cout << " ì°½ë¬¸, ë¬¸ ê·¸ë£¹ ì „ì²´ Wheel Error\n";
 			}
 		}
-		else //ÀÛ°Ô ÇÒ ¶§
+		else //ì‘ê²Œ í•  ë•Œ
 		{
 			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(tmpShape);
 			bool bSuccess = TRUE;
 
 			//////////////////////////////////////////////////////////////////////////
-			// ÀüÃ¼ Å©±â Ã¼Å©
+			// ì „ì²´ í¬ê¸° ì²´í¬
 			if (tmpShape->nWidth - tmpShape->nX < 30 || tmpShape->nHeight - tmpShape->nY < 30)
 			{
 				return MY_ERROR;
 			}
 
 			//////////////////////////////////////////////////////////////////////////
-			// ¸ÕÀú ÇÏ³ª¶óµµ °É¸®´Â °Ô ÀÖ´ÂÁö Check ÇØ¾ß µÊ!! ÇÏ³ª¶óµµ ¹Ì¸® ÀÛ¾ÆÁö¸é ½Ã½ºÅÛ ¿À·ù°¡ ³ª±â ¶§¹®
-			// ¾Æ´Ï¸é ³ªÁß¿¡ Undo Redo ±¸ÇöÇØ¼­ µÇµ¹¸®°Ô ÇØµµ µÉ µí?
-			for (auto pIter : tmpRoomShape->m_CaDoor) //Room¾ÈÀÇ Door!
+			// ë¨¼ì € í•˜ë‚˜ë¼ë„ ê±¸ë¦¬ëŠ” ê²Œ ìˆëŠ”ì§€ Check í•´ì•¼ ë¨!! í•˜ë‚˜ë¼ë„ ë¯¸ë¦¬ ì‘ì•„ì§€ë©´ ì‹œìŠ¤í…œ ì˜¤ë¥˜ê°€ ë‚˜ê¸° ë•Œë¬¸
+			// ì•„ë‹ˆë©´ ë‚˜ì¤‘ì— Undo Redo êµ¬í˜„í•´ì„œ ë˜ëŒë¦¬ê²Œ í•´ë„ ë  ë“¯?
+			for (auto pIter : tmpRoomShape->m_CaDoor) //Roomì•ˆì˜ Door!
 			{
-				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //¿ŞÂÊ, ¿À¸¥ÂÊ
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //ì™¼ìª½, ì˜¤ë¥¸ìª½
 				{
 					if (tmpRoomShape->nHeight < pIter->nHeight + 5 || tmpRoomShape->nY > pIter->nY - 5)
 					{
@@ -992,7 +992,7 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 						break;
 					}
 				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY || pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //À§ÂÊ, ¾Æ·¡ÂÊ
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY || pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //ìœ„ìª½, ì•„ë˜ìª½
 				{
 					if (tmpRoomShape->nWidth < pIter->nWidth + 5 || tmpRoomShape->nX > pIter->nX - 5)
 					{
@@ -1002,14 +1002,14 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 				}
 				else
 				{
-					cout << "Mouse Wheel ÀÛ¾ÆÁö°Ô Error" << endl;
+					cout << "Mouse Wheel ì‘ì•„ì§€ê²Œ Error" << endl;
 					bSuccess = FALSE;
 					break;
 				}
 			}
 			for (auto pIter : tmpRoomShape->m_CaWindow)
 			{
-				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //¿ŞÂÊ, ¿À¸¥ÂÊ
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //ì™¼ìª½, ì˜¤ë¥¸ìª½
 				{
 					if (tmpRoomShape->nHeight < pIter->nHeight + 5 || tmpRoomShape->nY > pIter->nY - 5)
 					{
@@ -1017,7 +1017,7 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 						break;
 					}
 				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY || pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //À§ÂÊ, ¾Æ·¡ÂÊ
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY || pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //ìœ„ìª½, ì•„ë˜ìª½
 				{
 					if (tmpRoomShape->nWidth < pIter->nWidth + 5 || tmpRoomShape->nX > pIter->nX - 5)
 					{
@@ -1027,7 +1027,7 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 				}
 				else
 				{
-					cout << "Mouse Wheel ÀÛ¾ÆÁö°Ô Error" << endl;
+					cout << "Mouse Wheel ì‘ì•„ì§€ê²Œ Error" << endl;
 					bSuccess = FALSE;
 					break;
 				}
@@ -1035,72 +1035,72 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 
 			if (!bSuccess)
 			{
-				cout << " Ã¢¹®, ¹® ±×·ì ÀüÃ¼ Wheel Error\n";
+				cout << " ì°½ë¬¸, ë¬¸ ê·¸ë£¹ ì „ì²´ Wheel Error\n";
 			}
 			else
 			{
-				for (auto pIter : tmpRoomShape->m_CaDoor) //Room¾ÈÀÇ Door!
+				for (auto pIter : tmpRoomShape->m_CaDoor) //Roomì•ˆì˜ Door!
 				{
-					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //¿ŞÂÊÀÌ¸é
+					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //ì™¼ìª½ì´ë©´
 					{
 						pIter->nX += 2;
 						pIter->nWidth += 2;
 					}
-					else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //¿À¸¥ÂÊÀÌ¸é
+					else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //ì˜¤ë¥¸ìª½ì´ë©´
 					{
 						pIter->nX -= 2;
 						pIter->nWidth -= 2;
 					}
-					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //À§ÂÊÀÌ¸é
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //ìœ„ìª½ì´ë©´
 					{
 						pIter->nY += 2;
 						pIter->nHeight += 2;
 					}
-					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //¾Æ·¡ÂÊÀÌ¸é
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //ì•„ë˜ìª½ì´ë©´
 					{
 						pIter->nY -= 2;
 						pIter->nHeight -= 2;
 					}
-					else // »ç½Ç À§¿¡¼­ ´Ù Ã¼Å©ÇÔ
+					else // ì‚¬ì‹¤ ìœ„ì—ì„œ ë‹¤ ì²´í¬í•¨
 					{
-						cout << "¹® ±×·ì Wheel Error\n";
+						cout << "ë¬¸ ê·¸ë£¹ Wheel Error\n";
 						bSuccess = FALSE;
 						break;
 					}
 				}
 				for (auto pIter : tmpRoomShape->m_CaWindow)
 				{
-					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //¿ŞÂÊÀÌ¸é
+					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //ì™¼ìª½ì´ë©´
 					{
 						pIter->nX += 2;
 						pIter->nWidth += 2;
 					}
-					else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //¿À¸¥ÂÊÀÌ¸é
+					else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //ì˜¤ë¥¸ìª½ì´ë©´
 					{
 						pIter->nX -= 2;
 						pIter->nWidth -= 2;
 
 					}
-					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //À§ÂÊÀÌ¸é
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //ìœ„ìª½ì´ë©´
 					{
 						pIter->nY += 2;
 						pIter->nHeight += 2;
 					}
-					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //¾Æ·¡ÂÊÀÌ¸é
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //ì•„ë˜ìª½ì´ë©´
 					{
 						pIter->nY -= 2;
 						pIter->nHeight -= 2;
 					}
-					else // »ç½Ç À§¿¡¼­ ´Ù Ã¼Å©ÇÔ
+					else // ì‚¬ì‹¤ ìœ„ì—ì„œ ë‹¤ ì²´í¬í•¨
 					{
-						cout << "Ã¢¹® ±×·ì Wheel Error\n";
+						cout << "ì°½ë¬¸ ê·¸ë£¹ Wheel Error\n";
 						bSuccess = FALSE;
 						break;
 					}
 				}
 
 				//////////////////////////////////////////////////////////////////////////
-				// ¼º°ø ¹æ Å©±â Á¶Á¤, Á¦ÀÏ ¸¶Áö¸·¿¡
+				// ì„±ê³µ ë°© í¬ê¸° ì¡°ì •, ì œì¼ ë§ˆì§€ë§‰ì—
 				tmpShape->nX += 2;
 				tmpShape->nWidth -= 2;
 				tmpShape->nY += 2;
@@ -1109,26 +1109,26 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 			}
 		}
 	}
-	else // ¹®ÀÌ³ª Ã¢¹® ´ÜÀÏ ¼±ÅÃ Scale
+	else // ë¬¸ì´ë‚˜ ì°½ë¬¸ ë‹¨ì¼ ì„ íƒ Scale
 	{
 		RoomShape *tmpRoomShape;
 
-		if (typeid(*tmpShape) == typeid(DoorShape)) //¹®ÀÏ¶§
+		if (typeid(*tmpShape) == typeid(DoorShape)) //ë¬¸ì¼ë•Œ
 		{
 			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<DoorShape*>(tmpShape)->pInRoomShapePointer);
 		}
-		else	//Ã¢¹®ÀÏ¶§
+		else	//ì°½ë¬¸ì¼ë•Œ
 		{
 			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<WindowShape*>(tmpShape)->pInRoomShapePointer);
 		}
 
 
-		if (tmpShape->nX + (m_nDrawRange * 2) == tmpShape->nWidth && (tmpShape->nX + m_nDrawRange == tmpRoomShape->nX) || (tmpShape->nX + m_nDrawRange == tmpRoomShape->nWidth)) //¿ŞÂÊ È¤Àº ¿À¸¥ÂÊ¿¡ ÀÖ´Ù¸é
+		if (tmpShape->nX + (m_nDrawRange * 2) == tmpShape->nWidth && (tmpShape->nX + m_nDrawRange == tmpRoomShape->nX) || (tmpShape->nX + m_nDrawRange == tmpRoomShape->nWidth)) //ì™¼ìª½ í˜¹ì€ ì˜¤ë¥¸ìª½ì— ìˆë‹¤ë©´
 		{
-			//cout << "¿Ş¿À\n";
+			//cout << "ì™¼ì˜¤\n";
 
 			//////////////////////////////////////////////////////////////////////////
-			// X ÃàÀº °íÁ¤ÇÏ°í, YÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+			// X ì¶•ì€ ê³ ì •í•˜ê³ , Yì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 			if (zDelta > 100)
 			{
@@ -1150,12 +1150,12 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 				}
 			}
 		}
-		else if (tmpShape->nY + (m_nDrawRange * 2) == tmpShape->nHeight  && (tmpShape->nY + m_nDrawRange == tmpRoomShape->nY) || (tmpShape->nY + m_nDrawRange == tmpRoomShape->nHeight)) //À§ÂÊ È¤Àº ¾Æ·¡ÂÊ¿¡ ÀÖ´Ù¸é
+		else if (tmpShape->nY + (m_nDrawRange * 2) == tmpShape->nHeight  && (tmpShape->nY + m_nDrawRange == tmpRoomShape->nY) || (tmpShape->nY + m_nDrawRange == tmpRoomShape->nHeight)) //ìœ„ìª½ í˜¹ì€ ì•„ë˜ìª½ì— ìˆë‹¤ë©´
 		{
-			//cout << "À§¾Æ·¡\n";
+			//cout << "ìœ„ì•„ë˜\n";
 
 			//////////////////////////////////////////////////////////////////////////
-			// Y ÃàÀº °íÁ¤ÇÏ°í, XÃà¸¸ RoomShapeÀÇ ¹üÀ§ ¹ÛÀ» ³ª°¡Áö ¾Ê°Ô °íÁ¤ÇÔ
+			// Y ì¶•ì€ ê³ ì •í•˜ê³ , Xì¶•ë§Œ RoomShapeì˜ ë²”ìœ„ ë°–ì„ ë‚˜ê°€ì§€ ì•Šê²Œ ê³ ì •í•¨
 
 			if (zDelta > 100)
 			{
@@ -1179,27 +1179,27 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 		}
 		else
 		{
-			cout << "Ã¢¹®, ¹® ´ÜÀÏ Copy Error\n";
+			cout << "ì°½ë¬¸, ë¬¸ ë‹¨ì¼ Copy Error\n";
 		}
 	}
 	return MY_SUCCES;
 }
 
 
-/// ¹Ì¿Ï¼º
+/// ë¯¸ì™„ì„±
 int ShapeHandler::RotateSelectedShape()
 {
 	int index = GetCurrentSelectedIndex();
 
-	if (index == MY_ERROR) //¾ÆÁ÷ ¼±ÅÃ¾ÈµÊ
+	if (index == MY_ERROR) //ì•„ì§ ì„ íƒì•ˆë¨
 	{
 		return MY_ERROR;
 	}
 
 	Shape *tmpShape = m_CaShape.at(index);
 
-	
-	cout << endl << "Shape Á¤º¸ Ãâ·Â : " << endl;
+
+	cout << endl << "Shape ì •ë³´ ì¶œë ¥ : " << endl;
 	cout << "nX : " << to_string(tmpShape->nX) << endl;
 	cout << "nY : " << to_string(tmpShape->nY) << endl;
 	cout << "nWidth : " << to_string(tmpShape->nWidth) << endl;
