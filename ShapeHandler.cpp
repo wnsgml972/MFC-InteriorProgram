@@ -44,10 +44,31 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	}
 	if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_ROOM)
 	{
+		//////////////////////////////////////////////////////////////////////////
+		// 마지막 검사
+		if (nX > nWidth)
+		{
+			swap(nX, nWidth);
+		}
+		if (nY > nHeight)
+		{
+			swap(nY, nHeight);
+		}
 		m_CaShape.push_back(new RoomShape(m_nAutoIncId++, nX, nY, nWidth, nHeight));
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_DOOR)
 	{
+		//////////////////////////////////////////////////////////////////////////
+		// 마지막 검사
+		if (nX > nWidth)
+		{
+			swap(nX, nWidth);
+		}
+		if (nY > nHeight)
+		{
+			swap(nY, nHeight);
+		}
+
 		DoorShape *CDoorShape = new DoorShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
 		
 		CDoorShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // 자신이 속해있는 Room의 포인터
@@ -59,6 +80,17 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_WINDOW)
 	{
+		//////////////////////////////////////////////////////////////////////////
+		// 마지막 검사
+		if (nX > nWidth)
+		{
+			swap(nX, nWidth);
+		}
+		if (nY > nHeight)
+		{
+			swap(nY, nHeight);
+		}
+
 		WindowShape *CWindowShape = new WindowShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
 
 		CWindowShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // 자신이 속해있는 Room의 포인터
@@ -201,6 +233,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 		// 창문 문만 클릭했을 시!!!
 
 		RoomShape *tmpRoomShape;
+
 		if (typeid(*tmpShape) == typeid(DoorShape))
 		{
 			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<DoorShape*>(tmpShape)->pInRoomShapePointer);
@@ -214,7 +247,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 			cout << "Move 형 변환 Error\n";
 		}
 		
-		if (tmpShape->nX + (m_nDrawRange * 2) == tmpShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
+		if (tmpShape->nX + m_nDrawRange == tmpRoomShape->nX || tmpShape->nWidth - m_nDrawRange == tmpRoomShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
 		{
 			//cout << "왼오\n";
 
@@ -224,7 +257,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 			tmpY = point.y + tmpShape->m_nMoveSubVal[1];
 			tmpHeight = point.y + tmpShape->m_nMoveSubVal[3];
 
-			if (tmpY < tmpRoomShape->nY || tmpHeight > tmpRoomShape->nHeight)
+			if (tmpY <= tmpRoomShape->nY || tmpHeight >= tmpRoomShape->nHeight)
 			{
 				return;
 			}
@@ -234,7 +267,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 				tmpShape->nHeight = tmpHeight;
 			}
 		}
-		else if (tmpShape->nY + (m_nDrawRange * 2) == tmpShape->nHeight) //위쪽 혹은 아래쪽에 있다면
+		else if (tmpShape->nY + m_nDrawRange == tmpRoomShape->nY || tmpShape->nHeight - m_nDrawRange == tmpRoomShape->nHeight) //위쪽 혹은 아래쪽에 있다면
 		{
 			//cout << "위아래\n";
 
@@ -244,7 +277,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 			tmpX = point.x + tmpShape->m_nMoveSubVal[0];
 			tmpWidth = point.x + tmpShape->m_nMoveSubVal[2];
 			
-			if (tmpX < tmpRoomShape->nX || tmpWidth > tmpRoomShape->nWidth)
+			if (tmpX <= tmpRoomShape->nX || tmpWidth >= tmpRoomShape->nWidth)
 			{
 				return;
 			}
@@ -305,8 +338,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 #pragma warning(disable: 4018)
 	for (int i = m_CaShape.size() - 1; i >= 0; i--)
 #pragma warning(pop)
-	{
-		
+	{		
 		//Room이 아니면 Continue, Room안에서 Door나 Window를 찾아야 하기 때문
 		if (!(typeid(*m_CaShape.at(i)) == typeid(RoomShape)))
 		{
@@ -545,7 +577,7 @@ int ShapeHandler::HowManySelected()
 
 	return nResult;
 }
-int ShapeHandler::RotateSelectedShape()
+int ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
 {
 	int index = GetCurrentSelectedIndex();
 
@@ -553,8 +585,8 @@ int ShapeHandler::RotateSelectedShape()
 	{
 		return MY_ERROR;
 	}
-
 	Shape *tmpShape = m_CaShape.at(index);
+	tmpShape->SetRect(nX, nY, nWidth, nHeight);
 
 	return MY_SUCCES;
 }
@@ -568,7 +600,7 @@ int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Doo
 	}
 	//////////////////////////////////////////////////////////////////////////
 	// [ 그룹화 삭제 알고리즘 ]
- 	if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(RoomShape))
+	if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(RoomShape))
 	{
 		auto tmpInRoomPtr = m_CaShape.at(nSelectedIndex); //먼저 방의 포인터를 받아둠
 		tmpInRoomPtr->SetId(-600000);
@@ -629,7 +661,7 @@ int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Doo
 		// 문 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
 		for (long i = tmpDoorPtr->size() - 1; i >= 0; i--)
 		{
-			
+
 			int nWasteValue = tmpDoorPtr->at(i)->GetId();
 			if (nWasteValue < -50000)
 			{
@@ -672,7 +704,7 @@ int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Doo
 		}
 		SAFE_DELETE(tmpSelectedWindowPtr);//  선택된 문 삭제, delete
 	}
-	else 
+	else
 	{
 		cout << "Delete Error\n";
 		return MY_ERROR;
@@ -681,18 +713,481 @@ int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Doo
 }
 int ShapeHandler::CopySelectedShape()
 {
+	cout << "Copy\n";
+
 	int index = GetCurrentSelectedIndex();
 
-	if (index == MY_ERROR) //아직 선택안됨
+	if (index == MY_ERROR)
 	{
+		cout << "Cant Copy, Anything Selected" << endl;
 		return MY_ERROR;
 	}
+	else
+	{
+		Shape *tmpShape = m_CaShape[index];
 
-	Shape *tmpShape = m_CaShape.at(index);
+		if (typeid(*tmpShape) == typeid(RoomShape)) // Room을 선택해서 복사하려 할 때!,  그룹화 복사 사용 안 함!
+		{
+			RoomShape *CNewCopyShape = new RoomShape(*dynamic_cast<RoomShape*>(tmpShape));
+			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
+
+			CNewCopyShape->nX += 10;
+			CNewCopyShape->nWidth += 10;
+			CNewCopyShape->nY += 10;
+			CNewCopyShape->nHeight += 10;
+
+			if (CNewCopyShape->nX < 0)
+			{
+				CNewCopyShape->nX = 0;
+			}
+			if (CNewCopyShape->nWidth > 765)
+			{
+				CNewCopyShape->nWidth = 765;
+			}
+			if (CNewCopyShape->nY < 0)
+			{
+				CNewCopyShape->nY = 0;
+			}
+			if (CNewCopyShape->nHeight > 720)
+			{
+				CNewCopyShape->nHeight = 720;
+			}
+
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_ROOM; // Room 생성 상태로 바꿈
+			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+		}
+		else if (typeid(*tmpShape) == typeid(DoorShape)) // Door를 선택해서 복사하려 할 때!
+		{
+			DoorShape *CNewCopyShape = new DoorShape(*dynamic_cast<DoorShape*>(tmpShape));
+			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
+			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<DoorShape*>(tmpShape)->pInRoomShapePointer);
+
+			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
+			{
+				//cout << "왼오\n";
+
+				//////////////////////////////////////////////////////////////////////////
+				// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+				CNewCopyShape->nY += 10;
+				CNewCopyShape->nHeight += 10;
+
+				if (CNewCopyShape->nY < tmpRoomShape->nY)
+				{
+					CNewCopyShape->nY = tmpRoomShape->nY;
+				}
+				else if (CNewCopyShape->nHeight > tmpRoomShape->nHeight)
+				{
+					CNewCopyShape->nHeight = tmpRoomShape->nHeight;
+				}
+			}
+			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //위쪽 혹은 아래쪽에 있다면
+			{
+				//cout << "위아래\n";
+
+				//////////////////////////////////////////////////////////////////////////
+				// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+				CNewCopyShape->nX += 10;
+				CNewCopyShape->nWidth += 10;
+
+				if (CNewCopyShape->nX < tmpRoomShape->nX)
+				{
+					CNewCopyShape->nX = tmpRoomShape->nX;
+				}
+				else if (CNewCopyShape->nWidth > tmpRoomShape->nWidth)
+				{
+					CNewCopyShape->nWidth = tmpRoomShape->nWidth;
+				}
+			}
+			else
+			{
+				cout << "창문, 문 단일 Copy Error\n";
+			}
+
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_DOOR; // Door 생성 상태로 바꿈
+			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+		}
+		else if (typeid(*tmpShape) == typeid(WindowShape)) // Window를 선택해서 복사하려 할 때!
+		{
+			WindowShape *CNewCopyShape = new WindowShape(*dynamic_cast<WindowShape*>(tmpShape));
+			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
+			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<WindowShape*>(tmpShape)->pInRoomShapePointer);
+
+			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
+			{
+				//cout << "왼오\n";
+
+				//////////////////////////////////////////////////////////////////////////
+				// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+				CNewCopyShape->nY += 10;
+				CNewCopyShape->nHeight += 10;
+
+				if (CNewCopyShape->nY < tmpRoomShape->nY)
+				{
+					CNewCopyShape->nY = tmpRoomShape->nY;
+				}
+				else if (CNewCopyShape->nHeight > tmpRoomShape->nHeight)
+				{
+					CNewCopyShape->nHeight = tmpRoomShape->nHeight;
+				}
+			}
+			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //위쪽 혹은 아래쪽에 있다면
+			{
+				//cout << "위아래\n";
+
+				//////////////////////////////////////////////////////////////////////////
+				// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+				CNewCopyShape->nX += 10;
+				CNewCopyShape->nWidth += 10;
+
+				if (CNewCopyShape->nX < tmpRoomShape->nX)
+				{
+					CNewCopyShape->nX = tmpRoomShape->nX;
+				}
+				else if (CNewCopyShape->nWidth > tmpRoomShape->nWidth)
+				{
+					CNewCopyShape->nWidth = tmpRoomShape->nWidth;
+				}
+			}
+			else
+			{
+				cout << "창문, 문 단일 Copy Error\n";
+			}
+
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_WINDOW; // Window 생성 상태로 바꿈
+			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
+			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+		}
+		else
+		{
+			cout << "Copy Error\n" << endl;
+		}
+	}
 
 	return MY_SUCCES;
 }
-int ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
+int ShapeHandler::WheelSelectedShape(short zDelta)
+{
+	int index = GetCurrentSelectedIndex();
+	if (index == MY_ERROR)
+	{
+		cout << "Cant Wheel, Anything Selected" << endl;
+		return MY_ERROR;
+	}
+
+	Shape *tmpShape = m_CaShape[index];
+
+	if (typeid(*tmpShape) == typeid(RoomShape)) // Room을 선택해서 Scale하려 할 때!,  그룹화 Scale 사용 안 함!
+	{
+		if (zDelta > 100) //크게 할 때
+		{
+			if (tmpShape->nX < 5 || tmpShape->nWidth > 740 || tmpShape->nY < 5 || tmpShape->nHeight > 700)
+			{
+				return MY_ERROR;
+			}
+
+			bool bSuccess = TRUE;
+			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(tmpShape);
+
+			for (auto pIter : tmpRoomShape->m_CaDoor) //Room안의 Door!
+			{
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
+				{
+					pIter->nX -= 2;
+					pIter->nWidth -= 2;
+				}
+				else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //오른쪽이면
+				{
+					pIter->nX += 2;
+					pIter->nWidth += 2;
+				}
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //위쪽이면
+				{
+					pIter->nY -= 2;
+					pIter->nHeight -= 2;
+				}
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //아래쪽이면
+				{
+					pIter->nY += 2;
+					pIter->nHeight += 2;
+				}
+				else
+				{
+					cout << " 문 그룹 Wheel Error\n";
+					bSuccess = FALSE;
+					break;
+				}
+			}
+			for (auto pIter : tmpRoomShape->m_CaWindow)
+			{
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
+				{
+					pIter->nX -= 2;
+					pIter->nWidth -= 2;
+				}
+				else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //오른쪽이면
+				{
+					pIter->nX += 2;
+					pIter->nWidth += 2;
+				}
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //위쪽이면
+				{
+					pIter->nY -= 2;
+					pIter->nHeight -= 2;
+				}
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //아래쪽이면
+				{
+					pIter->nY += 2;
+					pIter->nHeight += 2;
+				}
+				else
+				{
+					cout << " 창문 그룹 Wheel Error\n";
+					bSuccess = FALSE;
+					break;
+				}
+			}
+
+			//////////////////////////////////////////////////////////////////////////
+			// 성공 방 크기 조정, 제일 마지막에
+			if (bSuccess)
+			{
+				tmpShape->nX -= 2;
+				tmpShape->nWidth += 2;
+				tmpShape->nY -= 2;
+				tmpShape->nHeight += 2;
+			}
+			else
+			{
+				cout << " 창문, 문 그룹 전체 Wheel Error\n";
+			}
+		}
+		else //작게 할 때
+		{
+			RoomShape *tmpRoomShape = dynamic_cast<RoomShape*>(tmpShape);
+			bool bSuccess = TRUE;
+
+			//////////////////////////////////////////////////////////////////////////
+			// 전체 크기 체크
+			if (tmpShape->nWidth - tmpShape->nX < 30 || tmpShape->nHeight - tmpShape->nY < 30)
+			{
+				return MY_ERROR;
+			}
+
+			//////////////////////////////////////////////////////////////////////////
+			// 먼저 하나라도 걸리는 게 있는지 Check 해야 됨!! 하나라도 미리 작아지면 시스템 오류가 나기 때문
+			// 아니면 나중에 Undo Redo 구현해서 되돌리게 해도 될 듯?
+			for (auto pIter : tmpRoomShape->m_CaDoor) //Room안의 Door!
+			{
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //왼쪽, 오른쪽
+				{
+					if (tmpRoomShape->nHeight < pIter->nHeight + 5 || tmpRoomShape->nY > pIter->nY - 5)
+					{
+						bSuccess = FALSE;
+						break;
+					}
+				}
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY || pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //위쪽, 아래쪽
+				{
+					if (tmpRoomShape->nWidth < pIter->nWidth + 5 || tmpRoomShape->nX > pIter->nX - 5)
+					{
+						bSuccess = FALSE;
+						break;
+					}
+				}
+				else
+				{
+					cout << "Mouse Wheel 작아지게 Error" << endl;
+					bSuccess = FALSE;
+					break;
+				}
+			}
+			for (auto pIter : tmpRoomShape->m_CaWindow)
+			{
+				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //왼쪽, 오른쪽
+				{
+					if (tmpRoomShape->nHeight < pIter->nHeight + 5 || tmpRoomShape->nY > pIter->nY - 5)
+					{
+						bSuccess = FALSE;
+						break;
+					}
+				}
+				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY || pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //위쪽, 아래쪽
+				{
+					if (tmpRoomShape->nWidth < pIter->nWidth + 5 || tmpRoomShape->nX > pIter->nX - 5)
+					{
+						bSuccess = FALSE;
+						break;
+					}
+				}
+				else
+				{
+					cout << "Mouse Wheel 작아지게 Error" << endl;
+					bSuccess = FALSE;
+					break;
+				}
+			}
+
+			if (!bSuccess)
+			{
+				cout << " 창문, 문 그룹 전체 Wheel Error\n";
+			}
+			else
+			{
+				for (auto pIter : tmpRoomShape->m_CaDoor) //Room안의 Door!
+				{
+					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
+					{
+						pIter->nX += 2;
+						pIter->nWidth += 2;
+					}
+					else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //오른쪽이면
+					{
+						pIter->nX -= 2;
+						pIter->nWidth -= 2;
+					}
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //위쪽이면
+					{
+						pIter->nY += 2;
+						pIter->nHeight += 2;
+					}
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //아래쪽이면
+					{
+						pIter->nY -= 2;
+						pIter->nHeight -= 2;
+					}
+					else // 사실 위에서 다 체크함
+					{
+						cout << "문 그룹 Wheel Error\n";
+						bSuccess = FALSE;
+						break;
+					}
+				}
+				for (auto pIter : tmpRoomShape->m_CaWindow)
+				{
+					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
+					{
+						pIter->nX += 2;
+						pIter->nWidth += 2;
+					}
+					else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //오른쪽이면
+					{
+						pIter->nX -= 2;
+						pIter->nWidth -= 2;
+
+					}
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //위쪽이면
+					{
+						pIter->nY += 2;
+						pIter->nHeight += 2;
+					}
+					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //아래쪽이면
+					{
+						pIter->nY -= 2;
+						pIter->nHeight -= 2;
+					}
+					else // 사실 위에서 다 체크함
+					{
+						cout << "창문 그룹 Wheel Error\n";
+						bSuccess = FALSE;
+						break;
+					}
+				}
+
+				//////////////////////////////////////////////////////////////////////////
+				// 성공 방 크기 조정, 제일 마지막에
+				tmpShape->nX += 2;
+				tmpShape->nWidth -= 2;
+				tmpShape->nY += 2;
+				tmpShape->nHeight -= 2;
+
+			}
+		}
+	}
+	else // 문이나 창문 단일 선택 Scale
+	{
+		RoomShape *tmpRoomShape;
+
+		if (typeid(*tmpShape) == typeid(DoorShape)) //문일때
+		{
+			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<DoorShape*>(tmpShape)->pInRoomShapePointer);
+		}
+		else	//창문일때
+		{
+			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<WindowShape*>(tmpShape)->pInRoomShapePointer);
+		}
+
+
+		if (tmpShape->nX + (m_nDrawRange * 2) == tmpShape->nWidth && (tmpShape->nX + m_nDrawRange == tmpRoomShape->nX) || (tmpShape->nX + m_nDrawRange == tmpRoomShape->nWidth)) //왼쪽 혹은 오른쪽에 있다면
+		{
+			//cout << "왼오\n";
+
+			//////////////////////////////////////////////////////////////////////////
+			// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+			if (zDelta > 100)
+			{
+				if (!(tmpShape->nY - 2 < tmpRoomShape->nY))
+				{
+					tmpShape->nY -= 2;
+				}
+				if (!(tmpShape->nHeight + 2 > tmpRoomShape->nHeight))
+				{
+					tmpShape->nHeight += 2;
+				}
+			}
+			else
+			{
+				if (!(tmpShape->nHeight - tmpShape->nY < 28))
+				{
+					tmpShape->nY += 2;
+					tmpShape->nHeight -= 2;
+				}
+			}
+		}
+		else if (tmpShape->nY + (m_nDrawRange * 2) == tmpShape->nHeight  && (tmpShape->nY + m_nDrawRange == tmpRoomShape->nY) || (tmpShape->nY + m_nDrawRange == tmpRoomShape->nHeight)) //위쪽 혹은 아래쪽에 있다면
+		{
+			//cout << "위아래\n";
+
+			//////////////////////////////////////////////////////////////////////////
+			// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+			if (zDelta > 100)
+			{
+				if (!(tmpShape->nX - 2 < tmpRoomShape->nX))
+				{
+					tmpShape->nX -= 2;
+				}
+				if (!(tmpShape->nWidth + 2 > tmpRoomShape->nWidth))
+				{
+					tmpShape->nWidth += 2;
+				}
+			}
+			else
+			{
+				if (!(tmpShape->nWidth - tmpShape->nX < 28))
+				{
+					tmpShape->nX += 2;
+					tmpShape->nWidth -= 2;
+				}
+			}
+		}
+		else
+		{
+			cout << "창문, 문 단일 Copy Error\n";
+		}
+	}
+	return MY_SUCCES;
+}
+
+
+/// 미완성
+int ShapeHandler::RotateSelectedShape()
 {
 	int index = GetCurrentSelectedIndex();
 
@@ -700,10 +1195,17 @@ int ShapeHandler::UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight)
 	{
 		return MY_ERROR;
 	}
+
 	Shape *tmpShape = m_CaShape.at(index);
-	tmpShape->SetRect(nX, nY, nWidth, nHeight);
+
+	
+	cout << endl << "Shape 정보 출력 : " << endl;
+	cout << "nX : " << to_string(tmpShape->nX) << endl;
+	cout << "nY : " << to_string(tmpShape->nY) << endl;
+	cout << "nWidth : " << to_string(tmpShape->nWidth) << endl;
+	cout << "nHeight : " << to_string(tmpShape->nHeight) << endl;
+	cout << endl << endl;
+
 
 	return MY_SUCCES;
 }
-
-

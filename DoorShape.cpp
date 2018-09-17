@@ -8,6 +8,7 @@ DoorShape::DoorShape(int nId, int nX, int nY, int nWidth, int nHeight)
 	nRed = 211;
 	nGreen = 162;
 	nBlue = 127;
+	nLocaInfo = LOCA_DEFAULT;
 }
 
 DoorShape::~DoorShape()
