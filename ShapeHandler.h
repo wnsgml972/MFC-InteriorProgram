@@ -37,6 +37,7 @@ public:
 	int DeleteSelectedShape(); //delete p; undo() ÇØ¾ß ÇÔ
 	int UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight);
 	int CopySelectedShape();
+	int WheelSelectedShape(short zDelta);
 
 	vector<Shape*> m_CaShape;
 	bool NoAddShape;

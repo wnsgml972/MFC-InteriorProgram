@@ -7,5 +7,8 @@ public:
 	~DoorShape();
 
 	Shape *pInRoomShapePointer;
+	int nLocaInfo;
+	enum {LOCA_DEFAULT, LOCA_UP, LOCA_RIGHT, LOCA_DOWN, LOCA_LEFT
+	};
 };
 
