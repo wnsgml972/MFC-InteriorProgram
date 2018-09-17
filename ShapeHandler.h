@@ -41,6 +41,9 @@ public:
 	vector<Shape*> m_CaShape;
 	bool NoAddShape;
 
+	int MakeAutoIncId();
+	int m_nDrawRange;
+
 private:
 	ShapeHandler();
 	static ShapeHandler *instance;
@@ -49,9 +52,8 @@ private:
 	FileManager *CFileManager;
 	int m_nAutoIncId;
 	int m_nSelectRange;
-	int m_nDrawRange;
 	int m_nDrawSelectRange;
 
-	Shape *m_pRememberIndexForDoorWindowPointer;
+	Shape *m_pRememberRoomPtrForDoorWindow;
 };
 

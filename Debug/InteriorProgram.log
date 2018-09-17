@@ -1,4 +1,2 @@
-﻿  ShapeHandler.cpp
-c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(155): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(172): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+﻿  InteriorProgramView.cpp
   InteriorProgram.vcxproj -> C:\Users\kjh0121\source\repos\Project1\Debug\InteriorProgram.exe

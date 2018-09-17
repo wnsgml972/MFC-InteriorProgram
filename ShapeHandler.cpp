@@ -11,6 +11,11 @@ ShapeHandler* ShapeHandler::GetInstance()
 	}
 	return instance;
 }
+int ShapeHandler::MakeAutoIncId()
+{
+	m_nAutoIncId += 1;
+	return m_nAutoIncId;
+}
 ShapeHandler::ShapeHandler()
 {
 	CFileManager = FileManager::GetInstance();
@@ -45,7 +50,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	{
 		DoorShape *CDoorShape = new DoorShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
 		
-		CDoorShape->pInRoomShapePointer = m_pRememberIndexForDoorWindowPointer; // 자신이 속해있는 Room의 포인터
+		CDoorShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // 자신이 속해있는 Room의 포인터
 
 
 		/// 삽입!
@@ -56,7 +61,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	{
 		WindowShape *CWindowShape = new WindowShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
 
-		CWindowShape->pInRoomShapePointer = m_pRememberIndexForDoorWindowPointer; // 자신이 속해있는 Room의 포인터
+		CWindowShape->pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // 자신이 속해있는 Room의 포인터
 
 		/// 삽입!
 		m_CaShape.push_back(CWindowShape);
@@ -152,7 +157,10 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 		// 위에서 먼저 체크하고 리턴해버려야 함
 
 		//In Room Door
+#pragma warning(push)
+#pragma warning(disable: 4018)
 		for (long i = 0; i < tmpRoomShape->m_CaDoor.size(); i++)
+#pragma warning(pop)
 		{
 			// 문 범위 제어 문
 			if (point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3] > 720)
@@ -169,7 +177,10 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 		}
 
 		//In Room Window
+#pragma warning(push)
+#pragma warning(disable: 4018)
 		for (long i = 0; i < tmpRoomShape->m_CaWindow.size(); i++)
+#pragma warning(push)
 		{
 			// 창문 범위 제어 문
 			if (point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3] > 720)
@@ -188,23 +199,64 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 	else if (typeid(*tmpShape) == typeid(DoorShape) || typeid(*tmpShape) == typeid(WindowShape))
 	{
 		// 창문 문만 클릭했을 시!!!
-		return;
-		tmpX = point.x + tmpShape->m_nMoveSubVal[0];
-		tmpY = point.y + tmpShape->m_nMoveSubVal[1];
-		tmpWidth = point.x + tmpShape->m_nMoveSubVal[2];
-		tmpHeight = point.y + tmpShape->m_nMoveSubVal[3];
 
-		if (tmpX < 0 || tmpWidth > 765 || tmpY < 0 || tmpHeight > 720)
+		RoomShape *tmpRoomShape;
+		if (typeid(*tmpShape) == typeid(DoorShape))
 		{
-			return;
+			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<DoorShape*>(tmpShape)->pInRoomShapePointer);
+		}
+		else if (typeid(*tmpShape) == typeid(WindowShape))
+		{
+			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<WindowShape*>(tmpShape)->pInRoomShapePointer);
 		}
 		else
 		{
-			tmpShape->nX = tmpX;
-			tmpShape->nY = tmpY;
-			tmpShape->nWidth = tmpWidth;
-			tmpShape->nHeight = tmpHeight;
+			cout << "Move 형 변환 Error\n";
+		}
+		
+		if (tmpShape->nX + (m_nDrawRange * 2) == tmpShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
+		{
+			//cout << "왼오\n";
 
+			//////////////////////////////////////////////////////////////////////////
+			// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+			tmpY = point.y + tmpShape->m_nMoveSubVal[1];
+			tmpHeight = point.y + tmpShape->m_nMoveSubVal[3];
+
+			if (tmpY < tmpRoomShape->nY || tmpHeight > tmpRoomShape->nHeight)
+			{
+				return;
+			}
+			else
+			{
+				tmpShape->nY = tmpY;
+				tmpShape->nHeight = tmpHeight;
+			}
+		}
+		else if (tmpShape->nY + (m_nDrawRange * 2) == tmpShape->nHeight) //위쪽 혹은 아래쪽에 있다면
+		{
+			//cout << "위아래\n";
+
+			//////////////////////////////////////////////////////////////////////////
+			// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
+
+			tmpX = point.x + tmpShape->m_nMoveSubVal[0];
+			tmpWidth = point.x + tmpShape->m_nMoveSubVal[2];
+			
+			if (tmpX < tmpRoomShape->nX || tmpWidth > tmpRoomShape->nWidth)
+			{
+				return;
+			}
+			else
+			{
+				tmpShape->nX = tmpX;
+				tmpShape->nWidth = tmpWidth;
+			}
+		}
+		else
+		{
+			cout << "창문, 문 단일 Move Error\n";
 		}
 	}
 	else
@@ -255,7 +307,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 #pragma warning(pop)
 	{
 		
-		//Room이 아니면 Continue
+		//Room이 아니면 Continue, Room안에서 Door나 Window를 찾아야 하기 때문
 		if (!(typeid(*m_CaShape.at(i)) == typeid(RoomShape)))
 		{
 			continue;
@@ -317,7 +369,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.x = nShapeTempWidth;
 			}
 
-			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 			break;
@@ -346,7 +398,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.y = nShapeTempHeight;
 			}
 
-			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 
@@ -377,7 +429,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.x = nShapeTempWidth;
 			}
 
-			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 
@@ -407,7 +459,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.y = nShapeTempHeight;
 			}
 
-			m_pRememberIndexForDoorWindowPointer = m_CaShape.at(i);
+			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 

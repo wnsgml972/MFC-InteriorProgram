@@ -21,7 +21,11 @@ Shape::Shape(Shape * CShape)
 	this->nY = CShape->nY;
 	this->nWidth = CShape->nWidth;
 	this->nHeight = CShape->nHeight;
+	this->bSelectedState = bSelectedState;
 
+	this->nRed = nRed;
+	this->nGreen = nGreen;
+	this->nBlue = nBlue;
 }
 
 Shape::~Shape()
