@@ -38,6 +38,7 @@ public:
 	int UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight);
 	int CopySelectedShape();
 	int WheelSelectedShape(short zDelta);
+	int MagneticSelectedShape();
 
 	vector<Shape*> m_CaShape;
 	bool NoAddShape;

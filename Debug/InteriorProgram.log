@@ -1,2 +1,6 @@
 ﻿  ShapeHandler.cpp
+c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(1186): warning C4101: 'tmpHeight' :참조되지 않은 지역 변수입니다.
+c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(1186): warning C4101: 'tmpY' :참조되지 않은 지역 변수입니다.
+c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(1186): warning C4101: 'tmpWidth' :참조되지 않은 지역 변수입니다.
+c:\users\kjh0121\source\repos\project1\interiorprogram\shapehandler.cpp(1186): warning C4101: 'tmpX' :참조되지 않은 지역 변수입니다.
   InteriorProgram.vcxproj -> C:\Users\kjh0121\source\repos\Project1\Debug\InteriorProgram.exe
