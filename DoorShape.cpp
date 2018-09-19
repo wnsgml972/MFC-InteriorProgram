@@ -13,4 +13,5 @@ DoorShape::DoorShape(int nId, int nX, int nY, int nWidth, int nHeight)
 
 DoorShape::~DoorShape()
 {
+	printf("~DoorShape\n");
 }

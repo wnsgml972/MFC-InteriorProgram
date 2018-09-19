@@ -136,6 +136,10 @@ void ShapeHandler::Redo()
 
 void ShapeHandler::Clear()
 {
+	for (auto iter : m_CaShape)
+	{
+		SAFE_DELETE(iter);
+	}
 	instance->m_CaShape.clear();
 }
 
@@ -723,13 +727,10 @@ int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Doo
 }
 int ShapeHandler::CopySelectedShape()
 {
-	cout << "Copy\n";
-
 	int index = GetCurrentSelectedIndex();
 
 	if (index == MY_ERROR)
 	{
-		cout << "Cant Copy, Anything Selected" << endl;
 		return MY_ERROR;
 	}
 	else
@@ -1199,8 +1200,6 @@ int ShapeHandler::MagneticSelectedShape()
 	int index = GetCurrentSelectedIndex();
 	if (index == MY_ERROR)
 	{
-		cout << "Cant Wheel, Anything Selected" << endl;
-
 		return MY_ERROR;
 	}
 
@@ -1281,7 +1280,7 @@ int ShapeHandler::MagneticSelectedShape()
 					switch (j)
 					{
 					case 0: //위
-						cout << "Mag 위쪽 " << endl;
+						//cout << "Mag 위쪽 " << endl;
 						nSubMoving = (tmpShape->nY - m_CaShape[i]->nHeight);
 						tmpShape->nHeight -= nSubMoving; 
 						tmpShape->nY = m_CaShape[i]->nHeight;
@@ -1303,7 +1302,7 @@ int ShapeHandler::MagneticSelectedShape()
 						}
 						break;
 					case 1: //오른쪽
-						cout << "Mag 오른쪽 " << endl;
+						//cout << "Mag 오른쪽 " << endl;
 						nSubMoving = (tmpShape->nWidth - m_CaShape[i]->nX);
 						tmpShape->nX -= nSubMoving;
 						tmpShape->nWidth = m_CaShape[i]->nX;
@@ -1325,7 +1324,7 @@ int ShapeHandler::MagneticSelectedShape()
 						}
 						break;
 					case 2: //아래
-						cout << "Mag 아래 " << endl;
+						//cout << "Mag 아래 " << endl;
 						nSubMoving = (tmpShape->nHeight - m_CaShape[i]->nY);
 						tmpShape->nY -= nSubMoving;
 						tmpShape->nHeight = m_CaShape[i]->nY;
@@ -1347,7 +1346,7 @@ int ShapeHandler::MagneticSelectedShape()
 						}
 						break;
 					case 3: //왼쪽
-						cout << "Mag 왼쪽 " << endl;
+						//cout << "Mag 왼쪽 " << endl;
 						nSubMoving = (tmpShape->nX - m_CaShape[i]->nWidth);
 						tmpShape->nWidth -= nSubMoving;
 						tmpShape->nX = m_CaShape[i]->nWidth;
@@ -1388,8 +1387,7 @@ int ShapeHandler::RotateSelectedShape()
 		return MY_ERROR;
 	}
 
-	Shape *tmpShape = m_CaShape.at(index);
-
+	Shape *tmpShape = m_CaShape.at(index);	
 
 	cout << endl << "Shape 정보 출력 : " << endl;
 	cout << "nX : " << to_string(tmpShape->nX) << endl;

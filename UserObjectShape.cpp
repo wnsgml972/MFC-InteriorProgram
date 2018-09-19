@@ -9,4 +9,5 @@ UserObjectShape::UserObjectShape(int nId, int nX, int nY, int nWidth, int nHeigh
 
 UserObjectShape::~UserObjectShape()
 {
+	printf("~UserObjectShape\n");
 }

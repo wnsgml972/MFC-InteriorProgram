@@ -12,4 +12,5 @@ WindowShape::WindowShape(int nId, int nX, int nY, int nWidth, int nHeight)
 
 WindowShape::~WindowShape()
 {
+	printf("~WindowShape\n");
 }
