@@ -27,6 +27,7 @@ public:
 	void Move(CPoint point);
 	void Select(CPoint point);
 	void SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPoint &CurrentMousePoint);
+	void MakeFiveReferenceVertex(int *naVertex, int tmpVal1, int tmpVal2);
 
 	//////////////////////////////////////////////////////////////////////////
 	/// Select Shape
@@ -57,5 +58,7 @@ private:
 	int m_nDrawSelectRange;
 
 	Shape *m_pRememberRoomPtrForDoorWindow;
+	int m_RememberLocationForDoorWindow;
+
 };
 

@@ -24,6 +24,9 @@ public:
 	}; // InteriorProgramView랑 동기화 시켜줘야 됨...
 	   // PAINT_BASIC은 Select와 Move, Magnetic 담당함!
 
+	enum {
+		LOCA_DEFAULT, LOCA_UP, LOCA_RIGHT, LOCA_DOWN, LOCA_LEFT
+	};
 
 private:
 	GlobalNum();

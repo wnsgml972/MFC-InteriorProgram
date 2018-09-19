@@ -7,6 +7,7 @@ WindowShape::WindowShape(int nId, int nX, int nY, int nWidth, int nHeight)
 	nRed = 80;
 	nGreen = 188;
 	nBlue = 223;
+	m_nLocaInfo = LOCA_DEFAULT;
 }
 
 WindowShape::~WindowShape()
