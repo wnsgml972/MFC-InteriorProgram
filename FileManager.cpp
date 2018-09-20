@@ -42,7 +42,16 @@ CString FileManager::StringToCString(string str)
 	return strResult;
 }
 
-
+bool FileManager::isNumber(string s)
+{
+	if (s.size() == 0) return false;
+	for (int i = 0; i < s.size(); i++) {
+		if ((s[i] >= '0' && s[i] <= '9') == false) {
+			return false;
+		}
+	}
+	return true;
+}
 FileManager::FileManager()
 {
 

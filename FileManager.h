@@ -23,10 +23,11 @@ public:
 	boolean LoadAsCsv();
 	vector<string> CsvReadRow(istream &file, char cDelimiter);
 
+	string CStringToString(CString cstr);
+	CString StringToCString(string str);
+	bool isNumber(string s);
+
 private:
 	FileManager();
 	static FileManager *instance;
-
-	string CStringToString(CString cstr);
-	CString StringToCString(string str);
 };

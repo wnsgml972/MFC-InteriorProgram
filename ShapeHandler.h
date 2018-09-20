@@ -37,7 +37,7 @@ public:
 	int RotateSelectedShape();
 	int DeleteSelectedShape(); //delete p; undo() ÇØ¾ß ÇÔ
 	int UpdateSelectedShape(int nX, int nY, int nWidth, int nHeight);
-	int CopySelectedShape();
+	int CopySelectedShape(int nIndex = MY_ERROR);
 	int WheelSelectedShape(short zDelta);
 	int MagneticSelectedShape();
 

@@ -725,9 +725,21 @@ int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Doo
 	}
 	return MY_SUCCES;
 }
-int ShapeHandler::CopySelectedShape()
+int ShapeHandler::CopySelectedShape(int nIndex)
 {
-	int index = GetCurrentSelectedIndex();
+	bool type = false;
+	int nRandLocation = static_cast<int>((rand() % 10)) + 1;
+
+	int index;
+	if (nIndex == MY_ERROR)
+	{
+		index = GetCurrentSelectedIndex();
+	}
+	else
+	{
+		index = nIndex;
+		type = true;
+	}
 
 	if (index == MY_ERROR)
 	{
@@ -742,10 +754,21 @@ int ShapeHandler::CopySelectedShape()
 			RoomShape *CNewCopyShape = new RoomShape(*dynamic_cast<RoomShape*>(tmpShape));
 			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
 
-			CNewCopyShape->nX += 10;
-			CNewCopyShape->nWidth += 10;
-			CNewCopyShape->nY += 10;
-			CNewCopyShape->nHeight += 10;
+
+			if (type)
+			{
+				CNewCopyShape->nX += 10 + nRandLocation;
+				CNewCopyShape->nWidth += 10 + nRandLocation;
+				CNewCopyShape->nY += 10 + nRandLocation;
+				CNewCopyShape->nHeight += 10 + nRandLocation;
+			}
+			else
+			{
+				CNewCopyShape->nX += 10;
+				CNewCopyShape->nWidth += 10;
+				CNewCopyShape->nY += 10;
+				CNewCopyShape->nHeight += 10;
+			}
 
 			if (CNewCopyShape->nX < 0)
 			{
@@ -781,8 +804,16 @@ int ShapeHandler::CopySelectedShape()
 				//////////////////////////////////////////////////////////////////////////
 				// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
 
-				CNewCopyShape->nY += 10;
-				CNewCopyShape->nHeight += 10;
+				if (type)
+				{
+					CNewCopyShape->nY += 10;
+					CNewCopyShape->nHeight += 10;
+				}
+				else
+				{
+					CNewCopyShape->nY += 10 + nRandLocation;
+					CNewCopyShape->nHeight += 10 + nRandLocation;
+				}
 
 				if (CNewCopyShape->nY < tmpRoomShape->nY)
 				{
@@ -800,8 +831,16 @@ int ShapeHandler::CopySelectedShape()
 				//////////////////////////////////////////////////////////////////////////
 				// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
 
-				CNewCopyShape->nX += 10;
-				CNewCopyShape->nWidth += 10;
+				if (type)
+				{
+					CNewCopyShape->nX += 10 + nRandLocation;
+					CNewCopyShape->nWidth += 10 + nRandLocation;
+				}
+				else
+				{
+					CNewCopyShape->nX += 10;
+					CNewCopyShape->nWidth += 10;
+				}
 
 				if (CNewCopyShape->nX < tmpRoomShape->nX)
 				{
@@ -834,8 +873,16 @@ int ShapeHandler::CopySelectedShape()
 				//////////////////////////////////////////////////////////////////////////
 				// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
 
-				CNewCopyShape->nY += 10;
-				CNewCopyShape->nHeight += 10;
+				if (type)
+				{
+					CNewCopyShape->nY += 10 + nRandLocation;
+					CNewCopyShape->nHeight += 10 + nRandLocation;
+				}
+				else
+				{
+					CNewCopyShape->nY += 10;
+					CNewCopyShape->nHeight += 10;
+				}
 
 				if (CNewCopyShape->nY < tmpRoomShape->nY)
 				{
@@ -853,8 +900,17 @@ int ShapeHandler::CopySelectedShape()
 				//////////////////////////////////////////////////////////////////////////
 				// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
 
-				CNewCopyShape->nX += 10;
-				CNewCopyShape->nWidth += 10;
+
+				if (type)
+				{
+					CNewCopyShape->nX += 10 + nRandLocation;
+					CNewCopyShape->nWidth += 10 + nRandLocation;
+				}
+				else 
+				{
+					CNewCopyShape->nX += 10;
+					CNewCopyShape->nWidth += 10;
+				}
 
 				if (CNewCopyShape->nX < tmpRoomShape->nX)
 				{
