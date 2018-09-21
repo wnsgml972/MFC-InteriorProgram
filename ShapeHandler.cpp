@@ -58,6 +58,9 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_DOOR)
 	{
+		if (m_CaShape.size() == 0)
+			return;
+
 		//////////////////////////////////////////////////////////////////////////
 		// 마지막 검사, 기준 재조정
 		if (nX > nWidth)
@@ -73,13 +76,15 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		CDoorShape->m_nLocaInfo = m_RememberLocationForDoorWindow;
 		CDoorShape->m_pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // 자신이 속해있는 Room의 포인터
 
-
 		/// 삽입!
 		m_CaShape.push_back(CDoorShape);
 		dynamic_cast<RoomShape*>(CDoorShape->m_pInRoomShapePointer)->m_CaDoor.push_back(CDoorShape);
 	}
 	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_WINDOW)
 	{
+		if (m_CaShape.size() == 0)
+			return;
+
 		//////////////////////////////////////////////////////////////////////////
 		// 마지막 검사
 		if (nX > nWidth)
