@@ -4,7 +4,11 @@ class UserObjectShape :
 	public Shape
 {
 public:
-	UserObjectShape(int nId, int nX = 0, int nY = 0, int nWidth = 0, int nHeight = 0);
+	UserObjectShape(int nId, int nX = 10, int nY = 10, int nWidth = 50, int nHeight = 50);
 	~UserObjectShape();
-};
 
+	
+	void SetImage();
+	
+	Shape *m_pInRoomShapePointer; // 추 후 그룹화 고민
+};

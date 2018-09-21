@@ -3,6 +3,7 @@
 #define SAFE_DELETE(p) { if(p) {delete p; p = NULL;} }
 #define MY_ERROR -1
 #define MY_SUCCES 1
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <vector>
 #include <stack>

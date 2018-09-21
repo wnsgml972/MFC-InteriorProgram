@@ -39,3 +39,5 @@
 * define의 각종 함수들
 
 * FileManager
+
+* CBufferDC

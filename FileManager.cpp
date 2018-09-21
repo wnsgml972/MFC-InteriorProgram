@@ -44,8 +44,13 @@ CString FileManager::StringToCString(string str)
 
 bool FileManager::isNumber(string s)
 {
-	if (s.size() == 0) return false;
+	if (s.size() == 0) 
+		return false;
+
+#pragma warning(push)
+#pragma warning(disable: 4018)
 	for (int i = 0; i < s.size(); i++) {
+#pragma warning(pop)
 		if ((s[i] >= '0' && s[i] <= '9') == false) {
 			return false;
 		}

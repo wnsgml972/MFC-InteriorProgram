@@ -59,6 +59,5 @@ private:
 
 	Shape *m_pRememberRoomPtrForDoorWindow;
 	int m_RememberLocationForDoorWindow;
-
 };
 

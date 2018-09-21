@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ShapeHandler.h"
 #include "RoomShape.h"
+#include "UserObjectShape.h"
 
 ShapeHandler* ShapeHandler::instance = NULL;
 
@@ -104,6 +105,20 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		m_CaShape.push_back(CWindowShape);
 		dynamic_cast<RoomShape*>(CWindowShape->m_pInRoomShapePointer)->m_CaWindow.push_back(CWindowShape);
 	}
+	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_USER_ADD)
+	{
+		//////////////////////////////////////////////////////////////////////////
+		// 마지막 검사, 기준 재조정
+		if (nX > nWidth)
+		{
+			swap(nX, nWidth);
+		}
+		if (nY > nHeight)
+		{
+			swap(nY, nHeight);
+		}
+		m_CaShape.push_back(new UserObjectShape(m_nAutoIncId++, nX, nY, nWidth, nHeight));
+	}
 	else //error
 	{
 		cout << "Add Shape Error\n";
@@ -138,7 +153,6 @@ void ShapeHandler::Redo()
 {
 
 }
-
 void ShapeHandler::Clear()
 {
 	for (auto iter : m_CaShape)
@@ -193,46 +207,49 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 			tmpRoomShape->nHeight = tmpHeight;
 
 		}
+
 		// 방에 대한 것을 먼저 해야하는 게 방 클릭 후 범위 밖으로 나가면 다른 창문이나 문은 움직이면 안 되므로
 		// 위에서 먼저 체크하고 리턴해버려야 함
-
-		//In Room Door
+		// 문 안의 도형
+		{
+			//In Room Door
 #pragma warning(push)
 #pragma warning(disable: 4018)
-		for (long i = 0; i < tmpRoomShape->m_CaDoor.size(); i++)
+			for (long i = 0; i < tmpRoomShape->m_CaDoor.size(); i++)
 #pragma warning(pop)
-		{
-			// 문 범위 제어 문
-			if (point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3] > 720)
 			{
-				return;
+				// 문 범위 제어 문
+				if (point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3] > 720)
+				{
+					return;
+				}
+				else
+				{
+					tmpRoomShape->m_CaDoor[i]->nX = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0];
+					tmpRoomShape->m_CaDoor[i]->nY = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1];
+					tmpRoomShape->m_CaDoor[i]->nWidth = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2];
+					tmpRoomShape->m_CaDoor[i]->nHeight = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3];
+				}
 			}
-			else
-			{
-				tmpRoomShape->m_CaDoor[i]->nX = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0];
-				tmpRoomShape->m_CaDoor[i]->nY = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1];
-				tmpRoomShape->m_CaDoor[i]->nWidth = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2];
-				tmpRoomShape->m_CaDoor[i]->nHeight = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3];
-			}
-		}
 
-		//In Room Window
+			//In Room Window
 #pragma warning(push)
 #pragma warning(disable: 4018)
-		for (long i = 0; i < tmpRoomShape->m_CaWindow.size(); i++)
+			for (long i = 0; i < tmpRoomShape->m_CaWindow.size(); i++)
 #pragma warning(push)
-		{
-			// 창문 범위 제어 문
-			if (point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3] > 720)
 			{
-				return;
-			}
-			else
-			{
-				tmpRoomShape->m_CaWindow[i]->nX = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0];
-				tmpRoomShape->m_CaWindow[i]->nY = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1];
-				tmpRoomShape->m_CaWindow[i]->nWidth = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2];
-				tmpRoomShape->m_CaWindow[i]->nHeight = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3];
+				// 창문 범위 제어 문
+				if (point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3] > 720)
+				{
+					return;
+				}
+				else
+				{
+					tmpRoomShape->m_CaWindow[i]->nX = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0];
+					tmpRoomShape->m_CaWindow[i]->nY = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1];
+					tmpRoomShape->m_CaWindow[i]->nWidth = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2];
+					tmpRoomShape->m_CaWindow[i]->nHeight = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3];
+				}
 			}
 		}
 	}
@@ -298,6 +315,29 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 		else
 		{
 			cout << "창문, 문 단일 Move Error\n";
+		}
+	}
+	else if (typeid(*tmpShape) == typeid(UserObjectShape)) //RoomShape Move시 그룹화 된 문과 창문을 같이 움직여야 됨!
+	{
+	UserObjectShape *tmpShape = dynamic_cast<UserObjectShape*>(m_CaShape.at(index)); 		//Room
+
+		// 밑에처럼 다른 문 벡터나 창문 벡터처럼 한번에 해도 되지만 좀 알아보기 쉽게 방은 그냥 템프 하나 구해놈
+		tmpX = point.x + tmpShape->m_nMoveSubVal[0];
+		tmpY = point.y + tmpShape->m_nMoveSubVal[1];
+		tmpWidth = point.x + tmpShape->m_nMoveSubVal[2];
+		tmpHeight = point.y + tmpShape->m_nMoveSubVal[3];
+
+		// 창문이나 문이 그려지면 그 DrawRange 범위 밖으로도 나가지면 안 됨!!
+		if (tmpX < 0 + m_nDrawSelectRange || tmpWidth > 765 - m_nDrawSelectRange || tmpY < 0 + m_nDrawSelectRange || tmpHeight > 720 - m_nDrawSelectRange) // 방 범위 제어 문
+		{
+			return;
+		}
+		else
+		{
+			tmpShape->nX = tmpX;
+			tmpShape->nY = tmpY;
+			tmpShape->nWidth = tmpWidth;
+			tmpShape->nHeight = tmpHeight;
 		}
 	}
 	else
@@ -553,6 +593,10 @@ void ShapeHandler::InitSelect()
 			{
 				m_CaShape.at(i)->SetColor(80, 188, 223);
 			}
+			else if (typeid(*m_CaShape.at(i)) == typeid(UserObjectShape))
+			{
+				m_CaShape.at(i)->SetColor(111, 128, 244);
+			}
 			else
 			{
 				cout << "InitSelected Error\n";
@@ -723,6 +767,12 @@ int ShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Doo
 		}
 		SAFE_DELETE(tmpSelectedWindowPtr);//  선택된 문 삭제, delete
 	}
+	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(UserObjectShape))
+	{
+		UserObjectShape *tmpShape = dynamic_cast<UserObjectShape*>(m_CaShape.at(nSelectedIndex));
+		m_CaShape.erase(m_CaShape.begin() + nSelectedIndex);
+		SAFE_DELETE(tmpShape);//  선택된 object 삭제, delete
+	}
 	else
 	{
 		cout << "Delete Error\n";
@@ -754,11 +804,18 @@ int ShapeHandler::CopySelectedShape(int nIndex)
 	{
 		Shape *tmpShape = m_CaShape[index];
 
-		if (typeid(*tmpShape) == typeid(RoomShape)) // Room을 선택해서 복사하려 할 때!,  그룹화 복사 사용 안 함!
+		if (typeid(*tmpShape) == typeid(RoomShape) || typeid(*tmpShape) == typeid(UserObjectShape)) // Room을 선택해서 복사하려 할 때!,  그룹화 복사 사용 안 함!
 		{
-			RoomShape *CNewCopyShape = new RoomShape(*dynamic_cast<RoomShape*>(tmpShape));
+			Shape *CNewCopyShape;
+			if (typeid(*tmpShape) == typeid(RoomShape))
+			{
+				CNewCopyShape = new RoomShape(*dynamic_cast<RoomShape*>(tmpShape));
+			}
+			else
+			{
+				CNewCopyShape = new UserObjectShape(*dynamic_cast<UserObjectShape*>(tmpShape));
+			}
 			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
-
 
 			if (type)
 			{
@@ -792,7 +849,14 @@ int ShapeHandler::CopySelectedShape(int nIndex)
 				CNewCopyShape->nHeight = 720;
 			}
 
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_ROOM; // Room 생성 상태로 바꿈
+			if (typeid(*tmpShape) == typeid(RoomShape))
+			{
+				GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_ROOM; // Room 생성 상태로 바꿈
+			}
+			else
+			{
+				GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_USER_ADD; // Room 생성 상태로 바꿈
+			}
 			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
 			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
 		}
@@ -1181,7 +1245,7 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 			}
 		}
 	}
-	else // 문이나 창문 단일 선택 Scale
+	else if(typeid(*tmpShape) == typeid(DoorShape) || typeid(*tmpShape) == typeid(WindowShape)) // 문이나 창문 단일 선택 Scale
 	{
 		RoomShape *tmpRoomShape;
 
@@ -1254,6 +1318,40 @@ int ShapeHandler::WheelSelectedShape(short zDelta)
 			cout << "창문, 문 단일 Copy Error\n";
 		}
 	}
+	else //UserObject
+	{
+		if (zDelta > 100) //크게 할 때
+		{
+			if (tmpShape->nX < 5 || tmpShape->nWidth > 740 || tmpShape->nY < 5 || tmpShape->nHeight > 700)
+			{
+				return MY_ERROR;
+			}
+
+			UserObjectShape *tmpRoomShape = dynamic_cast<UserObjectShape*>(tmpShape);
+
+			tmpShape->nX -= 2;
+			tmpShape->nWidth += 2;
+			tmpShape->nY -= 2;
+			tmpShape->nHeight += 2;		
+		}
+		else //작게 할 때
+		{
+			UserObjectShape *tmpRoomShape = dynamic_cast<UserObjectShape*>(tmpShape);
+
+			if (tmpShape->nWidth - tmpShape->nX < 30 || tmpShape->nHeight - tmpShape->nY < 30)
+			{
+				return MY_ERROR;
+			}
+
+			tmpShape->nX += 2;
+			tmpShape->nWidth -= 2;
+			tmpShape->nY += 2;
+			tmpShape->nHeight -= 2;
+
+		}
+	}
+
+
 	return MY_SUCCES;
 }
 int ShapeHandler::MagneticSelectedShape()
@@ -1433,7 +1531,113 @@ int ShapeHandler::MagneticSelectedShape()
 			}
 		}
 	}
+	else if (typeid(*tmpShape) == typeid(UserObjectShape))
+	{
+		UserObjectShape *tmpUserObjectShape = dynamic_cast<UserObjectShape*>(tmpShape); //UserObjectShape
 
+	//전체 Shape중 인접한 Shape가 있는지
+	//뒤에서부터 검색해야 함!
+#pragma warning(push)
+#pragma warning(disable: 4018)
+		for (long i = m_CaShape.size() - 1; i >= 0; i--)
+#pragma warning(pop)
+		{
+			if (tmpUserObjectShape == m_CaShape[i] || typeid(*m_CaShape[i]) != typeid(RoomShape)) // 서로 같거나 Room이 아니면 넘김
+			{
+				continue;
+			}
+
+			int nShapeTempX = tmpUserObjectShape->nX;
+			int nShapeTempWidth = tmpUserObjectShape->nWidth;
+			int nShapeTempY = tmpUserObjectShape->nY;
+			int nShapeTempHeight = tmpUserObjectShape->nHeight;
+
+			int naDirectionControl[4] = { 0 };
+			int nAnyReferenceX[5] = { 0 };
+			int nSelectedReferenceX[5] = { 0 };
+			int nAnyReferenceY[5] = { 0 };
+			int nSelectedReferenceY[5] = { 0 };
+
+			// 1. Select > Any
+			// 네모를 하나의 라인 하나당 Range가 존재하는 네모로 봤을 때
+			// 각각 위에서부터 범위를 조사해감
+			// 위 -> 아래 -> 왼쪽 -> 오른쪽 
+			// Select 기준에서 Magnetic Range를 만들고 Any Shape의 다섯 좌표가 그 Range 안에 들어간다면 그 방향으로 선택
+			// 2. Select < Any
+			// 위와 같은 알고리즘으로 그 반대의 Any Shape의 기준에서 Magnetic Range를 만들어 놓고
+			// 그 범위 안에 Select Shape의 다섯 좌표가 들어가는지 똑같은 방식으로 조사함 
+
+			MakeFiveReferenceVertex(nAnyReferenceX, m_CaShape[i]->nX, m_CaShape[i]->nWidth);
+			MakeFiveReferenceVertex(nSelectedReferenceX, nShapeTempX, nShapeTempWidth);
+			MakeFiveReferenceVertex(nAnyReferenceY, m_CaShape[i]->nY, m_CaShape[i]->nHeight);
+			MakeFiveReferenceVertex(nSelectedReferenceY, nShapeTempY, nShapeTempHeight);
+
+			// 5개의 정점을 모두 Magnetic Range안에 들어가는지 찾음
+			for (int j = 0; j < 5; j++)
+			{
+				if ((nShapeTempX - m_nSelectRange <= nAnyReferenceX[j] && nAnyReferenceX[j] <= nShapeTempWidth + m_nSelectRange) && (nShapeTempY - m_nSelectRange <= m_CaShape[i]->nHeight && m_CaShape[i]->nHeight <= nShapeTempY + m_nSelectRange)
+					|| (m_CaShape[i]->nX - m_nSelectRange <= nSelectedReferenceX[j] && nSelectedReferenceX[j] <= m_CaShape[i]->nWidth + m_nSelectRange) && (m_CaShape[i]->nHeight - m_nSelectRange <= nShapeTempY && nShapeTempY <= m_CaShape[i]->nHeight + m_nSelectRange))
+				{ // 위
+					naDirectionControl[0]++;
+				}
+				else if ((nShapeTempY - m_nSelectRange <= nAnyReferenceY[j] && nAnyReferenceY[j] <= nShapeTempHeight + m_nSelectRange) && (nShapeTempWidth - m_nSelectRange <= m_CaShape[i]->nX && m_CaShape[i]->nX <= nShapeTempWidth + m_nSelectRange)
+					|| (m_CaShape[i]->nY - m_nSelectRange <= nSelectedReferenceY[j] && nSelectedReferenceY[j] <= m_CaShape[i]->nHeight + m_nSelectRange) && (m_CaShape[i]->nX - m_nSelectRange <= nShapeTempWidth && nShapeTempWidth <= m_CaShape[i]->nX + m_nSelectRange))
+				{ // 오른쪽
+					naDirectionControl[1]++;
+				}
+				else if ((nShapeTempX - m_nSelectRange <= nAnyReferenceX[j] && nAnyReferenceX[j] <= nShapeTempWidth + m_nSelectRange) && (nShapeTempHeight - m_nSelectRange <= m_CaShape[i]->nY && m_CaShape[i]->nY <= nShapeTempHeight + m_nSelectRange)
+					|| (m_CaShape[i]->nX - m_nSelectRange <= nSelectedReferenceX[j] && nSelectedReferenceX[j] <= m_CaShape[i]->nWidth + m_nSelectRange) && (m_CaShape[i]->nY - m_nSelectRange <= nShapeTempHeight && nShapeTempHeight <= m_CaShape[i]->nY + m_nSelectRange))
+				{ // 아래
+					naDirectionControl[2]++;
+				}
+				else if ((nShapeTempY - m_nSelectRange <= nAnyReferenceY[j] && nAnyReferenceY[j] <= nShapeTempHeight + m_nSelectRange) && (nShapeTempX - m_nSelectRange <= m_CaShape[i]->nWidth && m_CaShape[i]->nWidth <= nShapeTempX + m_nSelectRange)
+					|| (m_CaShape[i]->nY - m_nSelectRange <= nSelectedReferenceY[j] && nSelectedReferenceY[j] <= m_CaShape[i]->nHeight + m_nSelectRange) && (m_CaShape[i]->nWidth - m_nSelectRange <= nShapeTempX && nShapeTempX <= m_CaShape[i]->nWidth + m_nSelectRange))
+				{ // 왼쪽
+					naDirectionControl[3]++;
+				}
+			}
+
+			// 3개 이상 범위에 들어오면 성공
+			for (int j = 0; j < 4; j++)
+			{
+				if (naDirectionControl[j] >= 3)
+				{
+					int nSubMoving;
+					switch (j)
+					{
+					case 0: //위
+						//cout << "Mag 위쪽 " << endl;
+						nSubMoving = (tmpShape->nY - m_CaShape[i]->nHeight);
+						tmpShape->nHeight -= nSubMoving;
+						tmpShape->nY = m_CaShape[i]->nHeight;
+
+						break;
+					case 1: //오른쪽
+						//cout << "Mag 오른쪽 " << endl;
+						nSubMoving = (tmpShape->nWidth - m_CaShape[i]->nX);
+						tmpShape->nX -= nSubMoving;
+						tmpShape->nWidth = m_CaShape[i]->nX;
+
+						break;
+					case 2: //아래
+						//cout << "Mag 아래 " << endl;
+						nSubMoving = (tmpShape->nHeight - m_CaShape[i]->nY);
+						tmpShape->nY -= nSubMoving;
+						tmpShape->nHeight = m_CaShape[i]->nY;
+
+						break;
+					case 3: //왼쪽
+						//cout << "Mag 왼쪽 " << endl;
+						nSubMoving = (tmpShape->nX - m_CaShape[i]->nWidth);
+						tmpShape->nWidth -= nSubMoving;
+						tmpShape->nX = m_CaShape[i]->nWidth;
+
+						break;
+					}
+				}
+			}
+		}
+	}
 	return MY_SUCCES;
 }
 
