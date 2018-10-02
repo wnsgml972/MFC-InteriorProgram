@@ -46,11 +46,17 @@
 
 #### Capture
 
-![capture](./media/gif/capture.gif)
+![magnetic](./media/gif/magnetic.gif)
 
 #### Redo, Undo (```ctrl + y, ctrl + z```)  구현 중
 
 #### Save, Load  구현 중
+
+#### Capture
+
+![capture](./media/gif/capture.gif)
+
+
 
 <br/>
 
