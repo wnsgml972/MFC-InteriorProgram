@@ -44,7 +44,7 @@
 
 ### 편의 기능
 
-#### Capture
+#### Magnetic
 
 ![magnetic](./media/gif/magnetic.gif)
 
@@ -94,7 +94,7 @@
   * OnPaint에 dc를 이거로 교체하면 끝!
   * repaint()시 깜빡임이 바로 없어짐
 
-4. MVC 패턴에 따른 패키징
+4. MVC 패턴에 따른 필터 구성
 
 ### 프로젝트 개발 Log
 

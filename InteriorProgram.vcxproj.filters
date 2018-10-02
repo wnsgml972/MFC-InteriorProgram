@@ -17,11 +17,11 @@
     <Filter Include="Main">
       <UniqueIdentifier>{1dac73ab-9841-4c2a-ba3f-74ed275e97a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLib">
+      <UniqueIdentifier>{74df4254-614d-4929-8fbf-1e0ce2702cf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CBufferDC.h">
-      <Filter>View</Filter>
-    </ClInclude>
     <ClInclude Include="CDlgTab1.h">
       <Filter>View</Filter>
     </ClInclude>
@@ -64,23 +64,23 @@
     <ClInclude Include="DoorShape.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>Controller</Filter>
-    </ClInclude>
     <ClInclude Include="ShapeHandler.h">
       <Filter>Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="define.h">
-      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="UserObjectShape.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="CBufferDC.h">
+      <Filter>CustomLib</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>CustomLib</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>CustomLib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CBufferDC.cpp">
-      <Filter>View</Filter>
-    </ClCompile>
     <ClCompile Include="CDlgTab1.cpp">
       <Filter>View</Filter>
     </ClCompile>
@@ -105,9 +105,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="define.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="DoorShape.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -120,14 +117,20 @@
     <ClCompile Include="WindowShape.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>Controller</Filter>
-    </ClCompile>
     <ClCompile Include="ShapeHandler.cpp">
       <Filter>Controller</Filter>
     </ClCompile>
     <ClCompile Include="UserObjectShape.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="CBufferDC.cpp">
+      <Filter>CustomLib</Filter>
+    </ClCompile>
+    <ClCompile Include="define.cpp">
+      <Filter>CustomLib</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>CustomLib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

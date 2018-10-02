@@ -22,10 +22,11 @@ public:
 	boolean SaveAsCsv();
 	boolean LoadAsCsv();
 	vector<string> CsvReadRow(istream &file, char cDelimiter);
-
+	
 	string CStringToString(CString cstr);
 	CString StringToCString(string str);
 	bool isNumber(string s);
+	void SpecificAreaCapture(CWnd *pcwnd);
 
 private:
 	FileManager();
