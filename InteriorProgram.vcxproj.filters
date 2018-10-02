@@ -151,6 +151,18 @@
     <Image Include="res\Toolbar256.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="res\icon1.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="media\favicon.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="media\laundry.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="media\tv.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\InteriorProgram.rc2">

@@ -1,9 +1,70 @@
 # MFC InteriorProgram
 
+## 구현 기능
+
+### 그래픽
+
+#### Draw room, Select, Move
+
+![draw select move](./media/gif/draw_select_move.gif)
+
+#### Draw window, door
+
+![draw window door](./media/gif/draw_window_door.gif)
+
+#### Move group
+
+![move group](./media/gif/group_move.gif)
+
+#### Draw user object
+
+![draw user object](./media/gif/user_object.gif)
+
+<br/>
+
+### 편집
+
+#### Copy, Paste (```ctrl + c, ctrl + v```)
+
+![copy paste](./media/gif/copy_paste.gif)
+
+#### Scale (```mouse wheel```)
+
+![scale](./media/gif/scale.gif)
+
+#### Edit (```Dbclick or 마우스 오른쪽 클릭```)
+
+![edit](./media/gif/dbclick_edit.gif)
+
+#### delete (```ctrl + x, 마우스 오른쪽 클릭```)
+
+![delete](./media/gif/delete.gif)
+
+<br/>
+
+### 편의 기능
+
+#### Capture
+
+![capture](./media/gif/capture.gif)
+
+#### Redo, Undo (```ctrl + y, ctrl + z```)  구현 중
+
+#### Save, Load  구현 중
+
+<br/>
+
+### 전체 시연 영상
+
+<https://www.youtube.com/watch?v=ldUrHtPFh3A&feature=youtu.be>
+
+<br/><br/>
+
+
+## 첫 과제
+
 * [09.10] 시작!
-
 * 2번 째 과제
-
 * 마이다스 코딩 규칙에 맞춰서, 마이다스 챌린지 때 했던 것을 자바에서 C++로 구현
 
 

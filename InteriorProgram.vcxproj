@@ -227,6 +227,10 @@
     <ResourceCompile Include="InteriorProgram.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="media\favicon.ico" />
+    <Image Include="media\laundry.ico" />
+    <Image Include="media\tv.ico" />
+    <Image Include="res\icon1.ico" />
     <Image Include="res\InteriorProgram.ico" />
     <Image Include="res\InteriorProgramDoc.ico" />
     <Image Include="res\Toolbar.bmp" />

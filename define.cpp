@@ -1,6 +1,6 @@
+
 #include "stdafx.h"
 #include "define.h"
-
 
 
 GlobalNum* GlobalNum::instance = NULL;

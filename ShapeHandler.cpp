@@ -257,22 +257,25 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 	{
 		// 창문 문만 클릭했을 시!!!
 
-		RoomShape *tmpRoomShape;
+		RoomShape *tmpRoomShape = nullptr;
+		int nLocaInfo = -1;
 
 		if (typeid(*tmpShape) == typeid(DoorShape))
 		{
 			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<DoorShape*>(tmpShape)->m_pInRoomShapePointer);
+			nLocaInfo = dynamic_cast<DoorShape*>(tmpShape)->m_nLocaInfo;
 		}
 		else if (typeid(*tmpShape) == typeid(WindowShape))
 		{
 			tmpRoomShape = dynamic_cast<RoomShape*>(dynamic_cast<WindowShape*>(tmpShape)->m_pInRoomShapePointer);
+			nLocaInfo = dynamic_cast<WindowShape*>(tmpShape)->m_nLocaInfo;
 		}
 		else
 		{
 			cout << "Move 형 변환 Error\n";
 		}
 
-		if (tmpShape->nX + m_nDrawRange == tmpRoomShape->nX || tmpShape->nWidth - m_nDrawRange == tmpRoomShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
+		if ( nLocaInfo == GlobalNum::getInstance()->LOCA_LEFT  || nLocaInfo == GlobalNum::getInstance()->LOCA_RIGHT) //왼쪽 혹은 오른쪽에 있다면
 		{
 			//cout << "왼오\n";
 
@@ -292,7 +295,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 				tmpShape->nHeight = tmpHeight;
 			}
 		}
-		else if (tmpShape->nY + m_nDrawRange == tmpRoomShape->nY || tmpShape->nHeight - m_nDrawRange == tmpRoomShape->nHeight) //위쪽 혹은 아래쪽에 있다면
+		else if (nLocaInfo == GlobalNum::getInstance()->LOCA_UP || nLocaInfo == GlobalNum::getInstance()->LOCA_DOWN) //위쪽 혹은 아래쪽에 있다면
 		{
 			//cout << "위아래\n";
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "define.h"
 
 //////////////////////////////////////////////////////////////////////////
 /// fole load, save ½Ã ÇÊ¿ä
@@ -8,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <istream>
+#include "define.h"
 
 class FileManager
 {

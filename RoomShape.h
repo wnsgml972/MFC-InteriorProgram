@@ -2,8 +2,10 @@
 #include "Shape.h"
 #include "DoorShape.h"
 #include "WindowShape.h"
-#include "define.h"
 #include "UserObjectShape.h"
+#include "define.h"
+
+
 class RoomShape :
 	public Shape
 {

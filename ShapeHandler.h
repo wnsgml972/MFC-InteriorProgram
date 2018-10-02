@@ -1,8 +1,8 @@
 #pragma once
 
-#include "define.h"
 #include "Shape.h"
 #include "FileManager.h"
+#include "define.h"
 
 class ShapeHandler
 {
@@ -26,7 +26,7 @@ public:
 	void CopyShapeById(int nId);
 	void Move(CPoint point);
 	void Select(CPoint point);
-	void SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPoint &CurrentMousePoint);
+	void SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint,  CPoint &CurrentMousePoint);
 	void MakeFiveReferenceVertex(int *naVertex, int tmpVal1, int tmpVal2);
 
 	//////////////////////////////////////////////////////////////////////////
