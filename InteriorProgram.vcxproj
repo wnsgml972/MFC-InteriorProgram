@@ -189,6 +189,7 @@
     <ClInclude Include="InteriorProgram.h" />
     <ClInclude Include="InteriorProgramDoc.h" />
     <ClInclude Include="InteriorProgramView.h" />
+    <ClInclude Include="JunUtil.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RoomShape.h" />
@@ -204,12 +205,12 @@
     <ClCompile Include="CDlgTab1.cpp" />
     <ClCompile Include="CDlgTab2.cpp" />
     <ClCompile Include="ControlView.cpp" />
-    <ClCompile Include="define.cpp" />
     <ClCompile Include="DoorShape.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="InteriorProgram.cpp" />
     <ClCompile Include="InteriorProgramDoc.cpp" />
     <ClCompile Include="InteriorProgramView.cpp" />
+    <ClCompile Include="JunUtil.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="RoomShape.cpp" />
     <ClCompile Include="Shape.cpp" />

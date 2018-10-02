@@ -17,7 +17,7 @@
     <Filter Include="Main">
       <UniqueIdentifier>{1dac73ab-9841-4c2a-ba3f-74ed275e97a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CustomLib">
+    <Filter Include="Util">
       <UniqueIdentifier>{74df4254-614d-4929-8fbf-1e0ce2702cf9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -71,13 +71,16 @@
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="CBufferDC.h">
-      <Filter>CustomLib</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="define.h">
-      <Filter>CustomLib</Filter>
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="FileManager.h">
-      <Filter>CustomLib</Filter>
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="JunUtil.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,13 +127,13 @@
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="CBufferDC.cpp">
-      <Filter>CustomLib</Filter>
-    </ClCompile>
-    <ClCompile Include="define.cpp">
-      <Filter>CustomLib</Filter>
+      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="FileManager.cpp">
-      <Filter>CustomLib</Filter>
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="JunUtil.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

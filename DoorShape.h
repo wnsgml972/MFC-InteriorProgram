@@ -8,8 +8,6 @@ public:
 
 	Shape *m_pInRoomShapePointer;
 	int m_nLocaInfo;
-	enum {
-		LOCA_DEFAULT, LOCA_UP, LOCA_RIGHT, LOCA_DOWN, LOCA_LEFT
-	};
+
 };
 

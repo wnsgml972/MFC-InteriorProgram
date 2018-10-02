@@ -43,7 +43,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		NoAddShape = FALSE;
 		return;
 	}
-	if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_ROOM)
+	if (GlobalNum::nPaintStatus == PAINT_ROOM)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// 마지막 검사, 기준 재조정
@@ -57,7 +57,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		}
 		m_CaShape.push_back(new RoomShape(m_nAutoIncId++, nX, nY, nWidth, nHeight));
 	}
-	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_DOOR)
+	else if (GlobalNum::nPaintStatus == PAINT_DOOR)
 	{
 		if (m_CaShape.size() == 0)
 			return;
@@ -81,7 +81,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		m_CaShape.push_back(CDoorShape);
 		dynamic_cast<RoomShape*>(CDoorShape->m_pInRoomShapePointer)->m_CaDoor.push_back(CDoorShape);
 	}
-	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_WINDOW)
+	else if (GlobalNum::nPaintStatus == PAINT_WINDOW)
 	{
 		if (m_CaShape.size() == 0)
 			return;
@@ -105,7 +105,7 @@ void ShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
 		m_CaShape.push_back(CWindowShape);
 		dynamic_cast<RoomShape*>(CWindowShape->m_pInRoomShapePointer)->m_CaWindow.push_back(CWindowShape);
 	}
-	else if (GlobalNum::getInstance()->nPaintStatus == GlobalNum::getInstance()->PAINT_USER_ADD)
+	else if (GlobalNum::nPaintStatus == PAINT_USER_ADD)
 	{
 		//////////////////////////////////////////////////////////////////////////
 		// 마지막 검사, 기준 재조정
@@ -275,7 +275,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 			cout << "Move 형 변환 Error\n";
 		}
 
-		if ( nLocaInfo == GlobalNum::getInstance()->LOCA_LEFT  || nLocaInfo == GlobalNum::getInstance()->LOCA_RIGHT) //왼쪽 혹은 오른쪽에 있다면
+		if ( nLocaInfo == LOCA_LEFT  || nLocaInfo == LOCA_RIGHT) //왼쪽 혹은 오른쪽에 있다면
 		{
 			//cout << "왼오\n";
 
@@ -295,7 +295,7 @@ void ShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다.
 				tmpShape->nHeight = tmpHeight;
 			}
 		}
-		else if (nLocaInfo == GlobalNum::getInstance()->LOCA_UP || nLocaInfo == GlobalNum::getInstance()->LOCA_DOWN) //위쪽 혹은 아래쪽에 있다면
+		else if (nLocaInfo == LOCA_UP || nLocaInfo == LOCA_DOWN) //위쪽 혹은 아래쪽에 있다면
 		{
 			//cout << "위아래\n";
 
@@ -451,7 +451,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.x = nShapeTempWidth;
 			}
 
-			m_RememberLocationForDoorWindow = GlobalNum::LOCA_UP;
+			m_RememberLocationForDoorWindow = LOCA_UP;
 			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
@@ -481,7 +481,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.y = nShapeTempHeight;
 			}
 
-			m_RememberLocationForDoorWindow = GlobalNum::LOCA_RIGHT;
+			m_RememberLocationForDoorWindow = LOCA_RIGHT;
 			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
@@ -513,7 +513,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.x = nShapeTempWidth;
 			}
 
-			m_RememberLocationForDoorWindow = GlobalNum::LOCA_DOWN;
+			m_RememberLocationForDoorWindow = LOCA_DOWN;
 			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
@@ -544,7 +544,7 @@ void ShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPo
 				CurrentMousePoint.y = nShapeTempHeight;
 			}
 
-			m_RememberLocationForDoorWindow = GlobalNum::LOCA_LEFT;
+			m_RememberLocationForDoorWindow = LOCA_LEFT;
 			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
@@ -854,14 +854,14 @@ int ShapeHandler::CopySelectedShape(int nIndex)
 
 			if (typeid(*tmpShape) == typeid(RoomShape))
 			{
-				GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_ROOM; // Room 생성 상태로 바꿈
+				GlobalNum::nPaintStatus = PAINT_ROOM; // Room 생성 상태로 바꿈
 			}
 			else
 			{
-				GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_USER_ADD; // Room 생성 상태로 바꿈
+				GlobalNum::nPaintStatus = PAINT_USER_ADD; // Room 생성 상태로 바꿈
 			}
 			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+			GlobalNum::nPaintStatus = PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
 		}
 		else if (typeid(*tmpShape) == typeid(DoorShape)) // Door를 선택해서 복사하려 할 때!
 		{
@@ -928,9 +928,9 @@ int ShapeHandler::CopySelectedShape(int nIndex)
 				cout << "창문, 문 단일 Copy Error\n";
 			}
 
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_DOOR; // Door 생성 상태로 바꿈
+			GlobalNum::nPaintStatus = PAINT_DOOR; // Door 생성 상태로 바꿈
 			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+			GlobalNum::nPaintStatus = PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
 		}
 		else if (typeid(*tmpShape) == typeid(WindowShape)) // Window를 선택해서 복사하려 할 때!
 		{
@@ -998,9 +998,9 @@ int ShapeHandler::CopySelectedShape(int nIndex)
 				cout << "창문, 문 단일 Copy Error\n";
 			}
 
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_WINDOW; // Window 생성 상태로 바꿈
+			GlobalNum::nPaintStatus = PAINT_WINDOW; // Window 생성 상태로 바꿈
 			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::getInstance()->nPaintStatus = GlobalNum::getInstance()->PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+			GlobalNum::nPaintStatus = PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
 		}
 		else
 		{

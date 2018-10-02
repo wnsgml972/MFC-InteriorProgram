@@ -23,30 +23,26 @@
 #define FORj(start, count)      FOR(j, start, count)
 #define FORk(start, count)      FOR(k, start, count)
 
+// Add Lib
 #include <vector>
 #include <stack>
 #include <typeinfo>
 #include <algorithm>
+#include "JunUtil.h"
 
+
+// Namespace
 using namespace std;
 
-class GlobalNum
+
+// Enum List
+const enum    // PAINT_BASIC은 Select와 Move, Magnetic 담당함!
 {
-public:
-	static GlobalNum* getInstance();
+	PAINT_BASIC = 0, PAINT_ROOM, PAINT_WINDOW, PAINT_DOOR,
+	PAINT_USER_ADD, PAINT_USER_WASH, PAINT_USER_TV,
+}; 
 
-	int nPaintStatus;
-	enum {
-		PAINT_BASIC, PAINT_ROOM, PAINT_WINDOW, PAINT_DOOR,
-		PAINT_USER_ADD, PAINT_USER_WASH, PAINT_USER_TV,		
-	}; // InteriorProgramView랑 동기화 시켜줘야 됨...
-	   // PAINT_BASIC은 Select와 Move, Magnetic 담당함!
-
-	enum {
-		LOCA_DEFAULT, LOCA_UP, LOCA_RIGHT, LOCA_DOWN, LOCA_LEFT
-	};
-
-private:
-	GlobalNum();
-	static GlobalNum *instance;
+const enum 
+{
+	LOCA_DEFAULT = 0, LOCA_UP, LOCA_RIGHT, LOCA_DOWN, LOCA_LEFT
 };

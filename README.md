@@ -99,12 +99,3 @@
 ### 프로젝트 개발 Log
 
 * [Midas Log](https://github.com/wnsgml972/midas_log/blob/master/contents/2018.09/09.md),  [09.10] 부터 볼 것
-
-
-## 쓸만한 것
-
-* define의 각종 함수들
-
-* FileManager
-
-* CBufferDC
