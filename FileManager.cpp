@@ -1,24 +1,24 @@
 #include "stdafx.h"
 #include "FileManager.h"
+#include "ShapeHandler.h"
 
 FileManager* FileManager::instance = NULL;
 
 
 FileManager* FileManager::GetInstance()
 {
-	if (!instance) {
+	if (!instance)
+	{
 		instance = new FileManager();
 	}
 	return instance;
 }
-FileManager::FileManager()
-{
+FileManager::FileManager()  { }
+FileManager::~FileManager() { SAFE_DELETE(instance); }
 
-}
-FileManager::~FileManager()
-{
-	SAFE_DELETE(instance);
-}
+
+//////////////////////////////////////////////////////////////////////////
+// JSon 이용
 void FileManager::SaveAsJson()
 {
 
@@ -27,10 +27,13 @@ void FileManager::LoadAsJson()
 {
 
 }
-/*
+
+
+//////////////////////////////////////////////////////////////////////////
+// csv 이용
 boolean FileManager::SaveAsCsv()
 {
-	PhoneBook *CPhoneBook = PhoneBook::getInstance();
+	ShapeHandler *CShapeHandler = ShapeHandler::GetInstance();
 
 	CString strPath = _T("C:\\Users\\kjh0121\\source\\repos\\Project1\\PhoneBookGUI\\media\\마이다스주소록_20180214.csv");
 
@@ -43,14 +46,15 @@ boolean FileManager::SaveAsCsv()
 #pragma warning(disable: 4018)
 	//파일 쓰기
 
-	for (int i = 0; i < CPhoneBook->m_CaShape.size(); i++)
+	for (int i = 0; i < CShapeHandler->m_CaShape.size(); i++)
 	{
-		if (CPhoneBook->m_CaShape.at(i) == nullptr)
+		if (CShapeHandler->m_CaShape.at(i) == nullptr)
 		{
 			continue;
 		}
-		file << CStringToString(CPhoneBook->m_CaShape.at(i)->GetName()) << ',' << CStringToString(CPhoneBook->m_CaShape.at(i)->GetPhoneNumber())
-			<< ',' << CStringToString(CPhoneBook->m_CaShape.at(i)->GetTitle()) << ',' << CStringToString(CPhoneBook->m_CaShape.at(i)->GetJob());
+		// file에 쓰고 싶은 내용 쓰기 !!  추가
+// 		file << CStringToString(CShapeHandler->m_CaShape.at(i)->GetName()) << ',' << CStringToString(CShapeHandler->m_CaShape.at(i)->GetPhoneNumber())
+// 			<< ',' << CStringToString(CShapeHandler->m_CaShape.at(i)->GetTitle()) << ',' << CStringToString(CShapeHandler->m_CaShape.at(i)->GetJob());
 		file << '\n';
 	}
 #pragma warning(pop)
@@ -64,10 +68,9 @@ boolean FileManager::SaveAsCsv()
 
 	return TRUE;
 }
-
 boolean FileManager::LoadAsCsv()
 {
-	PhoneBook *CPhoneBook = PhoneBook::getInstance();
+	ShapeHandler *CShapeHandler = ShapeHandler::GetInstance();
 
 	CString strPath = _T("C:\\Users\\kjh0121\\source\\repos\\Project1\\PhoneBookGUI\\media\\마이다스주소록_20180214.csv");
 
@@ -85,7 +88,7 @@ boolean FileManager::LoadAsCsv()
 		return FALSE;
 	}
 
-	CPhoneBook->m_CaShape.clear();
+	CShapeHandler->m_CaShape.clear();
 
 	while (file.good()) //eof, bad, fail 함수가 거짓을 반환할 때까지
 	{
@@ -97,12 +100,14 @@ boolean FileManager::LoadAsCsv()
 		}
 		else //#문자가 없을 경우
 		{
-			strName = StringToCString(row[0]);
-			strJob = StringToCString(row[1]);
-			strTitle = StringToCString(row[2]);
-			strPhoneNumber = StringToCString(row[3]);
+			// Add Shape!! 추가
 
-			CPhoneBook->m_CaShape.push_back(new Person(CPhoneBook->m_AutoIncId++, strName, strPhoneNumber, strTitle, strJob));
+// 			strName = StringToCString(row[0]);
+// 			strJob = StringToCString(row[1]);
+// 			strTitle = StringToCString(row[2]);
+// 			strPhoneNumber = StringToCString(row[3]);
+
+			//CShapeHandler->m_CaShape.push_back(new Person(CShapeHandler->, strName, strPhoneNumber, strTitle, strJob));
 		}
 	}
 
@@ -111,12 +116,11 @@ boolean FileManager::LoadAsCsv()
 	return TRUE;
 
 }
-
 vector<string> FileManager::CsvReadRow(istream &file, char cDelimiter)
 {
 	stringstream StringStream;
 	bool bInquotes = false;  // 인용구, 큰 따옴표 같은 것 제거
-	vector<string> row;//relying on RVO
+	vector<string> row; //relying on RVO
 
 	while (file.good())
 	{
@@ -156,4 +160,3 @@ vector<string> FileManager::CsvReadRow(istream &file, char cDelimiter)
 
 	return row;
 }
-*/

@@ -23,6 +23,11 @@
 #define FORj(start, count)      FOR(j, start, count)
 #define FORk(start, count)      FOR(k, start, count)
 
+
+// Delete Warning
+//#pragma warning(disable:4018)  벡터 포문 돌릴 시 벡터에서 사이즈 관한 warning 안 뜨게 함
+
+
 // Add Lib
 #include <vector>
 #include <stack>
@@ -41,7 +46,6 @@ const enum    // PAINT_BASIC은 Select와 Move, Magnetic 담당함!
 	PAINT_BASIC = 0, PAINT_ROOM, PAINT_WINDOW, PAINT_DOOR,
 	PAINT_USER_ADD, PAINT_USER_WASH, PAINT_USER_TV,
 }; 
-
 const enum 
 {
 	LOCA_DEFAULT = 0, LOCA_UP, LOCA_RIGHT, LOCA_DOWN, LOCA_LEFT

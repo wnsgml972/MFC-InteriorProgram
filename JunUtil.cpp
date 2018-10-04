@@ -3,13 +3,20 @@
 
 
 //////////////////////////////////////////////////////////////////////////
-// GlobalNum Init
+// GlobalNum 초기화
+
 int GlobalNum::nPaintStatus = 0;
+
+
+
+
+
 
 
 //////////////////////////////////////////////////////////////////////////
 // JunHee Util
-// CString <-> string  변환기
+
+// 문자열 컨트롤
 std::string JunUtil::CStringToString(CString cstr)
 {
 	char caResult[100];
@@ -35,25 +42,26 @@ CString JunUtil::StringToCString(std::string str)
 
 	return strResult;
 }
-
-// 숫자인지 아닌지
-bool JunUtil::isNumber(std::string s)
+bool JunUtil::isNumber(std::string str)
 {
-	if (s.size() == 0)
+	if (str.size() == 0)
 		return false;
 
 #pragma warning(push)
 #pragma warning(disable: 4018)
-	for (int i = 0; i < s.size(); i++) {
+	for (int i = 0; i < str.size(); i++)
+	{
 #pragma warning(pop)
-		if ((s[i] >= '0' && s[i] <= '9') == false) {
+		if (( str[i] >= '0' && str[i] <= '9') == false) 
+		{
 			return false;
 		}
 	}
 	return true;
 }
 
-// 원하는 작업 영역 캡쳐!!!,  캡쳐 하고 싶은 영역의 Frame Param 전달
+
+// 원하는 작업 영역 캡쳐,  캡쳐 하고 싶은 영역의 Frame Param 전달
 void JunUtil::SpecificAreaCapture(CWnd *pcwnd)
 {
 	// 바탕 화면 윈도우 객체에 대한 포인터를 얻는다.
