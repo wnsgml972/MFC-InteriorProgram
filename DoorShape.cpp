@@ -2,8 +2,7 @@
 #include "DoorShape.h"
 
 
-DoorShape::DoorShape(int nId, int nX, int nY, int nWidth, int nHeight)
-	: Shape(nId, nX, nY, nWidth, nHeight)
+CDoorShape::CDoorShape(int nId, int nX, int nY, int nWidth, int nHeight) : CShape(nId, nX, nY, nWidth, nHeight)
 {
 	nRed = 211;
 	nGreen = 162;
@@ -11,7 +10,7 @@ DoorShape::DoorShape(int nId, int nX, int nY, int nWidth, int nHeight)
 	m_nLocaInfo = 0; //LOCA_DEFAULT
 }
 
-DoorShape::~DoorShape()
+CDoorShape::~CDoorShape()
 {
 	printf("~DoorShape\n");
 }

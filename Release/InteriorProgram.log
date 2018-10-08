@@ -1,13 +1,21 @@
-﻿  CDlgTab1.cpp
+﻿  stdafx.cpp
+  CBufferDC.cpp
+  CDlgTab1.cpp
   CDlgTab2.cpp
   ControlView.cpp
+  DoorShape.cpp
+  FileManager.cpp
   InteriorProgram.cpp
   InteriorProgramDoc.cpp
   InteriorProgramView.cpp
+  JunUtil.cpp
   MainFrm.cpp
+  RoomShape.cpp
+  Shape.cpp
+  ShapeHandler.cpp
+  UserObjectShape.cpp
+  WindowShape.cpp
   코드를 생성하고 있습니다.
-  161 of 409 functions (39.4%) were compiled, the rest were copied from previous compilation.
-    90 functions were new in current compilation
-    30 functions had inline decision re-evaluated but remain unchanged
+  All 1099 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   코드를 생성했습니다.
-  InteriorProgram.vcxproj -> C:\Users\kjh0121\source\repos\Project1\Release\InteriorProgram.exe
+  InteriorProgram.vcxproj -> C:\Users\kjh0121\Desktop\kjh\MFC-InteriorProgram\Release\InteriorProgram.exe

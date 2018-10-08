@@ -2,28 +2,28 @@
 #include "FileManager.h"
 #include "ShapeHandler.h"
 
-FileManager* FileManager::instance = NULL;
+CFileManager* CFileManager::instance = NULL;
 
 
-FileManager* FileManager::GetInstance()
+CFileManager* CFileManager::GetInstance()
 {
 	if (!instance)
 	{
-		instance = new FileManager();
+		instance = new CFileManager();
 	}
 	return instance;
 }
-FileManager::FileManager()  { }
-FileManager::~FileManager() { SAFE_DELETE(instance); }
+CFileManager::CFileManager()  { }
+CFileManager::~CFileManager() { SAFE_DELETE(instance); }
 
 
 //////////////////////////////////////////////////////////////////////////
 // JSon 이용
-void FileManager::SaveAsJson()
+void CFileManager::SaveAsJson()
 {
 
 }
-void FileManager::LoadAsJson()
+void CFileManager::LoadAsJson()
 {
 
 }
@@ -31,9 +31,9 @@ void FileManager::LoadAsJson()
 
 //////////////////////////////////////////////////////////////////////////
 // csv 이용
-boolean FileManager::SaveAsCsv()
+bool CFileManager::SaveAsCsv()
 {
-	ShapeHandler *CShapeHandler = ShapeHandler::GetInstance();
+	CShapeHandler *CShapeHandler = CShapeHandler::GetInstance();
 
 	CString strPath = _T("C:\\Users\\kjh0121\\source\\repos\\Project1\\PhoneBookGUI\\media\\마이다스주소록_20180214.csv");
 
@@ -68,9 +68,9 @@ boolean FileManager::SaveAsCsv()
 
 	return TRUE;
 }
-boolean FileManager::LoadAsCsv()
+bool CFileManager::LoadAsCsv()
 {
-	ShapeHandler *CShapeHandler = ShapeHandler::GetInstance();
+	CShapeHandler *CShapeHandler = CShapeHandler::GetInstance();
 
 	CString strPath = _T("C:\\Users\\kjh0121\\source\\repos\\Project1\\PhoneBookGUI\\media\\마이다스주소록_20180214.csv");
 
@@ -116,7 +116,7 @@ boolean FileManager::LoadAsCsv()
 	return TRUE;
 
 }
-vector<string> FileManager::CsvReadRow(istream &file, char cDelimiter)
+vector<string> CFileManager::CsvReadRow(istream &file, char cDelimiter)
 {
 	stringstream StringStream;
 	bool bInquotes = false;  // 인용구, 큰 따옴표 같은 것 제거

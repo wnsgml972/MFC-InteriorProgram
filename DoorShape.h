@@ -1,12 +1,12 @@
 #pragma once
 #include "Shape.h"
-class DoorShape : public Shape
+class CDoorShape : public CShape
 {
 public:
-	DoorShape(int nId, int nX = 0, int nY = 0, int nWidth = 0, int nHeight = 0);
-	~DoorShape();
+	CDoorShape(int nId, int nX = 0, int nY = 0, int nWidth = 0, int nHeight = 0);
+	~CDoorShape();
 
-	Shape *m_pInRoomShapePointer;
+	CShape *m_pInRoomShapePointer;
 	int m_nLocaInfo;
 
 };

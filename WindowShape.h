@@ -1,12 +1,12 @@
 #pragma once
 #include "Shape.h"
-class WindowShape :	public Shape
+class CWindowShape :	public CShape
 {
 public:
-	WindowShape(int nId, int nX = 0, int nY = 0, int nWidth = 0, int nHeight = 0);
-	~WindowShape();
+	CWindowShape(int nId, int nX = 0, int nY = 0, int nWidth = 0, int nHeight = 0);
+	~CWindowShape();
 
-	Shape *m_pInRoomShapePointer;
+	CShape *m_pInRoomShapePointer;
 	int m_nLocaInfo;
 
 };

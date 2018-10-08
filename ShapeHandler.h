@@ -3,12 +3,15 @@
 #include "Shape.h"
 #include "FileManager.h"
 #include "define.h"
+#include "RoomShape.h"
+#include "UserObjectShape.h"
 
-class ShapeHandler
+
+class CShapeHandler
 {
 public:
-	static ShapeHandler* GetInstance();
-	~ShapeHandler();
+	static CShapeHandler* GetInstance();
+	~CShapeHandler();
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -41,23 +44,23 @@ public:
 	int WheelSelectedShape(short zDelta);
 	int MagneticSelectedShape();
 
-	vector<Shape*> m_CaShape;
+	vector<CShape*> m_CaShape;
 	bool NoAddShape;
 
 	int MakeAutoIncId();
 	int m_nDrawRange;
 
 private:
-	ShapeHandler();
-	static ShapeHandler *instance;
+	CShapeHandler();
+	static CShapeHandler *instance;
 
-	stack<Shape*> m_CsShape;
-	FileManager *CFileManager;
+	stack<CShape*> m_CsShape;
+	CFileManager *CFileManager;
 	int m_nAutoIncId;
 	int m_nSelectRange;
 	int m_nDrawSelectRange;
 
-	Shape *m_pRememberRoomPtrForDoorWindow;
+	CShape *m_pRememberRoomPtrForDoorWindow;
 	int m_RememberLocationForDoorWindow;
 };
 

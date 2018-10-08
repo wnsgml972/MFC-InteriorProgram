@@ -6,15 +6,14 @@
 #include "define.h"
 
 
-class RoomShape :
-	public Shape
+class CRoomShape : public CShape
 {
 public:
-	RoomShape(int nId, int nX = 0, int nY = 0, int nWidth = 0, int nHeight = 0);
-	~RoomShape();
+	CRoomShape(int nId, int nX = 0, int nY = 0, int nWidth = 0, int nHeight = 0);
+	~CRoomShape();
 
-	vector<DoorShape*> m_CaDoor;		//몇 개의 문을 가지고 있는지
-	vector<WindowShape*> m_CaWindow; //몇 개의 창문을 가지고 있는지
+	vector<CDoorShape*> m_CaDoor;		//몇 개의 문을 가지고 있는지
+	vector<CWindowShape*> m_CaWindow; //몇 개의 창문을 가지고 있는지
 
-	vector<UserObjectShape*> m_CaUserObject;  // 추 후 그룹화 고민
+	vector<CUserObjectShape*> m_CaUserObject;  // 추 후 그룹화 고민
 };

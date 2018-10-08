@@ -22,12 +22,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CDlgTab1.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="CDlgTab2.h">
-      <Filter>View</Filter>
-    </ClInclude>
     <ClInclude Include="ControlView.h">
       <Filter>View</Filter>
     </ClInclude>
@@ -70,9 +64,6 @@
     <ClInclude Include="UserObjectShape.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="CBufferDC.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="define.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -82,14 +73,17 @@
     <ClInclude Include="JunUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="DlgTab1.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgTab2.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferDC.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CDlgTab1.cpp">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="CDlgTab2.cpp">
-      <Filter>View</Filter>
-    </ClCompile>
     <ClCompile Include="ControlView.cpp">
       <Filter>View</Filter>
     </ClCompile>
@@ -126,13 +120,19 @@
     <ClCompile Include="UserObjectShape.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="CBufferDC.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="FileManager.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="JunUtil.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgTab1.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgTab2.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferDC.cpp">
       <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>

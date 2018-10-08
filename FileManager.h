@@ -9,21 +9,21 @@
 #include <istream>
 #include "define.h"
 
-class FileManager
+class CFileManager
 {
 public:
 
-	static FileManager* GetInstance();
+	static CFileManager* GetInstance();
 
-	~FileManager();
+	~CFileManager();
 
 	void SaveAsJson();
 	void LoadAsJson();
-	boolean SaveAsCsv();
-	boolean LoadAsCsv();
+	bool SaveAsCsv();
+	bool LoadAsCsv();
 	vector<string> CsvReadRow(istream &file, char cDelimiter);
 
 private:
-	FileManager();
-	static FileManager *instance;
+	CFileManager();
+	static CFileManager *instance;
 };

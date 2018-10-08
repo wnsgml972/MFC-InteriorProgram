@@ -179,9 +179,9 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CBufferDC.h" />
-    <ClInclude Include="CDlgTab1.h" />
-    <ClInclude Include="CDlgTab2.h" />
+    <ClInclude Include="BufferDC.h" />
+    <ClInclude Include="DlgTab1.h" />
+    <ClInclude Include="DlgTab2.h" />
     <ClInclude Include="ControlView.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="DoorShape.h" />
@@ -201,9 +201,9 @@
     <ClInclude Include="WindowShape.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CBufferDC.cpp" />
-    <ClCompile Include="CDlgTab1.cpp" />
-    <ClCompile Include="CDlgTab2.cpp" />
+    <ClCompile Include="BufferDC.cpp" />
+    <ClCompile Include="DlgTab1.cpp" />
+    <ClCompile Include="DlgTab2.cpp" />
     <ClCompile Include="ControlView.cpp" />
     <ClCompile Include="DoorShape.cpp" />
     <ClCompile Include="FileManager.cpp" />

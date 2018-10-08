@@ -2,7 +2,7 @@
 #include "Shape.h"
 
 
-Shape::Shape(int nId, int nX, int nY, int nWidth, int nHeight)
+CShape::CShape(int nId, int nX, int nY, int nWidth, int nHeight)
 {
 	this->nId = nId;
 	this->nX = nX;
@@ -14,13 +14,13 @@ Shape::Shape(int nId, int nX, int nY, int nWidth, int nHeight)
 	nRed = 0;  nGreen = 0;  nBlue = 0;	
 }
 
-Shape::Shape(Shape * CShape)
+CShape::CShape(CShape * tmpShape)
 {
-	this->nId = CShape->nId;
-	this->nX = CShape->nX;
-	this->nY = CShape->nY;
-	this->nWidth = CShape->nWidth;
-	this->nHeight = CShape->nHeight;
+	this->nId = tmpShape->nId;
+	this->nX = tmpShape->nX;
+	this->nY = tmpShape->nY;
+	this->nWidth = tmpShape->nWidth;
+	this->nHeight = tmpShape->nHeight;
 	this->bSelectedState = bSelectedState;
 
 	this->nRed = nRed;
@@ -28,12 +28,12 @@ Shape::Shape(Shape * CShape)
 	this->nBlue = nBlue;
 }
 
-Shape::~Shape()
+CShape::~CShape()
 {
 	printf("~Shape\n");
 }
 
-void Shape::SetRect(int nX, int nY, int nWidth, int nHeight)
+void CShape::SetRect(int nX, int nY, int nWidth, int nHeight)
 {
 	this->nX = nX;
 	this->nY = nY;
@@ -43,19 +43,19 @@ void Shape::SetRect(int nX, int nY, int nWidth, int nHeight)
 	nRed = 0;  nGreen = 0;  nBlue = 0;
 }
 
-void Shape::SetColor(int nRed, int nGreen, int nBlue)
+void CShape::SetColor(int nRed, int nGreen, int nBlue)
 {
 	this->nRed = nRed;
 	this->nGreen = nGreen;
 	this->nBlue = nBlue;
 }
 
-int Shape::GetId()
+int CShape::GetId()
 {
 	return nId;
 }
 
-void Shape::SetId(int nId)
+void CShape::SetId(int nId)
 {
 	this->nId = nId;
 }

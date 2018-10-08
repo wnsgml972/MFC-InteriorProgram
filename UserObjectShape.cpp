@@ -1,24 +1,24 @@
 #include "stdafx.h"
 #include "UserObjectShape.h"
 
-UserObjectShape::UserObjectShape(int nId, int nX, int nY, int nWidth, int nHeight)
-	: Shape(nId, nX, nY, nWidth, nHeight)
+CUserObjectShape::CUserObjectShape(int nId, int nX, int nY, int nWidth, int nHeight)
+	: CShape(nId, nX, nY, nWidth, nHeight)
 {
 	nRed = 111;
 	nGreen = 128;
 	nBlue = 244;
 }
 
-UserObjectShape::~UserObjectShape()
+CUserObjectShape::~CUserObjectShape()
 {
 	printf("~UserObjectShape\n");
 }
 
-void UserObjectShape::SetImageIcon(int ID)
+void CUserObjectShape::SetImageIcon(int ID)
 {
 	icon = AfxGetApp()->LoadIcon(ID);
 }
-MYICON_INFO UserObjectShape::MyGetIconInfo(HICON hIcon)
+MYICON_INFO CUserObjectShape::MyGetIconInfo(HICON hIcon)
 {
 	MYICON_INFO myinfo;
 	ZeroMemory(&myinfo, sizeof(myinfo));
