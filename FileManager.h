@@ -15,7 +15,7 @@ public:
 
 	static CFileManager* GetInstance();
 
-	~CFileManager();
+	virtual ~CFileManager();
 
 	void SaveAsJson();
 	void LoadAsJson();

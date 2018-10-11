@@ -1,5 +1,7 @@
 #pragma once
 
+#include "define.h"
+
 class CShape
 {
 public:
@@ -12,6 +14,11 @@ public:
 	
 	int GetId();
 	void SetId(int nId);
+
+	virtual int GetLocaInfo() = 0;
+	virtual void SetOwnColor() = 0;
+	virtual bool AddShape() = 0;
+	virtual bool CopyShape() = 0;
 
 	int nX, nY, nWidth, nHeight;
 	bool bSelectedState;

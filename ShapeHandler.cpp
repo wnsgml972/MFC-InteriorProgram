@@ -30,120 +30,48 @@ CShapeHandler::~CShapeHandler()
 	SAFE_DELETE(instance);
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////
 /// CRUD
-void CShapeHandler::AddShape(int nX, int nY, int nWidth, int nHeight)
+bool CShapeHandler::AddShape(CShape *CNewShape)
 {
 	if (NoAddShape == TRUE)
 	{
 		cout << "No Shape\n";
 		NoAddShape = FALSE;
-		return;
+		return FALSE;
 	}
-	if (GlobalNum::nPaintStatus == PAINT_ROOM)
-	{
-		//////////////////////////////////////////////////////////////////////////
-		// 마지막 검사, 기준 재조정
-		if (nX > nWidth)
-		{
-			swap(nX, nWidth);
-		}
-		if (nY > nHeight)
-		{
-			swap(nY, nHeight);
-		}
-		m_CaShape.push_back(new CRoomShape(m_nAutoIncId++, nX, nY, nWidth, nHeight));
-	}
-	else if (GlobalNum::nPaintStatus == PAINT_DOOR)
-	{
-		if (m_CaShape.size() == 0)
-			return;
+	/*
+	 - enum에 따른 분배 코드 지워가는 중! 가상 함수를 이용해 분배한다.
+	   이것만 부르면 알아서 다 생성해줌
+	 */
+	CShape *pNewShape = CNewShape;
+	pNewShape->AddShape();
 
-		//////////////////////////////////////////////////////////////////////////
-		// 마지막 검사, 기준 재조정
-		if (nX > nWidth)
-		{
-			swap(nX, nWidth);
-		}
-		if (nY > nHeight)
-		{
-			swap(nY, nHeight);
-		}
-
-		CDoorShape *CNewDoorShape = new CDoorShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
-		CNewDoorShape->m_nLocaInfo = m_RememberLocationForDoorWindow;
-		CNewDoorShape->m_pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // 자신이 속해있는 Room의 포인터
-
-		/// 삽입!
-		m_CaShape.push_back(CNewDoorShape);
-		dynamic_cast<CRoomShape*>(CNewDoorShape->m_pInRoomShapePointer)->m_CaDoor.push_back(CNewDoorShape);
-	}
-	else if (GlobalNum::nPaintStatus == PAINT_WINDOW)
-	{
-		if (m_CaShape.size() == 0)
-			return;
-
-		//////////////////////////////////////////////////////////////////////////
-		// 마지막 검사
-		if (nX > nWidth)
-		{
-			swap(nX, nWidth);
-		}
-		if (nY > nHeight)
-		{
-			swap(nY, nHeight);
-		}
-
-		CWindowShape *CNewWindowShape = new CWindowShape(m_nAutoIncId++, nX, nY, nWidth, nHeight);
-		CNewWindowShape->m_nLocaInfo = m_RememberLocationForDoorWindow;
-		CNewWindowShape->m_pInRoomShapePointer = m_pRememberRoomPtrForDoorWindow; // 자신이 속해있는 Room의 포인터
-
-		/// 삽입!
-		m_CaShape.push_back(CNewWindowShape);
-		dynamic_cast<CRoomShape*>(CNewWindowShape->m_pInRoomShapePointer)->m_CaWindow.push_back(CNewWindowShape);
-	}
-	else if (GlobalNum::nPaintStatus == PAINT_USER_ADD)
-	{
-		//////////////////////////////////////////////////////////////////////////
-		// 마지막 검사, 기준 재조정
-		if (nX > nWidth)
-		{
-			swap(nX, nWidth);
-		}
-		if (nY > nHeight)
-		{
-			swap(nY, nHeight);
-		}
-		m_CaShape.push_back(new CUserObjectShape(m_nAutoIncId++, nX, nY, nWidth, nHeight));
-	}
-	else //error
-	{
-		cout << "Add Shape Error\n";
-	}
+	return TRUE;
 }
-bool CShapeHandler::DeleteShapeById(int nId) // 만약 Room 이라면 그 안에 존재하는 Door와 Window 모두 벡터에서 같이 삭제해야 함
+
+
+CShape * CShapeHandler::GetShapeByID(int nId)
 {
-	return false;
-}
-void CShapeHandler::UpdateShapeById(int nId)
-{
+	if (nId < 0)
+		ASSERT(0);
 
+#pragma warning(push)
+#pragma warning(disable: 4018)
+	for(int i=0; i<m_CaShape.size(); i++)
+#pragma warning(pop)
+	{
+		if (m_CaShape[i]->GetId() == nId)
+		{
+			return m_CaShape[i];
+		}
+	}
+	
+	return nullptr;
 }
-int CShapeHandler::FindVectorIndexById(int nId)
-{
-	return 0;
-}
-
-
 
 //////////////////////////////////////////////////////////////////////////
 /// 기능
-void CShapeHandler::CopyShapeById(int nId)
-{
-
-}
 void CShapeHandler::Undo()
 {
 
@@ -257,24 +185,21 @@ void CShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다
 		// 창문 문만 클릭했을 시!!!
 
 		CRoomShape *tmpRoomShape = nullptr;
-		int nLocaInfo = -1;
 
 		if (typeid(*tmpShape) == typeid(CDoorShape))
 		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(dynamic_cast<CDoorShape*>(tmpShape)->m_pInRoomShapePointer);
-			nLocaInfo = dynamic_cast<CDoorShape*>(tmpShape)->m_nLocaInfo;
+			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDoorShape*>(tmpShape)->m_pInRoomShapeID));
 		}
 		else if (typeid(*tmpShape) == typeid(CWindowShape))
 		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(dynamic_cast<CWindowShape*>(tmpShape)->m_pInRoomShapePointer);
-			nLocaInfo = dynamic_cast<CWindowShape*>(tmpShape)->m_nLocaInfo;
+			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CWindowShape*>(tmpShape)->m_pInRoomShapeID));
 		}
 		else
 		{
 			cout << "Move 형 변환 Error\n";
 		}
 
-		if ( nLocaInfo == LOCA_LEFT  || nLocaInfo == LOCA_RIGHT) //왼쪽 혹은 오른쪽에 있다면
+		if ( tmpShape->GetLocaInfo() == LOCA_LEFT  || tmpShape->GetLocaInfo() == LOCA_RIGHT) //왼쪽 혹은 오른쪽에 있다면
 		{
 			//cout << "왼오\n";
 
@@ -294,7 +219,7 @@ void CShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다
 				tmpShape->nHeight = tmpHeight;
 			}
 		}
-		else if (nLocaInfo == LOCA_UP || nLocaInfo == LOCA_DOWN) //위쪽 혹은 아래쪽에 있다면
+		else if (tmpShape->GetLocaInfo() == LOCA_UP || tmpShape->GetLocaInfo() == LOCA_DOWN) //위쪽 혹은 아래쪽에 있다면
 		{
 			//cout << "위아래\n";
 
@@ -319,9 +244,9 @@ void CShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다
 			cout << "창문, 문 단일 Move Error\n";
 		}
 	}
-	else if (typeid(*tmpShape) == typeid(CUserObjectShape)) //RoomShape Move시 그룹화 된 문과 창문을 같이 움직여야 됨!
+	else if (typeid(*tmpShape) == typeid(CUserObjectShape))  // 나중에 그룹화 할 듯
 	{
-	CUserObjectShape *tmpShape = dynamic_cast<CUserObjectShape*>(m_CaShape.at(index)); 		//Room
+		CUserObjectShape *tmpShape = dynamic_cast<CUserObjectShape*>(m_CaShape.at(index)); 	
 
 		// 밑에처럼 다른 문 벡터나 창문 벡터처럼 한번에 해도 되지만 좀 알아보기 쉽게 방은 그냥 템프 하나 구해놈
 		tmpX = point.x + tmpShape->m_nMoveSubVal[0];
@@ -377,11 +302,9 @@ void CShapeHandler::Select(CPoint point)
 }
 void CShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CPoint &CurrentMousePoint)
 {
-
 	// 먼저 그려져야 할 Room 범위를 찾음! ,제일 뒤에서부터 검색햐야 함!  z-index
 
 	bool bAllNoTouch = TRUE; // 어느 곳에도 속하지 않음
-
 
 #pragma warning(push)
 #pragma warning(disable: 4018)
@@ -451,7 +374,7 @@ void CShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CP
 			}
 
 			m_RememberLocationForDoorWindow = LOCA_UP;
-			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
+			m_pRememberRoomIDForDoorWindow = m_CaShape[i]->GetId();
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 			break;
@@ -481,7 +404,7 @@ void CShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CP
 			}
 
 			m_RememberLocationForDoorWindow = LOCA_RIGHT;
-			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
+			m_pRememberRoomIDForDoorWindow = m_CaShape[i]->GetId();
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 
@@ -513,7 +436,7 @@ void CShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CP
 			}
 
 			m_RememberLocationForDoorWindow = LOCA_DOWN;
-			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
+			m_pRememberRoomIDForDoorWindow = m_CaShape[i]->GetId();
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 
@@ -544,7 +467,7 @@ void CShapeHandler::SetDoorWindowRange(bool bDragFlag, CPoint &OldMousePoint, CP
 			}
 
 			m_RememberLocationForDoorWindow = LOCA_LEFT;
-			m_pRememberRoomPtrForDoorWindow = m_CaShape.at(i);
+			m_pRememberRoomIDForDoorWindow = m_CaShape[i]->GetId();
 			NoAddShape = FALSE;
 			bAllNoTouch = FALSE;
 
@@ -568,6 +491,25 @@ void CShapeHandler::MakeFiveReferenceVertex(int *naVertex, int tmpVal1, int tmpV
 
 	naVertex[1] = tmpVal1 + (naVertex[2] - tmpVal1) / 2;
 	naVertex[3] = naVertex[2] + (tmpVal2 - naVertex[2]) / 2;
+}
+void CShapeHandler::SetRange(int & nX, int & nY, int & nWidth, int & nHeight)
+{
+	if (nX < 0)
+	{
+		nX = 0;
+	}
+	if (nWidth > 765)
+	{
+		nWidth = 765;
+	}
+	if (nY < 0)
+	{
+		nY = 0;
+	}
+	if (nHeight > 720)
+	{
+		nHeight = 720;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -704,7 +646,8 @@ int CShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Do
 	{
 		// 선택된 방 안의 문의 벡터를 받아 둠
 		// 주솟 값을 받아야함!!!! 저기 있는 벡터는 포인터 변수가 아님 꼭 기억해 놓을 것!
-		auto tmpDoorPtr = &dynamic_cast<CRoomShape *>(dynamic_cast<CDoorShape*>(m_CaShape[nSelectedIndex])->m_pInRoomShapePointer)->m_CaDoor;
+
+		auto tmpDoorPtr = &dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDoorShape*>(m_CaShape[nSelectedIndex])->m_pInRoomShapeID))->m_CaDoor;
 		// 선택된 문의 포인터
 		auto tmpSelectedDoorPtr = m_CaShape.at(nSelectedIndex);
 
@@ -740,7 +683,7 @@ int CShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Do
 	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(CWindowShape))
 	{
 		// 선택된 방 안의 창문의 벡터 포인터를 받아 둠
-		auto tmpWindowPtr = &dynamic_cast<CRoomShape *>(dynamic_cast<CWindowShape*>(m_CaShape[nSelectedIndex])->m_pInRoomShapePointer)->m_CaWindow;
+		auto tmpWindowPtr = &dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CWindowShape*>(m_CaShape[nSelectedIndex])->m_pInRoomShapeID))->m_CaWindow;
 		// 선택된 창문의 포인터
 		auto tmpSelectedWindowPtr = m_CaShape.at(nSelectedIndex);
 
@@ -784,10 +727,9 @@ int CShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Do
 }
 int CShapeHandler::CopySelectedShape(int nIndex)
 {
-	bool type = false;
-	int nRandLocation = static_cast<int>((rand() % 10)) + 1;
+	int nRandLocation = static_cast<int>((rand() % 15)) + 1;
 
-	int index;
+	int index; //Copy, Paste 때문에 이렇게 구현
 	if (nIndex == MY_ERROR)
 	{
 		index = GetCurrentSelectedIndex();
@@ -795,7 +737,6 @@ int CShapeHandler::CopySelectedShape(int nIndex)
 	else
 	{
 		index = nIndex;
-		type = true;
 	}
 
 	if (index == MY_ERROR)
@@ -805,206 +746,32 @@ int CShapeHandler::CopySelectedShape(int nIndex)
 	else
 	{
 		CShape *tmpShape = m_CaShape[index];
+		CShape *CNewCopyShape;
 
-		if (typeid(*tmpShape) == typeid(CRoomShape) || typeid(*tmpShape) == typeid(CUserObjectShape)) // Room을 선택해서 복사하려 할 때!,  그룹화 복사 사용 안 함!
+		// 얘는 안에 들어가있는 문이나 창문은 복사 안 할꺼니까 이렇게 새로 만듬
+		if (typeid(*tmpShape) == typeid(CRoomShape))
 		{
-			CShape *CNewCopyShape;
-			if (typeid(*tmpShape) == typeid(CRoomShape))
-			{
-				CNewCopyShape = new CRoomShape(*dynamic_cast<CRoomShape*>(tmpShape));
-			}
-			else
-			{
-				CNewCopyShape = new CUserObjectShape(*dynamic_cast<CUserObjectShape*>(tmpShape));
-			}
-			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
-
-			if (type)
-			{
-				CNewCopyShape->nX += 10 + nRandLocation;
-				CNewCopyShape->nWidth += 10 + nRandLocation;
-				CNewCopyShape->nY += 10 + nRandLocation;
-				CNewCopyShape->nHeight += 10 + nRandLocation;
-			}
-			else
-			{
-				CNewCopyShape->nX += 10;
-				CNewCopyShape->nWidth += 10;
-				CNewCopyShape->nY += 10;
-				CNewCopyShape->nHeight += 10;
-			}
-
-			if (CNewCopyShape->nX < 0)
-			{
-				CNewCopyShape->nX = 0;
-			}
-			if (CNewCopyShape->nWidth > 765)
-			{
-				CNewCopyShape->nWidth = 765;
-			}
-			if (CNewCopyShape->nY < 0)
-			{
-				CNewCopyShape->nY = 0;
-			}
-			if (CNewCopyShape->nHeight > 720)
-			{
-				CNewCopyShape->nHeight = 720;
-			}
-
-			if (typeid(*tmpShape) == typeid(CRoomShape))
-			{
-				GlobalNum::nPaintStatus = PAINT_ROOM; // Room 생성 상태로 바꿈
-			}
-			else
-			{
-				GlobalNum::nPaintStatus = PAINT_USER_ADD; // Room 생성 상태로 바꿈
-			}
-			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::nPaintStatus = PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+			CNewCopyShape = new CRoomShape(tmpShape->GetId(), tmpShape->nX, tmpShape->nY, tmpShape->nWidth, tmpShape->nHeight);
 		}
-		else if (typeid(*tmpShape) == typeid(CDoorShape)) // Door를 선택해서 복사하려 할 때!
+		else if (typeid(*tmpShape) == typeid(CUserObjectShape))
 		{
-			CDoorShape *CNewCopyShape = new CDoorShape(*dynamic_cast<CDoorShape*>(tmpShape));
-			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
-			CRoomShape *tmpRoomShape = dynamic_cast<CRoomShape*>(dynamic_cast<CDoorShape*>(tmpShape)->m_pInRoomShapePointer);
-
-			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
-			{
-				//cout << "왼오\n";
-
-				//////////////////////////////////////////////////////////////////////////
-				// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
-
-				if (type)
-				{
-					CNewCopyShape->nY += 10;
-					CNewCopyShape->nHeight += 10;
-				}
-				else
-				{
-					CNewCopyShape->nY += 10 + nRandLocation;
-					CNewCopyShape->nHeight += 10 + nRandLocation;
-				}
-
-				if (CNewCopyShape->nY < tmpRoomShape->nY)
-				{
-					CNewCopyShape->nY = tmpRoomShape->nY;
-				}
-				else if (CNewCopyShape->nHeight > tmpRoomShape->nHeight)
-				{
-					CNewCopyShape->nHeight = tmpRoomShape->nHeight;
-				}
-			}
-			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //위쪽 혹은 아래쪽에 있다면
-			{
-				//cout << "위아래\n";
-
-				//////////////////////////////////////////////////////////////////////////
-				// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
-
-				if (type)
-				{
-					CNewCopyShape->nX += 10 + nRandLocation;
-					CNewCopyShape->nWidth += 10 + nRandLocation;
-				}
-				else
-				{
-					CNewCopyShape->nX += 10;
-					CNewCopyShape->nWidth += 10;
-				}
-
-				if (CNewCopyShape->nX < tmpRoomShape->nX)
-				{
-					CNewCopyShape->nX = tmpRoomShape->nX;
-				}
-				else if (CNewCopyShape->nWidth > tmpRoomShape->nWidth)
-				{
-					CNewCopyShape->nWidth = tmpRoomShape->nWidth;
-				}
-			}
-			else
-			{
-				cout << "창문, 문 단일 Copy Error\n";
-			}
-
-			GlobalNum::nPaintStatus = PAINT_DOOR; // Door 생성 상태로 바꿈
-			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::nPaintStatus = PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+			CNewCopyShape = new CUserObjectShape(tmpShape->GetId(), tmpShape->nX, tmpShape->nY, tmpShape->nWidth, 
+				tmpShape->nHeight, dynamic_cast<CUserObjectShape*>(tmpShape)->m_nIconID);
 		}
-		else if (typeid(*tmpShape) == typeid(CWindowShape)) // Window를 선택해서 복사하려 할 때!
+		else if (typeid(*tmpShape) == typeid(CDoorShape))		// 얘는 어느 방에 들어가있는지도 복사되야 하니까 이렇게 복사함
 		{
-			CWindowShape *CNewCopyShape = new CWindowShape(*dynamic_cast<CWindowShape*>(tmpShape));
-			CNewCopyShape->SetId(MakeAutoIncId()); // Id를 다시 부여해야 함!
-			CRoomShape *tmpRoomShape = dynamic_cast<CRoomShape*>(dynamic_cast<CWindowShape*>(tmpShape)->m_pInRoomShapePointer);
-
-			if (CNewCopyShape->nX + (m_nDrawRange * 2) == CNewCopyShape->nWidth) //왼쪽 혹은 오른쪽에 있다면
-			{
-				//cout << "왼오\n";
-
-				//////////////////////////////////////////////////////////////////////////
-				// X 축은 고정하고, Y축만 RoomShape의 범위 밖을 나가지 않게 고정함
-
-				if (type)
-				{
-					CNewCopyShape->nY += 10 + nRandLocation;
-					CNewCopyShape->nHeight += 10 + nRandLocation;
-				}
-				else
-				{
-					CNewCopyShape->nY += 10;
-					CNewCopyShape->nHeight += 10;
-				}
-
-				if (CNewCopyShape->nY < tmpRoomShape->nY)
-				{
-					CNewCopyShape->nY = tmpRoomShape->nY;
-				}
-				else if (CNewCopyShape->nHeight > tmpRoomShape->nHeight)
-				{
-					CNewCopyShape->nHeight = tmpRoomShape->nHeight;
-				}
-			}
-			else if (CNewCopyShape->nY + (m_nDrawRange * 2) == CNewCopyShape->nHeight) //위쪽 혹은 아래쪽에 있다면
-			{
-				//cout << "위아래\n";
-
-				//////////////////////////////////////////////////////////////////////////
-				// Y 축은 고정하고, X축만 RoomShape의 범위 밖을 나가지 않게 고정함
-
-
-				if (type)
-				{
-					CNewCopyShape->nX += 10 + nRandLocation;
-					CNewCopyShape->nWidth += 10 + nRandLocation;
-				}
-				else 
-				{
-					CNewCopyShape->nX += 10;
-					CNewCopyShape->nWidth += 10;
-				}
-
-				if (CNewCopyShape->nX < tmpRoomShape->nX)
-				{
-					CNewCopyShape->nX = tmpRoomShape->nX;
-				}
-				else if (CNewCopyShape->nWidth > tmpRoomShape->nWidth)
-				{
-					CNewCopyShape->nWidth = tmpRoomShape->nWidth;
-				}
-			}
-			else
-			{
-				cout << "창문, 문 단일 Copy Error\n";
-			}
-
-			GlobalNum::nPaintStatus = PAINT_WINDOW; // Window 생성 상태로 바꿈
-			AddShape(CNewCopyShape->nX, CNewCopyShape->nY, CNewCopyShape->nWidth, CNewCopyShape->nHeight);
-			GlobalNum::nPaintStatus = PAINT_BASIC; // 기본 상태로 다시 되돌아옴!
+			CNewCopyShape = new CDoorShape(*dynamic_cast<CDoorShape*>(tmpShape));
+		}
+		else if (typeid(*tmpShape) == typeid(CWindowShape))	// 얘는 어느 방에 들어가있는지도 복사되야 하니까 이렇게 복사함
+		{
+			CNewCopyShape = new CWindowShape(*dynamic_cast<CWindowShape*>(tmpShape));
 		}
 		else
 		{
-			cout << "Copy Error\n" << endl;
+			ASSERT(0);
 		}
+
+		CNewCopyShape->CopyShape();
 	}
 
 	return MY_SUCCES;
@@ -1253,11 +1020,11 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 
 		if (typeid(*tmpShape) == typeid(CDoorShape)) //문일때
 		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(dynamic_cast<CDoorShape*>(tmpShape)->m_pInRoomShapePointer);
+			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDoorShape*>(tmpShape)->m_pInRoomShapeID));
 		}
 		else	//창문일때
 		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(dynamic_cast<CWindowShape*>(tmpShape)->m_pInRoomShapePointer);
+			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CWindowShape*>(tmpShape)->m_pInRoomShapeID));
 		}
 
 

@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "UserObjectShape.h"
+#include "ShapeHandler.h"
 
-CUserObjectShape::CUserObjectShape(int nId, int nX, int nY, int nWidth, int nHeight)
+CUserObjectShape::CUserObjectShape(int nId, int nX, int nY, int nWidth, int nHeight, int m_nIconID)
 	: CShape(nId, nX, nY, nWidth, nHeight)
 {
 	nRed = 111;
 	nGreen = 128;
 	nBlue = 244;
+	this->m_nIconID = m_nIconID;
 }
 
 CUserObjectShape::~CUserObjectShape()
@@ -16,7 +18,7 @@ CUserObjectShape::~CUserObjectShape()
 
 void CUserObjectShape::SetImageIcon(int ID)
 {
-	icon = AfxGetApp()->LoadIcon(ID);
+	m_icon = AfxGetApp()->LoadIcon(ID);
 }
 MYICON_INFO CUserObjectShape::MyGetIconInfo(HICON hIcon)
 {
@@ -63,4 +65,51 @@ MYICON_INFO CUserObjectShape::MyGetIconInfo(HICON hIcon)
 		DeleteObject(info.hbmMask);
 
 	return myinfo;
+}
+
+bool CUserObjectShape::AddShape()
+{
+	CShapeHandler *tmpShapeHandler = CShapeHandler::GetInstance();
+	SetImageIcon(m_nIconID);
+
+	if (nX < 0)	
+	{
+		SetRect(10, 10, 10 + MyGetIconInfo(m_icon).nWidth,
+			10 + MyGetIconInfo(m_icon).nHeight);
+	}
+	else //Copy ÇÒ ¶§
+	{
+		SetRect(nX, nY, nX + MyGetIconInfo(m_icon).nWidth,
+			nY + MyGetIconInfo(m_icon).nHeight);
+	}
+
+	tmpShapeHandler->m_CaShape.push_back(this);
+	return TRUE;
+}
+
+void CUserObjectShape::SetOwnColor()
+{
+	printf("³­ »ö±òÀÌ ¾øÀ¸¿è\n");
+}
+
+int CUserObjectShape::GetLocaInfo()
+{
+	ASSERT(0);
+	return -1;
+}
+
+bool CUserObjectShape::CopyShape()
+{
+	int nRandLocation = static_cast<int>((rand() % 15)) + 1;
+
+	nX += 10 + nRandLocation;
+	nWidth += 10 + nRandLocation;
+	nY += 10 + nRandLocation;
+	nHeight += 10 + nRandLocation;
+
+	SetId(CShapeHandler::GetInstance()->MakeAutoIncId());
+	CShapeHandler::GetInstance()->SetRange(nX, nY, nWidth, nHeight);
+	CShapeHandler::GetInstance()->AddShape(this);
+
+	return TRUE;
 }

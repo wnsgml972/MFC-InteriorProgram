@@ -27,6 +27,7 @@ CBufferDC::CBufferDC(CWnd *pParent)
 	Attach(m_MemoryDC);
 }
 
+
 //////////////////////////////////////////////////////////////////////
 CBufferDC::~CBufferDC()
 {

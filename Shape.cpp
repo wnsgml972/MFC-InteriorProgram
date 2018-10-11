@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Shape.h"
 
-
 CShape::CShape(int nId, int nX, int nY, int nWidth, int nHeight)
 {
 	this->nId = nId;
