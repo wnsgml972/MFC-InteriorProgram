@@ -76,9 +76,13 @@
 
 ## 단일 문서 기반(SDI)
 
-### Project Structure
+### Project View Structure
 
 ![structure](/media/structure.png)
+
+### Project Model Structure
+
+![structure](/media/shape_structure2.png)
 
 ### 프로젝트 시작 방법
 
