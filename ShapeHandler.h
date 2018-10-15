@@ -2,12 +2,7 @@
 
 #include "Shape.h"
 #include "FileManager.h"
-#include "define.h"
 #include "RoomShape.h"
-#include "UserObjectShape.h"
-
-class CShape;
-class CRoomShape;
 
 class CShapeHandler
 {
@@ -59,7 +54,7 @@ private:
 	static CShapeHandler *instance;
 
 	stack<CShape*> m_CsShape;
-	CFileManager *CFileManager;
+	CFileManager * m_CFileManager;
 	int m_nAutoIncId;
 	int m_nSelectRange;
 	int m_nDrawSelectRange;

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ShapeHandler.h"
-
+#include "WindowShape.h"
+#include "DoorShape.h"
+#include "ObjectShape.h"
 
 CShapeHandler* CShapeHandler::instance = NULL;
 
@@ -18,7 +20,7 @@ int CShapeHandler::MakeAutoIncId()
 }
 CShapeHandler::CShapeHandler()
 {
-	CFileManager = CFileManager::GetInstance();
+	m_CFileManager = CFileManager::GetInstance();
 	m_nAutoIncId = 0;
 	m_nSelectRange = 15;
 	m_nDrawRange = 7;
@@ -139,43 +141,24 @@ void CShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다
 		// 위에서 먼저 체크하고 리턴해버려야 함
 		// 문 안의 도형
 		{
-			//In Room Door
+			//In Room Door, Window
 #pragma warning(push)
 #pragma warning(disable: 4018)
-			for (long i = 0; i < tmpRoomShape->m_CaDoor.size(); i++)
+			for (long i = 0; i < tmpRoomShape->m_CaDependent.size(); i++)
 #pragma warning(pop)
 			{
 				// 문 범위 제어 문
-				if (point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3] > 720)
+				if (point.x + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[2] > 765 || 
+					point.y + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[3] > 720)
 				{
 					return;
 				}
 				else
 				{
-					tmpRoomShape->m_CaDoor[i]->nX = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[0];
-					tmpRoomShape->m_CaDoor[i]->nY = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[1];
-					tmpRoomShape->m_CaDoor[i]->nWidth = point.x + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[2];
-					tmpRoomShape->m_CaDoor[i]->nHeight = point.y + tmpRoomShape->m_CaDoor[i]->m_nMoveSubVal[3];
-				}
-			}
-
-			//In Room Window
-#pragma warning(push)
-#pragma warning(disable: 4018)
-			for (long i = 0; i < tmpRoomShape->m_CaWindow.size(); i++)
-#pragma warning(push)
-			{
-				// 창문 범위 제어 문
-				if (point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0] < 0 || point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2] > 765 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1] < 0 || point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3] > 720)
-				{
-					return;
-				}
-				else
-				{
-					tmpRoomShape->m_CaWindow[i]->nX = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[0];
-					tmpRoomShape->m_CaWindow[i]->nY = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[1];
-					tmpRoomShape->m_CaWindow[i]->nWidth = point.x + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[2];
-					tmpRoomShape->m_CaWindow[i]->nHeight = point.y + tmpRoomShape->m_CaWindow[i]->m_nMoveSubVal[3];
+					tmpRoomShape->m_CaDependent[i]->nX = point.x + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[0];
+					tmpRoomShape->m_CaDependent[i]->nY = point.y + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[1];
+					tmpRoomShape->m_CaDependent[i]->nWidth = point.x + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[2];
+					tmpRoomShape->m_CaDependent[i]->nHeight = point.y + tmpRoomShape->m_CaDependent[i]->m_nMoveSubVal[3];
 				}
 			}
 		}
@@ -184,22 +167,10 @@ void CShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다
 	{
 		// 창문 문만 클릭했을 시!!!
 
-		CRoomShape *tmpRoomShape = nullptr;
+		CRoomShape *tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDependentShape*>(tmpShape)->m_pInContainerShapeID));
+		
 
-		if (typeid(*tmpShape) == typeid(CDoorShape))
-		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDoorShape*>(tmpShape)->m_pInRoomShapeID));
-		}
-		else if (typeid(*tmpShape) == typeid(CWindowShape))
-		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CWindowShape*>(tmpShape)->m_pInRoomShapeID));
-		}
-		else
-		{
-			cout << "Move 형 변환 Error\n";
-		}
-
-		if ( tmpShape->GetLocaInfo() == LOCA_LEFT  || tmpShape->GetLocaInfo() == LOCA_RIGHT) //왼쪽 혹은 오른쪽에 있다면
+		if (dynamic_cast<CDependentShape*>(tmpShape)->GetLocaInfo() == LOCA_LEFT  || dynamic_cast<CDependentShape*>(tmpShape)->GetLocaInfo() == LOCA_RIGHT) //왼쪽 혹은 오른쪽에 있다면
 		{
 			//cout << "왼오\n";
 
@@ -219,7 +190,7 @@ void CShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다
 				tmpShape->nHeight = tmpHeight;
 			}
 		}
-		else if (tmpShape->GetLocaInfo() == LOCA_UP || tmpShape->GetLocaInfo() == LOCA_DOWN) //위쪽 혹은 아래쪽에 있다면
+		else if (dynamic_cast<CDependentShape*>(tmpShape)->GetLocaInfo() == LOCA_UP || dynamic_cast<CDependentShape*>(tmpShape)->GetLocaInfo() == LOCA_DOWN) //위쪽 혹은 아래쪽에 있다면
 		{
 			//cout << "위아래\n";
 
@@ -244,9 +215,9 @@ void CShapeHandler::Move(CPoint point) //door list와 window list를 같이 움직인다
 			cout << "창문, 문 단일 Move Error\n";
 		}
 	}
-	else if (typeid(*tmpShape) == typeid(CUserObjectShape))  // 나중에 그룹화 할 듯
+	else if (typeid(*tmpShape) == typeid(CObjectShape))  // 나중에 그룹화 할 듯
 	{
-		CUserObjectShape *tmpShape = dynamic_cast<CUserObjectShape*>(m_CaShape.at(index)); 	
+		CObjectShape *tmpShape = dynamic_cast<CObjectShape*>(m_CaShape.at(index));
 
 		// 밑에처럼 다른 문 벡터나 창문 벡터처럼 한번에 해도 되지만 좀 알아보기 쉽게 방은 그냥 템프 하나 구해놈
 		tmpX = point.x + tmpShape->m_nMoveSubVal[0];
@@ -537,7 +508,7 @@ void CShapeHandler::InitSelect()
 			{
 				m_CaShape.at(i)->SetColor(80, 188, 223);
 			}
-			else if (typeid(*m_CaShape.at(i)) == typeid(CUserObjectShape))
+			else if (typeid(*m_CaShape.at(i)) == typeid(CObjectShape))
 			{
 				m_CaShape.at(i)->SetColor(111, 128, 244);
 			}
@@ -613,19 +584,13 @@ int CShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Do
 		tmpInRoomPtr->SetId(-600000);
 
 		//////////////////////////////////////////////////////////////////////////
-		// 먼저 방안의 문 벡터 창문 벡터를 모두 동적할당 해제 후 삭제
-		for (auto nIdx : dynamic_cast<CRoomShape*>(m_CaShape[nSelectedIndex])->m_CaDoor)
+		// 먼저 방안의 Dependent 벡터를 모두 동적할당 해제 후 삭제
+		for (auto nIdx : dynamic_cast<CRoomShape*>(m_CaShape[nSelectedIndex])->m_CaDependent)
 		{
 			nIdx->SetId(-600000);
 			SAFE_DELETE(nIdx);
 		}
-		for (auto nIdx : dynamic_cast<CRoomShape*>(m_CaShape[nSelectedIndex])->m_CaWindow)
-		{
-			nIdx->SetId(-600000);
-			SAFE_DELETE(nIdx);
-		}
-		dynamic_cast<CRoomShape*>(m_CaShape[nSelectedIndex])->m_CaDoor.clear();
-		dynamic_cast<CRoomShape*>(m_CaShape[nSelectedIndex])->m_CaWindow.clear();
+		dynamic_cast<CRoomShape*>(m_CaShape[nSelectedIndex])->m_CaDependent.clear();
 
 		//////////////////////////////////////////////////////////////////////////
 		// 전체 Shape 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제 후, 동적할당 해제
@@ -642,12 +607,12 @@ int CShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Do
 	}
 	//////////////////////////////////////////////////////////////////////////
 	// [ 선택 요소 삭제 알고리즘 ]
-	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(CDoorShape))
+	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(CDoorShape) || typeid(*m_CaShape.at(nSelectedIndex)) == typeid(CWindowShape))
 	{
 		// 선택된 방 안의 문의 벡터를 받아 둠
 		// 주솟 값을 받아야함!!!! 저기 있는 벡터는 포인터 변수가 아님 꼭 기억해 놓을 것!
 
-		auto tmpDoorPtr = &dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDoorShape*>(m_CaShape[nSelectedIndex])->m_pInRoomShapeID))->m_CaDoor;
+		auto tmpDependentPtr = &dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDependentShape*>(m_CaShape[nSelectedIndex])->m_pInContainerShapeID))->m_CaDependent;
 		// 선택된 문의 포인터
 		auto tmpSelectedDoorPtr = m_CaShape.at(nSelectedIndex);
 
@@ -666,55 +631,23 @@ int CShapeHandler::DeleteSelectedShape() // 만약 Room 이라면 그 안에 존재하는 Do
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		// 문 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
-		for (long i = tmpDoorPtr->size() - 1; i >= 0; i--)
+		// Dependent 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
+		for (long i = tmpDependentPtr->size() - 1; i >= 0; i--)
 		{
 
-			int nWasteValue = tmpDoorPtr->at(i)->GetId();
+			int nWasteValue = tmpDependentPtr->at(i)->GetId();
 			if (nWasteValue < -50000)
 			{
-				tmpDoorPtr->erase(tmpDoorPtr->begin() + i);
+				tmpDependentPtr->erase(tmpDependentPtr->begin() + i);
 				break;
 			}
 		}
 
 		SAFE_DELETE(tmpSelectedDoorPtr);//  선택된 문 삭제, delete
 	}
-	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(CWindowShape))
+	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(CObjectShape))
 	{
-		// 선택된 방 안의 창문의 벡터 포인터를 받아 둠
-		auto tmpWindowPtr = &dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CWindowShape*>(m_CaShape[nSelectedIndex])->m_pInRoomShapeID))->m_CaWindow;
-		// 선택된 창문의 포인터
-		auto tmpSelectedWindowPtr = m_CaShape.at(nSelectedIndex);
-
-		tmpSelectedWindowPtr->SetId(-600000);
-
-		//////////////////////////////////////////////////////////////////////////
-		// 전체 Shape 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
-		for (long i = m_CaShape.size() - 1; i >= 0; i--)
-		{
-			int nWasteValue = m_CaShape[i]->GetId();
-			if (nWasteValue < -50000)
-			{
-				m_CaShape.erase(m_CaShape.begin() + i);
-			}
-		}
-
-		//////////////////////////////////////////////////////////////////////////
-		// 창문 벡터에서는 아이디 값이 쓰레기 값인 것을 삭제
-		for (long i = tmpWindowPtr->size() - 1; i >= 0; i--)
-		{
-			int nWasteValue = tmpWindowPtr->at(i)->GetId();
-			if (nWasteValue < -50000)
-			{
-				tmpWindowPtr->erase(tmpWindowPtr->begin() + i);
-			}
-		}
-		SAFE_DELETE(tmpSelectedWindowPtr);//  선택된 문 삭제, delete
-	}
-	else if (typeid(*m_CaShape.at(nSelectedIndex)) == typeid(CUserObjectShape))
-	{
-		CUserObjectShape *tmpShape = dynamic_cast<CUserObjectShape*>(m_CaShape.at(nSelectedIndex));
+	CObjectShape *tmpShape = dynamic_cast<CObjectShape*>(m_CaShape.at(nSelectedIndex));
 		m_CaShape.erase(m_CaShape.begin() + nSelectedIndex);
 		SAFE_DELETE(tmpShape);//  선택된 object 삭제, delete
 	}
@@ -753,10 +686,10 @@ int CShapeHandler::CopySelectedShape(int nIndex)
 		{
 			CNewCopyShape = new CRoomShape(tmpShape->GetId(), tmpShape->nX, tmpShape->nY, tmpShape->nWidth, tmpShape->nHeight);
 		}
-		else if (typeid(*tmpShape) == typeid(CUserObjectShape))
+		else if (typeid(*tmpShape) == typeid(CObjectShape))
 		{
-			CNewCopyShape = new CUserObjectShape(tmpShape->GetId(), tmpShape->nX, tmpShape->nY, tmpShape->nWidth, 
-				tmpShape->nHeight, dynamic_cast<CUserObjectShape*>(tmpShape)->m_nIconID);
+			CNewCopyShape = new CObjectShape(tmpShape->GetId(), tmpShape->nX, tmpShape->nY, tmpShape->nWidth,
+				tmpShape->nHeight, dynamic_cast<CObjectShape*>(tmpShape)->m_nIconID);
 		}
 		else if (typeid(*tmpShape) == typeid(CDoorShape))		// 얘는 어느 방에 들어가있는지도 복사되야 하니까 이렇게 복사함
 		{
@@ -799,7 +732,7 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 			bool bSuccess = TRUE;
 			CRoomShape *tmpRoomShape = dynamic_cast<CRoomShape*>(tmpShape);
 
-			for (auto pIter : tmpRoomShape->m_CaDoor) //Room안의 Door!
+			for (auto pIter : tmpRoomShape->m_CaDependent) //Room안의 Dependent!
 			{
 				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
 				{
@@ -824,35 +757,6 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 				else
 				{
 					cout << " 문 그룹 Wheel Error\n";
-					bSuccess = FALSE;
-					break;
-				}
-			}
-			for (auto pIter : tmpRoomShape->m_CaWindow)
-			{
-				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
-				{
-					pIter->nX -= 2;
-					pIter->nWidth -= 2;
-				}
-				else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //오른쪽이면
-				{
-					pIter->nX += 2;
-					pIter->nWidth += 2;
-				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //위쪽이면
-				{
-					pIter->nY -= 2;
-					pIter->nHeight -= 2;
-				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //아래쪽이면
-				{
-					pIter->nY += 2;
-					pIter->nHeight += 2;
-				}
-				else
-				{
-					cout << " 창문 그룹 Wheel Error\n";
 					bSuccess = FALSE;
 					break;
 				}
@@ -887,7 +791,7 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 			//////////////////////////////////////////////////////////////////////////
 			// 먼저 하나라도 걸리는 게 있는지 Check 해야 됨!! 하나라도 미리 작아지면 시스템 오류가 나기 때문
 			// 아니면 나중에 Undo Redo 구현해서 되돌리게 해도 될 듯?
-			for (auto pIter : tmpRoomShape->m_CaDoor) //Room안의 Door!
+			for (auto pIter : tmpRoomShape->m_CaDependent) //Room안의 Dependent!
 			{
 				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //왼쪽, 오른쪽
 				{
@@ -912,39 +816,13 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 					break;
 				}
 			}
-			for (auto pIter : tmpRoomShape->m_CaWindow)
-			{
-				if (pIter->nX + m_nDrawRange == tmpRoomShape->nX || pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //왼쪽, 오른쪽
-				{
-					if (tmpRoomShape->nHeight <= pIter->nHeight || tmpRoomShape->nY >= pIter->nY )
-					{
-						bSuccess = FALSE;
-						break;
-					}
-				}
-				else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY || pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //위쪽, 아래쪽
-				{
-					if (tmpRoomShape->nWidth <= pIter->nWidth || tmpRoomShape->nX >= pIter->nX)
-					{
-						bSuccess = FALSE;
-						break;
-					}
-				}
-				else
-				{
-					cout << "Mouse Wheel 작아지게 Error" << endl;
-					bSuccess = FALSE;
-					break;
-				}
-			}
-
 			if (!bSuccess)
 			{
 				cout << " 창문, 문 그룹 전체 Wheel Error\n";
 			}
 			else
 			{
-				for (auto pIter : tmpRoomShape->m_CaDoor) //Room안의 Door!
+				for (auto pIter : tmpRoomShape->m_CaDependent) //Room안의 Dependent!
 				{
 					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
 					{
@@ -973,36 +851,6 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 						break;
 					}
 				}
-				for (auto pIter : tmpRoomShape->m_CaWindow)
-				{
-					if (pIter->nX + m_nDrawRange == tmpRoomShape->nX) //왼쪽이면
-					{
-						pIter->nX += 2;
-						pIter->nWidth += 2;
-					}
-					else if (pIter->nX + m_nDrawRange == tmpRoomShape->nWidth) //오른쪽이면
-					{
-						pIter->nX -= 2;
-						pIter->nWidth -= 2;
-
-					}
-					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nY) //위쪽이면
-					{
-						pIter->nY += 2;
-						pIter->nHeight += 2;
-					}
-					else if (pIter->nY + m_nDrawRange == tmpRoomShape->nHeight) //아래쪽이면
-					{
-						pIter->nY -= 2;
-						pIter->nHeight -= 2;
-					}
-					else // 사실 위에서 다 체크함
-					{
-						cout << "창문 그룹 Wheel Error\n";
-						bSuccess = FALSE;
-						break;
-					}
-				}
 
 				//////////////////////////////////////////////////////////////////////////
 				// 성공 방 크기 조정, 제일 마지막에
@@ -1018,13 +866,9 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 	{
 		CRoomShape *tmpRoomShape;
 
-		if (typeid(*tmpShape) == typeid(CDoorShape)) //문일때
+		if (typeid(*tmpShape) == typeid(CDoorShape) || typeid(*tmpShape) == typeid(CWindowShape)) 
 		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDoorShape*>(tmpShape)->m_pInRoomShapeID));
-		}
-		else	//창문일때
-		{
-			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CWindowShape*>(tmpShape)->m_pInRoomShapeID));
+			tmpRoomShape = dynamic_cast<CRoomShape*>(GetShapeByID(dynamic_cast<CDependentShape*>(tmpShape)->m_pInContainerShapeID));
 		}
 
 
@@ -1087,7 +931,7 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 			cout << "창문, 문 단일 Copy Error\n";
 		}
 	}
-	else //UserObject
+	else //Object
 	{
 		if (zDelta > 100) //크게 할 때
 		{
@@ -1096,7 +940,7 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 				return MY_ERROR;
 			}
 
-			CUserObjectShape *tmpRoomShape = dynamic_cast<CUserObjectShape*>(tmpShape);
+			CObjectShape *tmpRoomShape = dynamic_cast<CObjectShape*>(tmpShape);
 
 			tmpShape->nX -= 2;
 			tmpShape->nWidth += 2;
@@ -1105,7 +949,7 @@ int CShapeHandler::WheelSelectedShape(short zDelta)
 		}
 		else //작게 할 때
 		{
-			CUserObjectShape *tmpRoomShape = dynamic_cast<CUserObjectShape*>(tmpShape);
+			CObjectShape *tmpRoomShape = dynamic_cast<CObjectShape*>(tmpShape);
 
 			if (tmpShape->nWidth - tmpShape->nX < 30 || tmpShape->nHeight - tmpShape->nY < 30)
 			{
@@ -1215,17 +1059,11 @@ int CShapeHandler::MagneticSelectedShape()
 
 						/// 방 안의 창문과 문도 Update
 						{
-							//In Room Door
-							for (auto CDoorShape : tmpRoomShape->m_CaDoor)
+							//In Room Dependent
+							for (auto DependentShape : tmpRoomShape->m_CaDependent)
 							{
-								CDoorShape->nY -= nSubMoving;
-								CDoorShape->nHeight -= nSubMoving;
-							}
-							//In Room Window
-							for (auto CWindowShape : tmpRoomShape->m_CaWindow)
-							{
-								CWindowShape->nY -= nSubMoving;
-								CWindowShape->nHeight -= nSubMoving;
+								DependentShape->nY -= nSubMoving;
+								DependentShape->nHeight -= nSubMoving;
 							}
 						}
 						break;
@@ -1237,17 +1075,11 @@ int CShapeHandler::MagneticSelectedShape()
 
 						/// 방 안의 창문과 문도 Update
 						{
-							//In Room Door
-							for (auto CDoorShape : tmpRoomShape->m_CaDoor)
+							//In Room Dependent
+							for (auto DependentShape : tmpRoomShape->m_CaDependent)
 							{
-								CDoorShape->nX -= nSubMoving;
-								CDoorShape->nWidth -= nSubMoving;
-							}
-							//In Room Window
-							for (auto CWindowShape : tmpRoomShape->m_CaWindow)
-							{
-								CWindowShape->nX -= nSubMoving;
-								CWindowShape->nWidth -= nSubMoving;
+								DependentShape->nX -= nSubMoving;
+								DependentShape->nWidth -= nSubMoving;
 							}
 						}
 						break;
@@ -1259,17 +1091,11 @@ int CShapeHandler::MagneticSelectedShape()
 
 						/// 방 안의 창문과 문도 Update
 						{
-							//In Room Door
-							for (auto CDoorShape : tmpRoomShape->m_CaDoor)
+							//In Room Dependent
+							for (auto DependentShape : tmpRoomShape->m_CaDependent)
 							{
-								CDoorShape->nY -= nSubMoving;
-								CDoorShape->nHeight -= nSubMoving;
-							}
-							//In Room Window
-							for (auto CWindowShape : tmpRoomShape->m_CaWindow)
-							{
-								CWindowShape->nY -= nSubMoving;
-								CWindowShape->nHeight -= nSubMoving;
+								DependentShape->nY -= nSubMoving;
+								DependentShape->nHeight -= nSubMoving;
 							}
 						}
 						break;
@@ -1281,17 +1107,11 @@ int CShapeHandler::MagneticSelectedShape()
 
 						/// 방 안의 창문과 문도 Update
 						{
-							//In Room Door
-							for (auto CDoorShape : tmpRoomShape->m_CaDoor)
+							//In Room Dependent
+							for (auto DependentShape : tmpRoomShape->m_CaDependent)
 							{
-								CDoorShape->nX -= nSubMoving;
-								CDoorShape->nWidth -= nSubMoving;
-							}
-							//In Room Window
-							for (auto CWindowShape : tmpRoomShape->m_CaWindow)
-							{
-								CWindowShape->nX -= nSubMoving;
-								CWindowShape->nWidth -= nSubMoving;
+								DependentShape->nX -= nSubMoving;
+								DependentShape->nWidth -= nSubMoving;
 							}
 						}
 						break;
@@ -1300,9 +1120,9 @@ int CShapeHandler::MagneticSelectedShape()
 			}
 		}
 	}
-	else if (typeid(*tmpShape) == typeid(CUserObjectShape))
+	else if (typeid(*tmpShape) == typeid(CObjectShape))
 	{
-		CUserObjectShape *tmpUserObjectShape = dynamic_cast<CUserObjectShape*>(tmpShape); //CUserObjectShape
+	CObjectShape *tmpObjectShape = dynamic_cast<CObjectShape*>(tmpShape); //CUserObjectShape
 
 	//전체 Shape중 인접한 Shape가 있는지
 	//뒤에서부터 검색해야 함!
@@ -1311,15 +1131,15 @@ int CShapeHandler::MagneticSelectedShape()
 		for (long i = m_CaShape.size() - 1; i >= 0; i--)
 #pragma warning(pop)
 		{
-			if (tmpUserObjectShape == m_CaShape[i] || typeid(*m_CaShape[i]) != typeid(CRoomShape)) // 서로 같거나 Room이 아니면 넘김
+			if (tmpObjectShape == m_CaShape[i] || typeid(*m_CaShape[i]) != typeid(CRoomShape)) // 서로 같거나 Room이 아니면 넘김
 			{
 				continue;
 			}
 
-			int nShapeTempX = tmpUserObjectShape->nX;
-			int nShapeTempWidth = tmpUserObjectShape->nWidth;
-			int nShapeTempY = tmpUserObjectShape->nY;
-			int nShapeTempHeight = tmpUserObjectShape->nHeight;
+			int nShapeTempX = tmpObjectShape->nX;
+			int nShapeTempWidth = tmpObjectShape->nWidth;
+			int nShapeTempY = tmpObjectShape->nY;
+			int nShapeTempHeight = tmpObjectShape->nHeight;
 
 			int naDirectionControl[4] = { 0 };
 			int nAnyReferenceX[5] = { 0 };
@@ -1409,8 +1229,6 @@ int CShapeHandler::MagneticSelectedShape()
 	}
 	return MY_SUCCES;
 }
-
-
 /// 미완성
 int CShapeHandler::RotateSelectedShape()
 {

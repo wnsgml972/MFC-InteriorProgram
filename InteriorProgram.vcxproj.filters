@@ -20,6 +20,15 @@
     <Filter Include="Util">
       <UniqueIdentifier>{74df4254-614d-4929-8fbf-1e0ce2702cf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\Container">
+      <UniqueIdentifier>{c0ebad10-5305-41e8-9b8b-fbdd00bcf13d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Component">
+      <UniqueIdentifier>{6ed8c3c4-c647-49ca-8ca5-8c55942eb248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Super">
+      <UniqueIdentifier>{d79f6403-d8a8-426c-95e4-27755007f336}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ControlView.h">
@@ -46,31 +55,10 @@
     <ClInclude Include="targetver.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="RoomShape.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowShape.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Shape.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="DoorShape.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="ShapeHandler.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="UserObjectShape.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="define.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="FileManager.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="JunUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="DlgTab1.h">
@@ -81,6 +69,42 @@
     </ClInclude>
     <ClInclude Include="BufferDC.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="JunUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ContainerShape.h">
+      <Filter>Model\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="SuperContainerShape.h">
+      <Filter>Model\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowShape.h">
+      <Filter>Model\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DoorShape.h">
+      <Filter>Model\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicContainerShape.h">
+      <Filter>Model\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="RoomShape.h">
+      <Filter>Model\Container</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectShape.h">
+      <Filter>Model\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DependentShape.h">
+      <Filter>Model\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentShape.h">
+      <Filter>Model\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>Model\Super</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -102,29 +126,8 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="DoorShape.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="RoomShape.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Shape.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowShape.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="ShapeHandler.cpp">
       <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="UserObjectShape.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="FileManager.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="JunUtil.cpp">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="DlgTab1.cpp">
       <Filter>View</Filter>
@@ -134,6 +137,42 @@
     </ClCompile>
     <ClCompile Include="BufferDC.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="JunUtil.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ContainerShape.cpp">
+      <Filter>Model\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperContainerShape.cpp">
+      <Filter>Model\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowShape.cpp">
+      <Filter>Model\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="DoorShape.cpp">
+      <Filter>Model\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicContainerShape.cpp">
+      <Filter>Model\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomShape.cpp">
+      <Filter>Model\Container</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectShape.cpp">
+      <Filter>Model\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="DependentShape.cpp">
+      <Filter>Model\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentShape.cpp">
+      <Filter>Model\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>Model\Super</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

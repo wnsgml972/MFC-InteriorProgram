@@ -92,6 +92,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -179,7 +181,11 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BasicContainerShape.h" />
     <ClInclude Include="BufferDC.h" />
+    <ClInclude Include="ComponentShape.h" />
+    <ClInclude Include="ContainerShape.h" />
+    <ClInclude Include="DependentShape.h" />
     <ClInclude Include="DlgTab1.h" />
     <ClInclude Include="DlgTab2.h" />
     <ClInclude Include="ControlView.h" />
@@ -191,17 +197,22 @@
     <ClInclude Include="InteriorProgramView.h" />
     <ClInclude Include="JunUtil.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="ObjectShape.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RoomShape.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="ShapeHandler.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SuperContainerShape.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="UserObjectShape.h" />
     <ClInclude Include="WindowShape.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BasicContainerShape.cpp" />
     <ClCompile Include="BufferDC.cpp" />
+    <ClCompile Include="ComponentShape.cpp" />
+    <ClCompile Include="ContainerShape.cpp" />
+    <ClCompile Include="DependentShape.cpp" />
     <ClCompile Include="DlgTab1.cpp" />
     <ClCompile Include="DlgTab2.cpp" />
     <ClCompile Include="ControlView.cpp" />
@@ -212,6 +223,7 @@
     <ClCompile Include="InteriorProgramView.cpp" />
     <ClCompile Include="JunUtil.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="ObjectShape.cpp" />
     <ClCompile Include="RoomShape.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="ShapeHandler.cpp" />
@@ -221,7 +233,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UserObjectShape.cpp" />
+    <ClCompile Include="SuperContainerShape.cpp" />
     <ClCompile Include="WindowShape.cpp" />
   </ItemGroup>
   <ItemGroup>

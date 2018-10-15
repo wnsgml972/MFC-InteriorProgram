@@ -15,11 +15,19 @@ public:
 	int GetId();
 	void SetId(int nId);
 
-	virtual int GetLocaInfo() = 0;
-	virtual void SetOwnColor() = 0;
+	// All
 	virtual bool AddShape() = 0;
+	virtual bool DeleteShape() = 0;
 	virtual bool CopyShape() = 0;
+	virtual bool MoveShape() = 0;
+	virtual bool MagneticShape() = 0;
+	virtual bool EditShape() = 0;
+	virtual bool WheelShape() = 0;
 
+	// Paint Shape
+	virtual void SetOwnColor() { nRed = 0;  nGreen = 0;  nBlue = 0; };
+
+	// Delete, 
 	int nX, nY, nWidth, nHeight;
 	bool bSelectedState;
 	int nRed, nGreen, nBlue;

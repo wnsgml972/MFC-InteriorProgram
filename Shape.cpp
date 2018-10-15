@@ -20,8 +20,8 @@ CShape::CShape(CShape * tmpShape)
 	this->nY = tmpShape->nY;
 	this->nWidth = tmpShape->nWidth;
 	this->nHeight = tmpShape->nHeight;
-	this->bSelectedState = bSelectedState;
 
+	this->bSelectedState = bSelectedState;
 	this->nRed = nRed;
 	this->nGreen = nGreen;
 	this->nBlue = nBlue;
