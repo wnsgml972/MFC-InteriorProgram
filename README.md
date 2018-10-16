@@ -76,15 +76,15 @@
 
 ## 단일 문서 기반(SDI)
 
-### Project View Structure
+### View Structure
 
 ![structure](/media/structure.png)
 
-### Project Model Structure
+### Model Structure
 
 ![structure](/media/shape_structure3.png)
 
-### 전체 간단한 구조도
+### Project Overview
 
 ![structure](/media/total_structure.png)
 
