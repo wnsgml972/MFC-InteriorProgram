@@ -1,12 +1,2 @@
-﻿  BasicContainerShape.cpp
-  DependentShape.cpp
-  DlgTab1.cpp
-  DlgTab2.cpp
-  FileManager.cpp
-  InteriorProgram.cpp
-  InteriorProgramView.cpp
-  MainFrm.cpp
-  ObjectShape.cpp
-  ShapeHandler.cpp
-  코드를 생성하고 있습니다...
+﻿  InteriorProgramView.cpp
   InteriorProgram.vcxproj -> C:\Users\kjh0121\Desktop\kjh\새 폴더\MFC-InteriorProgram\Debug\InteriorProgram.exe

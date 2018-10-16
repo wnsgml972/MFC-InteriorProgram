@@ -201,6 +201,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RoomShape.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="ShapeFactory.h" />
     <ClInclude Include="ShapeHandler.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SuperContainerShape.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="ObjectShape.cpp" />
     <ClCompile Include="RoomShape.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="ShapeFactory.cpp" />
     <ClCompile Include="ShapeHandler.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

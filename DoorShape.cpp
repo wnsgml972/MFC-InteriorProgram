@@ -7,6 +7,8 @@ CDoorShape::CDoorShape(int nId, int nX, int nY, int nWidth, int nHeight)
 	nRed = 211;
 	nGreen = 162;
 	nBlue = 127;
+
+	m_nType = TYPE_DEPENDENT;
 }
 
 CDoorShape::~CDoorShape()

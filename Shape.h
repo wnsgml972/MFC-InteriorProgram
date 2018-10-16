@@ -19,10 +19,10 @@ public:
 	virtual bool AddShape() = 0;
 	virtual bool DeleteShape() = 0;
 	virtual bool CopyShape() = 0;
-	virtual bool MoveShape() = 0;
+	virtual bool MoveShape(CPoint point) = 0;
 	virtual bool MagneticShape() = 0;
-	virtual bool EditShape() = 0;
-	virtual bool WheelShape() = 0;
+	virtual bool EditShape(int nX, int nY, int nWidth, int nHeight, int *m_nSubShapeStatus, int *m_nRememberShapeStatus) = 0;
+	virtual bool WheelShape(short zDelta) = 0;
 
 	// Paint Shape
 	virtual void SetOwnColor() { nRed = 0;  nGreen = 0;  nBlue = 0; };
@@ -32,6 +32,7 @@ public:
 	bool bSelectedState;
 	int nRed, nGreen, nBlue;
 	int m_nMoveSubVal[4]; //Move에 사용함
+	int m_nType;
 
 private:
 	int nId;

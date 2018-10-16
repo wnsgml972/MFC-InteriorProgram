@@ -10,9 +10,9 @@ public:
 	virtual bool AddShape();
 	virtual bool DeleteShape();
 	virtual bool CopyShape();
-	virtual bool MoveShape();
+	virtual bool MoveShape(CPoint point);
 	virtual bool MagneticShape();
-	virtual bool EditShape();
-	virtual bool WheelShape();
+	virtual bool EditShape(int nX, int nY, int nWidth, int nHeight, int *m_nSubShapeStatus, int *m_nRememberShapeStatus);
+	virtual bool WheelShape(short zDelta);
 
 };

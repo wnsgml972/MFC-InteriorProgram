@@ -106,6 +106,9 @@
     <ClInclude Include="Shape.h">
       <Filter>Model\Super</Filter>
     </ClInclude>
+    <ClInclude Include="ShapeFactory.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ControlView.cpp">
@@ -173,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="Shape.cpp">
       <Filter>Model\Super</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFactory.cpp">
+      <Filter>Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

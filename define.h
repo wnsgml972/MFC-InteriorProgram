@@ -43,8 +43,7 @@ using namespace std;
 // Enum List
 const enum    // PAINT_BASIC은 Select와 Move, Magnetic 담당함!
 {
-	PAINT_BASIC = 0, PAINT_ROOM, PAINT_WINDOW, PAINT_DOOR,
-	PAINT_USER_ADD, PAINT_USER_WASH, PAINT_USER_TV,
+	PAINT_BASIC = 0, PAINT_ROOM, PAINT_WINDOW, PAINT_DOOR, PAINT_OBJECT
 }; 
 const enum 
 {

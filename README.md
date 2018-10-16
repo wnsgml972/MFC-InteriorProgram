@@ -82,7 +82,11 @@
 
 ### Project Model Structure
 
-![structure](/media/shape_structure2.png)
+![structure](/media/shape_structure3.png)
+
+### 전체 간단한 구조도
+
+![structure](/media/total_structure.png)
 
 ### 프로젝트 시작 방법
 

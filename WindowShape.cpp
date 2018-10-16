@@ -7,6 +7,8 @@ CWindowShape::CWindowShape(int nId, int nX, int nY, int nWidth, int nHeight)
 	nRed = 80;
 	nGreen = 188;
 	nBlue = 223;
+
+	m_nType = TYPE_DEPENDENT;
 }
 
 CWindowShape::~CWindowShape()

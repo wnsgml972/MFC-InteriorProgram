@@ -11,6 +11,7 @@ CShape::CShape(int nId, int nX, int nY, int nWidth, int nHeight)
 
 	bSelectedState = FALSE;
 	nRed = 0;  nGreen = 0;  nBlue = 0;	
+	m_nType = TYPE_DEFAULT;
 }
 
 CShape::CShape(CShape * tmpShape)
@@ -29,7 +30,7 @@ CShape::CShape(CShape * tmpShape)
 
 CShape::~CShape()
 {
-	printf("~Shape\n");
+	
 }
 
 void CShape::SetRect(int nX, int nY, int nWidth, int nHeight)

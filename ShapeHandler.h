@@ -38,6 +38,7 @@ public:
 	int CopySelectedShape(int nIndex = MY_ERROR);
 	int WheelSelectedShape(short zDelta);
 	int MagneticSelectedShape();
+	int EditSelectedShape(int nX, int nY, int nWidth, int nHeight, int *m_nSubShapeStatus, int *m_nRememberShapeStatus);
 
 	vector<CShape*> m_CaShape;
 	bool NoAddShape;
@@ -49,6 +50,9 @@ public:
 	int m_pRememberRoomIDForDoorWindow;
 	int m_RememberLocationForDoorWindow;
 
+
+	int m_nDrawSelectRange;
+	int m_nSelectRange;
 private:
 	CShapeHandler();
 	static CShapeHandler *instance;
@@ -56,8 +60,6 @@ private:
 	stack<CShape*> m_CsShape;
 	CFileManager * m_CFileManager;
 	int m_nAutoIncId;
-	int m_nSelectRange;
-	int m_nDrawSelectRange;
 
 };
 
