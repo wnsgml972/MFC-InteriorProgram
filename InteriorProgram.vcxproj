@@ -192,6 +192,8 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="DoorShape.h" />
     <ClInclude Include="FileManager.h" />
+    <ClInclude Include="HeaderPost.h" />
+    <ClInclude Include="HeaderPre.h" />
     <ClInclude Include="InteriorProgram.h" />
     <ClInclude Include="InteriorProgramDoc.h" />
     <ClInclude Include="InteriorProgramView.h" />

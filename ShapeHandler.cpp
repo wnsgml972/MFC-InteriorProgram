@@ -502,7 +502,8 @@ int CShapeHandler::EditSelectedShape(int nX, int nY, int nWidth, int nHeight, in
 		return MY_ERROR;
 	}
 
-	m_CaShape[index]->EditShape(nX, nY, nWidth, nHeight, m_nSubShapeStatus, m_nRememberShapeStatus);
+	if (!m_CaShape[index]->EditShape(nX, nY, nWidth, nHeight, m_nSubShapeStatus, m_nRememberShapeStatus))
+		return MY_ERROR;
 
 	return MY_SUCCES;
 }

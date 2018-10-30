@@ -9,6 +9,8 @@
 #include <istream>
 #include "define.h"
 
+//#include "HeaderPre.h"
+
 class CFileManager
 {
 public:
@@ -27,3 +29,5 @@ private:
 	CFileManager();
 	static CFileManager *instance;
 };
+
+//#include "HeaderPost.h"

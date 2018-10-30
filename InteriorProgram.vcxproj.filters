@@ -109,6 +109,12 @@
     <ClInclude Include="ShapeFactory.h">
       <Filter>Controller</Filter>
     </ClInclude>
+    <ClInclude Include="HeaderPre.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderPost.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ControlView.cpp">

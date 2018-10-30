@@ -26,6 +26,7 @@ public:
 	// 추가 기능
 	void SetImageIcon(int nImgIconID);
 	MYICON_INFO MyGetIconInfo(HICON hIcon);
+	virtual void SetOwnColor();
 
 	// 변수
 	int m_pInContainerShapeID;
